@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, Image, Button, StyleSheet, Pressable, TextInput, KeyboardAvoidingView } from 'react-native';
 import { shareAsync } from 'expo-sharing';
 import { useState } from 'react';
+
 const PreviewScreen = ({route, navigation}) => {
   const {photo, backPhoto} = route.params;
   const [showFront, setShowFront] = useState(true);
@@ -18,26 +19,19 @@ const PreviewScreen = ({route, navigation}) => {
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView style={styles.preview}behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Pressable style={styles.preview} onPress={() => setShowFront(!showFront)}>
-          <Image 
-            style={styles.preview} 
-            source={{ uri: "data:image/jpg;base64," 
-            +  (showFront ? photo.base64: backPhoto.base64) }}
-            
-          />
-        </Pressable></KeyboardAvoidingView>
+          <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," +  (showFront ? photo.base64: backPhoto.base64) }}/>
+        </Pressable>
         <TextInput
           style={styles.input}
           text={caption}
           onChangeText={(newValue) => {
             setCaption(newValue);
           }}
+          placeHolder={"Test Caption"}
         />
-        <Button title="Share" onPress={sharePic} />
-        <Button title="Discard" onPress={() => {
-          setPhoto(undefined);
-          setBackPhoto(undefined);
-
-        }} />
+        </KeyboardAvoidingView>
+        <Button title="Post" onPress={sharePic} />
+        <Button title="Retake" onPress={() => {navigation.goBack()}} />
       </SafeAreaView>
     );
 
