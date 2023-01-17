@@ -1,5 +1,5 @@
-node_modules/
-.expo/
+/tgr-app/node_modules/
+/tgr-app/.expo/
 dist/
 npm-debug.*
 *.jks
