@@ -1,6 +1,5 @@
 import React from 'react'; 
 import { SafeAreaView, Image, Button, StyleSheet, Pressable, TextInput, KeyboardAvoidingView } from 'react-native';
-import { shareAsync } from 'expo-sharing';
 import { useState } from 'react';
 
 const PreviewScreen = ({route, navigation}) => {
@@ -8,9 +7,6 @@ const PreviewScreen = ({route, navigation}) => {
   const [showFront, setShowFront] = useState(true);
   const [caption, setCaption] = useState('');
   let sharePic = () => {
-    shareAsync(photo.uri).then(() => {
-      setPhoto(undefined);
-    });
   }
   
     
