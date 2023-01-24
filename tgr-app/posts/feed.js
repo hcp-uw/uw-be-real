@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function App() {
+export default function Feed() {
   return (
     <View style={styles.container}>
       <FlatList
