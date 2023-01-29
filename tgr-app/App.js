@@ -5,7 +5,6 @@ import CameraScreen from "./src/camera/CameraScreen"
 import PreviewScreen from "./src/camera/PreviewScreen"
 import Feed from "./posts/feed"
 
-
 const Stack = createNativeStackNavigator();
 function App() {
   return (
@@ -13,7 +12,15 @@ function App() {
       <Stack.Navigator initialRouteName="Feed">
         <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true}}/>
         <Stack.Screen name="Preview" component={PreviewScreen}/>
-        <Stack.Screen name="Feed" component={Feed}/>
+        <Stack.Screen name="Feed" component={Feed}
+                      options={{
+                        // title: 'Feed',
+                        headerShown: false,
+                        // headerStyle: {
+                        //   backgroundColor: 'white',
+                        // },
+                        // headerTintColor: '#fff',
+                      }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
