@@ -17,7 +17,6 @@ const PreviewScreen = ({route, navigation}) => {
         <Pressable style={styles.preview} onPress={() => setShowFront(!showFront)}>
           <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," +  (showFront ? photo.base64: backPhoto.base64) }}/>
         <Image style={styles.thumbnail} source={{ uri: "data:image/jpg;base64," + (showFront ? backPhoto.base64: photo.base64) }} />
-        </Pressable>
         <TextInput
           style={styles.input}
           text={caption}
@@ -28,6 +27,8 @@ const PreviewScreen = ({route, navigation}) => {
           placeholder="Test Caption"
           placeholderTextColor="grey"
         />
+        </Pressable>
+        
         </KeyboardAvoidingView>
         <View style={styles.horizontalLayout}>
           <Button title="Post" onPress={sharePic} />
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     color: 'white',
     margin: 5,
+    width: "100%"
     
   },
   horizontalLayout: {
