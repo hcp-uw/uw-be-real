@@ -4,13 +4,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CameraScreen from "./src/camera/CameraScreen"
 import PreviewScreen from "./src/camera/PreviewScreen"
 import Feed from "./posts/feed"
+import Profile from "./posts/profile"
 
 
 const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Camera">
+      <Stack.Navigator initialRouteName="Feed">
         <Stack.Screen name="Camera" component={CameraScreen} options={{
           unmountOnBlur: true,
           headerStyle: {
@@ -30,6 +31,7 @@ function App() {
           }
         }/>
         <Stack.Screen name="Feed" component={Feed}/>
+        <Stack.Screen name="Profile" component={Profile}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
