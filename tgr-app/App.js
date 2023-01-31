@@ -6,32 +6,22 @@ import PreviewScreen from "./src/camera/PreviewScreen"
 import Feed from "./posts/feed"
 import Profile from "./posts/profile"
 
-
 const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Feed">
-        <Stack.Screen name="Camera" component={CameraScreen} options={{
-          unmountOnBlur: true,
-          headerStyle: {
-            backgroundColor: 'black',
-            
-          }, 
-          title: '',
-          headerTintColor: 'white'
-        }}/>
-        <Stack.Screen name="Preview" component={PreviewScreen} options={
-          {
-            headerStyle: {
-              backgroundColor: 'black'
-            },
-            title: '',
-            headerTintColor: 'white'
-          }
-        }/>
-        <Stack.Screen name="Feed" component={Feed}/>
-        <Stack.Screen name="Profile" component={Profile}/>
+        <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true}}/>
+        <Stack.Screen name="Preview" component={PreviewScreen}/>
+        <Stack.Screen name="Feed" component={Feed}
+                      options={{
+                        // title: 'Feed',
+                        headerShown: false,
+                        // headerStyle: {
+                        //   backgroundColor: 'white',
+                        // },
+                        // headerTintColor: '#fff',
+                      }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
