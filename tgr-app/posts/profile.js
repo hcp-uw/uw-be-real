@@ -215,7 +215,6 @@ const Profile = ({navigation, route}) => {
   );
 }
 
-
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
