@@ -10,9 +10,25 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Feed">
-        <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true}}/>
-        <Stack.Screen name="Preview" component={PreviewScreen}/>
+      <Stack.Navigator initialRouteName="Camera">
+        <Stack.Screen name="Camera" component={CameraScreen} options={{
+          unmountOnBlur: true,
+          headerStyle: {
+            backgroundColor: 'black',
+            
+          }, 
+          title: '',
+          headerTintColor: 'white'
+        }}/>
+        <Stack.Screen name="Preview" component={PreviewScreen} options={
+          {
+            headerStyle: {
+              backgroundColor: 'black'
+            },
+            title: '',
+            headerTintColor: 'white'
+          }
+        }/>
         <Stack.Screen name="Feed" component={Feed}/>
       </Stack.Navigator>
     </NavigationContainer>

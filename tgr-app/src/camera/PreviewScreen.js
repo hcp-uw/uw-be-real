@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { SafeAreaView, Image, Button, StyleSheet, Pressable, TextInput, KeyboardAvoidingView } from 'react-native';
+import { SafeAreaView, Image, Button, StyleSheet, Pressable, TextInput, KeyboardAvoidingView, View} from 'react-native';
 import { useState } from 'react';
 
 const PreviewScreen = ({route, navigation}) => {
@@ -17,17 +17,22 @@ const PreviewScreen = ({route, navigation}) => {
         <Pressable style={styles.preview} onPress={() => setShowFront(!showFront)}>
           <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," +  (showFront ? photo.base64: backPhoto.base64) }}/>
         </Pressable>
+        <Image style={styles.thumbnail} source={{ uri: "data:image/jpg;base64," + (showFront ? backPhoto.base64: photo.base64) }} />
         <TextInput
           style={styles.input}
           text={caption}
           onChangeText={(newValue) => {
             setCaption(newValue);
           }}
-          placeHolder={"Test Caption"}
+          textAlign='center'
+          placeholder="Test Caption"
+          placeholderTextColor="grey"
         />
         </KeyboardAvoidingView>
-        <Button title="Post" onPress={sharePic} />
-        <Button title="Retake" onPress={() => {navigation.goBack()}} />
+        <View style={styles.horizontalLayout}>
+          <Button title="Post" onPress={sharePic} />
+          <Button title="Retake" onPress={() => {navigation.goBack()}} />
+        </View>
       </SafeAreaView>
     );
 
@@ -50,7 +55,18 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: 'black',
     color: 'white',
-    margin: 5
-  }
+    margin: 5,
+    
+  },
+  horizontalLayout: {
+    flexDirection:'row'
+  }, 
+  thumbnail: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: 80,
+        height: 80,
+    },
 })
 export default PreviewScreen;
