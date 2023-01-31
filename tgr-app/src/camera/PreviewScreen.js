@@ -16,8 +16,8 @@ const PreviewScreen = ({route, navigation}) => {
         <KeyboardAvoidingView style={styles.preview}behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Pressable style={styles.preview} onPress={() => setShowFront(!showFront)}>
           <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," +  (showFront ? photo.base64: backPhoto.base64) }}/>
-        </Pressable>
         <Image style={styles.thumbnail} source={{ uri: "data:image/jpg;base64," + (showFront ? backPhoto.base64: photo.base64) }} />
+        </Pressable>
         <TextInput
           style={styles.input}
           text={caption}
