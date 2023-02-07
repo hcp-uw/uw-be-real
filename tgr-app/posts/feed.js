@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Dimensions, StyleSheet, FlatList, Text, Image, View } from 'react-native';
+import { Foundation } from '@expo/vector-icons';
+
 
 const {width} = Dimensions.get('window');
 
@@ -106,10 +108,7 @@ export default function App() {
         ItemSeparatorComponent={() => <View style={{height: 120}} />}
       />
       <View style={styles.navbar}>
-        {/* <Image
-                style={styles.navbar_home} 
-                source={{uri: '../assets/splash.png'}}
-        /> */}
+        <Foundation name="home" size={35} color="white" />
       </View>
     </View>
   );
