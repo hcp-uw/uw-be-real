@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   profImage: {
-    width: '15%',
-    height: width * 0.15,
+    width: '10%',
+    height: width * 0.10,
     borderRadius: 60,
     borderWidth: 1,
     borderColor: 'white'
@@ -51,7 +51,15 @@ const styles = StyleSheet.create({
   }, 
   feed: {
     flex: 1
-  }
+  },
+  profileInfo: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'left'
+  },
+  profileInfoText: {
+
+  },
 });
 
 export default function App() {
@@ -87,14 +95,28 @@ export default function App() {
         renderItem={({ item, index }) =>
                                     <View style={styles.itemImage}>
                                     {/* Profile portion of post */}
-                                    <View>
+                                    <View style={styles.profileInfo}>
                                       <Image
                                               style={styles.profImage} 
                                               source={{uri: item.author_icon}}
                                       />
+                                      <View style={{
+                                        margin: 5,
+                                      }}>
+                                        <Text style={{
+                                          color: 'white',
+                                        }}>Username
+                                        </Text>
+
+                                        <Text style={{
+                                          color: 'white',
+                                          fontSize: 10,
+                                        }}>Bio
+                                        </Text>
+                                      </View>
                                     </View>
                                     {/* Space in between who posted and the post itself */}
-                                    <View style={{padding: 10}}></View>
+                                    <View style={{padding: 5}}></View>
                                     {/* Default user's front photo */}
                                     <Image
                                             style={styles.itemImage} 
