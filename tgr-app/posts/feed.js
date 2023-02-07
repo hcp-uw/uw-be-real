@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { Dimensions, StyleSheet, FlatList, Text, Image, View } from 'react-native';
 import { Foundation } from '@expo/vector-icons';
 
-
 const {width} = Dimensions.get('window');
 
 const ITEM_LENGTH = width;
