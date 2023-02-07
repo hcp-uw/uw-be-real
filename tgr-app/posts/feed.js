@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Dimensions, StyleSheet, FlatList, Text, Image, View } from 'react-native';
-import { Foundation } from '@expo/vector-icons';
+import { Foundation, MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 const {width} = Dimensions.get('window');
 
@@ -46,9 +46,18 @@ const styles = StyleSheet.create({
   },
   navbar_home: {
     position: 'absolute',
-    top: 10,
-    width: '100%',
-    height: ITEM_LENGTH * 40,
+    left: (width * 0.33)-10,
+    bottom: 30
+  },
+  navbar_public: {
+    position: 'absolute',
+    left: (width * 0.5)-20,
+    bottom: 30
+  }, 
+  navbar_friends: {
+    position: 'absolute',
+    left: (width * 0.66)-20,
+    bottom: 30
   }, 
   feed: {
     flex: 1
@@ -129,7 +138,9 @@ export default function App() {
         ItemSeparatorComponent={() => <View style={{height: 120}} />}
       />
       <View style={styles.navbar}>
-        <Foundation name="home" size={35} color="white" />
+        <Foundation style={styles.navbar_home} name="home" size={35} color="white" />
+        <MaterialIcons style={styles.navbar_public} name="public" size={35} color="white" />
+        <Ionicons style={styles.navbar_friends} name="people" size={35} color="white" />
       </View>
     </View>
   );
