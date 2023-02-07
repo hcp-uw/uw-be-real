@@ -3081,7 +3081,7 @@
   "resolved" "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-11.0.1.tgz"
   "version" "11.0.1"
 
-"expo-media-library@^15.0.0":
+"expo-media-library@~15.0.0":
   "integrity" "sha512-BO17VEElQHf2kK45Vuqm4QtutWsT5X4clO8DjTp2BUNvmY+JgOTKsjPs1LIQcNaaum64u/Gfp3V4HV2a6JnHJg=="
   "resolved" "https://registry.npmjs.org/expo-media-library/-/expo-media-library-15.0.0.tgz"
   "version" "15.0.0"
