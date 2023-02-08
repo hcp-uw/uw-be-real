@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: ITEM_LENGTH * 1.5,
     borderRadius: 20,
-    resizeMode: 'cover',
   },
   profImage: {
     width: '10%',
@@ -46,7 +45,7 @@ const styles = StyleSheet.create({
   },
   navbar_home: {
     position: 'absolute',
-    left: (width * 0.33)-10,
+    left: (width * 0.23)-5,
     bottom: 30
   },
   navbar_public: {
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
   }, 
   navbar_friends: {
     position: 'absolute',
-    left: (width * 0.66)-20,
+    left: (width * 0.76)-20,
     bottom: 30
   }, 
   feed: {
