@@ -21,11 +21,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white'
   },
-  itemImage: {
+  bigImage: {
     padding: 10,
     width: '100%',
     height: ITEM_LENGTH * 1.5,
     borderRadius: 20,
+  },
+  smallImage: {
+    position: 'absolute',
+    top: 70,
+    left: 20,
+    // padding: 10,
+    width: '45%',
+    height: ITEM_LENGTH * 0.6,
+    borderRadius: 20,
+    borderColor: 'black',
+    borderWidth: 3
   },
   profImage: {
     width: '10%',
@@ -69,6 +80,9 @@ const styles = StyleSheet.create({
   profileInfoText: {
 
   },
+  userContainer: {
+    flexDirection: 'row',
+  }
 });
 
 export default function App() {
@@ -103,36 +117,65 @@ export default function App() {
         // keyExtractor={({ author_username }) => author_username.toString()}
         renderItem={({ item, index }) =>
                                     <View style={styles.itemImage}>
-                                    {/* Profile portion of post */}
-                                    <View style={styles.profileInfo}>
-                                      <Image
-                                              style={styles.profImage} 
-                                              source={{uri: item.author_icon}}
-                                      />
-                                      <View style={{
-                                        margin: 5,
-                                      }}>
-                                        <Text style={{
-                                          color: 'white',
-                                        }}>Username
-                                        </Text>
+                                      {/* Profile portion of post */}
+                                      <View style={styles.profileInfo}>
+                                        <Image
+                                                style={styles.profImage} 
+                                                source={{uri: item.author_icon}}
+                                        />
 
-                                        <Text style={{
-                                          color: 'white',
-                                          fontSize: 10,
-                                        }}>Bio
-                                        </Text>
+                                        {/* Username and info on post */}
+                                        <View style={{
+                                          margin: 5,
+                                        }}>
+                                          <View style={styles.userContainer}>
+                                            <Text style={{
+                                              color: 'white',
+                                            }}>{item.author_username}
+                                            </Text>
+
+                                            <Text style={{
+                                              color: '#adadad',
+                                              fontSize: 10,
+                                              position: "relative",
+                                              left: 4,
+                                              top: 2
+                                            }}>{item.author_streak}
+                                            </Text>
+
+                                            <Text style={{
+                                              color: 'white',
+                                              fontSize: 10,
+                                              position: "relative",
+                                              left: 4,
+                                              top: 2.5
+                                            }}>{item.author_streak_emoji}
+                                            </Text>
+                                          </View>
+                                          <Text style={{
+                                              color: 'white',
+                                            }}>{item.post_time}
+                                            </Text>
+                                        </View>
                                       </View>
-                                    </View>
-                                    {/* Space in between who posted and the post itself */}
-                                    <View style={{padding: 5}}></View>
-                                    {/* Default user's front photo */}
-                                    <Image
-                                            style={styles.itemImage} 
-                                            source={{uri: item.post_front}}
-                                            // Easy blur effect for when the user hasn't posted
-                                            // blurRadius={30}
-                                    />
+                                      
+                                      {/* Space in between who posted and the post itself */}
+                                      <View style={{padding: 5}}></View>
+
+                                      {/* User's bigger photo */}
+                                      <Image
+                                              style={styles.bigImage} 
+                                              source={{uri: item.post_front}}
+                                              // Easy blur effect for when the user hasn't posted
+                                              // blurRadius={30}
+                                      />
+
+                                      {/* User's smaller photo */}
+                                      <Image
+                                                style={styles.smallImage} 
+                                                source={{uri: item.post_back}}
+                                      />
+
                                     </View>}
         ItemSeparatorComponent={() => <View style={{height: 120}} />}
       />
