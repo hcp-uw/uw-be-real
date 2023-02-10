@@ -153,8 +153,8 @@ export default function App() {
                                             </Text>
                                           </View>
                                           <Text style={{
-                                              color: 'white',
-                                            }}>{item.post_time}
+                                              color: '#adadad',
+                                            }}>{ parseInt((parseInt(Date.now() / 1000) - item.post_time) / 3600)} hr Late
                                             </Text>
                                         </View>
                                       </View>
