@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, StyleSheet, FlatList, Image, View, Text } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
+import styles from './profile-style.js';
 
 const posts = [
   {
@@ -215,33 +216,9 @@ const Profile = ({navigation, route}) => {
   );
 }
 
-const {width} = Dimensions.get('window');
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: 'black',
-  },
-  profileImage: {
-    width: width / 3,
-    height: width / 3,
-    borderRadius: width / 6,
-    marginVertical: 20,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 20,
-    color: 'white',
-  },
-  caption: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginVertical: 20,
-    color: 'white',
-  },
-});
+// const styles = StyleSheet.create({
+  
+// });
 
 export default Profile;

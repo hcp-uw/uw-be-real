@@ -22,6 +22,7 @@ function App() {
                         // },
                         // headerTintColor: '#fff',
                       }}/>
+        <Stack.Screen name="Profile" component={Profile}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
