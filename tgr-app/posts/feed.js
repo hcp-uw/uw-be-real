@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
   profileInfo: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'left'
   },
   profileInfoText: {
 
@@ -82,13 +81,13 @@ const styles = StyleSheet.create({
   userContainer: {
     flexDirection: 'row',
   },
-  item_reaction: {
-    width: '560%',
-    height: width * 0.08,
-    borderRadius: 30,
-    borderWidth: 2.8,
-    borderColor: 'white'
-  },
+  // item_reaction: {
+  //   width: '560%',
+  //   height: width * 0.08,
+  //   borderRadius: 30,
+  //   borderWidth: 2.8,
+  //   borderColor: 'white'
+  // },
   interactionsText: {
     position: 'absolute',
     color: '#adadad',
@@ -191,11 +190,19 @@ export default function App() {
                                           data={item.post_interactions}
                                           ItemSeparatorComponent={() => <View style={{width: 20}} />}
                                           renderItem={({ filler, index }) =>
-                                          <View>
-                                                                    <Image
-                                                                            style={styles.item_reaction} 
+                                                                  // style={{ opacity: (1 -0.1 * index)}}
+                                                                  <View style={{backgroundColor: 'rgba(0, 0, 0, 0.7)'}}>
+                                                                          <Image
+                                                                            style={{width: '560%',
+                                                                                    height: width * 0.08,
+                                                                                    borderRadius: 30,
+                                                                                    borderWidth: 2.8,
+                                                                                    borderColor: 'white',
+                                                                                    // opacity: (1 -0.1 * index),
+                                                                                    
+                                                                            }} 
                                                                             source={{uri: item.post_interactions[index]}}
-                                                                            />
+                                                                          />
                                                                   </View>
                                           }
                                         />
