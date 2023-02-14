@@ -12,7 +12,7 @@ const PreviewScreen = ({route, navigation}) => {
   const THUMBNAIL_HEIGHT_SMALL = THUMBNAIL_HEIGHT / 3;
   const keyboardHeight = useRef(new Animated.Value(0)).current;
   const imageHeight = useRef(new Animated.Value(IMAGE_HEIGHT)).current;
-  const thumbnailHeight = useRef(new Animated.Value(THUMBNAIL_HEIGHT).current);
+  const thumbnailHeight = useRef(new Animated.Value(THUMBNAIL_HEIGHT)).current;
 
   console.log("Actual image height: " + IMAGE_HEIGHT);
   console.log(imageHeight);
