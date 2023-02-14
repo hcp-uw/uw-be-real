@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 70,
     left: 20,
-    // padding: 10,
     width: '45%',
     height: ITEM_LENGTH * 0.6,
     borderRadius: 20,
@@ -82,6 +81,20 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     flexDirection: 'row',
+  },
+  item_reaction: {
+    width: '560%',
+    height: width * 0.08,
+    borderRadius: 30,
+    borderWidth: 2.8,
+    borderColor: 'white'
+  },
+  interactionsText: {
+    position: 'absolute',
+    color: '#adadad',
+    right: 50,
+    fontWeight: 'bold',
+    bottom: 11
   }
 });
 
@@ -114,9 +127,8 @@ export default function App() {
       <FlatList
         style={styles.feed}
         data={posts}
-        // keyExtractor={({ author_username }) => author_username.toString()}
-        renderItem={({ item, index }) =>
-                                    <View style={styles.itemImage}>
+        renderItem={({ item }) =>
+                                    <View>
                                       {/* Profile portion of post */}
                                       <View style={styles.profileInfo}>
                                         <Image
@@ -155,7 +167,7 @@ export default function App() {
                                           <Text style={{
                                               color: '#adadad',
                                             }}>{ parseInt((parseInt(Date.now() / 1000) - item.post_time) / 3600)} hr Late
-                                            </Text>
+                                          </Text>
                                         </View>
                                       </View>
                                       
@@ -170,6 +182,27 @@ export default function App() {
                                               // blurRadius={30}
                                       />
 
+                                      {/* Space in between the big photo and interactions */}
+                                      <View style={{padding: 10}}></View>
+                                      <View style={{left: 15}}>
+                                        <FlatList
+                                          horizontal={true}
+                                          scrollEnabled={false}
+                                          data={item.post_interactions}
+                                          ItemSeparatorComponent={() => <View style={{width: 20}} />}
+                                          renderItem={({ filler, index }) =>
+                                          <View>
+                                                                    <Image
+                                                                            style={styles.item_reaction} 
+                                                                            source={{uri: item.post_interactions[index]}}
+                                                                            />
+                                                                  </View>
+                                          }
+                                        />
+                                      </View>
+
+                                      <Text style={styles.interactionsText}>View interactions ({item.post_comments})</Text>
+
                                       {/* User's smaller photo */}
                                       <Image
                                                 style={styles.smallImage} 
@@ -177,7 +210,7 @@ export default function App() {
                                       />
 
                                     </View>}
-        ItemSeparatorComponent={() => <View style={{height: 120}} />}
+        ItemSeparatorComponent={() => <View style={{height: 100}} />}
       />
       <View style={styles.navbar}>
         <Foundation style={styles.navbar_home} name="home" size={35} color="white" />
