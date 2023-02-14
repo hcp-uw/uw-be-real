@@ -8,8 +8,11 @@ const PreviewScreen = ({route, navigation}) => {
   const [caption, setCaption] = useState('');
   const IMAGE_HEIGHT = Dimensions.get('window').width * 1.5;
   const IMAGE_HEIGHT_SMALL = IMAGE_HEIGHT / 3;
+  const THUMBNAIL_HEIGHT = IMAGE_HEIGHT / 4;
+  const THUMBNAIL_HEIGHT_SMALL = THUMBNAIL_HEIGHT / 3;
   const keyboardHeight = useRef(new Animated.Value(0)).current;
   const imageHeight = useRef(new Animated.Value(IMAGE_HEIGHT)).current;
+  const thumbnailHeight = useRef(new Animated.Value(THUMBNAIL_HEIGHT).current);
 
   console.log("Actual image height: " + IMAGE_HEIGHT);
   console.log(imageHeight);
@@ -39,7 +42,12 @@ const PreviewScreen = ({route, navigation}) => {
         duration: event.duration,
         toValue: IMAGE_HEIGHT_SMALL,
         useNativeDriver: false
-      })
+      }),
+      Animated.timing(thumbnailHeight, {
+        duration: event.duration,
+        toValue: THUMBNAIL_HEIGHT_SMALL,
+        useNativeDriver: false
+      }),
     ]).start();
   };
   
@@ -56,7 +64,12 @@ const PreviewScreen = ({route, navigation}) => {
         toValue: IMAGE_HEIGHT,
         useNativeDriver: false
 
-      })
+      }),
+      Animated.timing(thumbnailHeight, {
+        duration: 100,
+        toValue: THUMBNAIL_HEIGHT,
+        useNativeDriver: false
+      }),
     ]).start();
   };
   return (
@@ -71,15 +84,15 @@ const PreviewScreen = ({route, navigation}) => {
             uri: "" +  (showFront ? photo.uri: backPhoto.uri)
           }}
         />
-        {/* <Animated.Image 
+        <Animated.Image 
           style={[
             styles.thumbnail,
-            {height: imageHeight / 4},
+            {height: thumbnailHeight, width: thumbnailHeight},
           ]} 
           source={{
             uri: "" + (showFront ? backPhoto.uri: photo.uri)
           }} 
-        /> */}
+        />
         </Pressable>
        <TextInput
         style={styles.input}
@@ -131,7 +144,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         
-        width: 20,
+        
     },
 })
 export default PreviewScreen;
