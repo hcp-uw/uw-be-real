@@ -46,7 +46,7 @@ const CameraScreen = ({navigation, route}) => {
       setTimeout(async ()  => {
         newPhoto = await cameraRef.current.takePictureAsync(options);
         setBackPhoto(newPhoto);
-      }, 1000);
+      }, 100);
       
       
     
