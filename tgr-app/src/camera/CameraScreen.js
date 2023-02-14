@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,  Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,  Button, TouchableOpacity, Dimensions } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { Camera, CameraType} from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library'; 
@@ -70,7 +70,7 @@ const CameraScreen = ({navigation, route}) => {
   
   return (
     <View style={styles.container}>
-        {isFocused && <Camera style={styles.camera} ref={cameraRef} type={type} borderRadius={15} resizeMode="cover" overflow="hidden" >
+        {isFocused && <Camera style={styles.camera} ref={cameraRef} type={type}   >
       <StatusBar style="auto" />
      
       </Camera> }
@@ -102,9 +102,10 @@ const styles = StyleSheet.create({
     marginLeft: 50,
   }, 
   camera: {
-    margin: 5,
-    width: "80%",
-    height: "50%",
+    width: "100%",
+    height: Dimensions.get("window").width * 1.5,
+    padding: 10,
+    borderRadius: 20
   },
   ring: {
     width: 150,
