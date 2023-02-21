@@ -22,6 +22,8 @@ const CameraScreen = ({navigation, route}) => {
       const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+      setPhoto(undefined);
+      setBackPhoto(undefined);
     })();
   }, []);
 
