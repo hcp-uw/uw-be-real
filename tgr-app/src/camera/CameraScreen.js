@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera, CameraType} from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library'; 
 import { useIsFocused } from '@react-navigation/native';
+import { IMAGE_HEIGHT, IMAGE_WIDTH } from './CameraStyles';
 
 const CameraScreen = ({navigation, route}) => {
   let cameraRef = useRef();
@@ -14,6 +15,7 @@ const CameraScreen = ({navigation, route}) => {
   const [type, setType] = useState(CameraType.back);
   const [backPhoto, setBackPhoto] = useState(undefined);
   const [backPhotoReady, setBackPhotoReady] = useState(false);
+  
   useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
@@ -38,15 +40,17 @@ const CameraScreen = ({navigation, route}) => {
     
       let newPhoto = await cameraRef.current.takePictureAsync(options);
       
+      console.log(cameraRef.current.getAvailablePictureSizesAsync());
+      console.log(cameraRef.current.getSupportedRatiosAsync());
       
-      cameraRef.current.pausePreview();
+      // cameraRef.current.pausePreview();
       setPhoto(newPhoto);
       toggleCameraType();
-      cameraRef.current.resumePreview();
+      // cameraRef.current.resumePreview();
       setTimeout(async ()  => {
         newPhoto = await cameraRef.current.takePictureAsync(options);
         setBackPhoto(newPhoto);
-      }, 100);
+      }, 500);
       
       
     
@@ -70,10 +74,16 @@ const CameraScreen = ({navigation, route}) => {
   
   return (
     <View style={styles.container}>
-        {isFocused && <Camera style={styles.camera} ref={cameraRef} type={type} borderRadius={15} resizeMode="cover" overflow="hidden" >
+      <View style={styles.roundCamera}>
+        {isFocused && <Camera
+          ratio="4:3" style={styles.camera} ref={cameraRef} type={type} borderRadius={15} resizeMode="cover" overflow="hidden"
+          >
+      
       <StatusBar style="auto" />
      
-      </Camera> }
+      </Camera>
+       }
+       </View>
       
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={takePic}>
@@ -103,8 +113,8 @@ const styles = StyleSheet.create({
   }, 
   camera: {
     margin: 5,
-    width: "80%",
-    height: "50%",
+    width: IMAGE_WIDTH,
+    height: IMAGE_HEIGHT,
   },
   ring: {
     width: 150,
@@ -117,6 +127,9 @@ const styles = StyleSheet.create({
     margin: 10,
     justifyContent: 'center'
   },
+  roundCamera: {
+    borderRadius: 75
+  }
 
 });
 

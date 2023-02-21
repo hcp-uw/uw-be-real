@@ -1,18 +1,17 @@
 import React, { useEffect } from 'react'; 
 import { SafeAreaView, Button, StyleSheet, Pressable, TextInput, Animated, View, Keyboard, Dimensions} from 'react-native';
 import { useState, useRef } from 'react';
-
+import styles,{ IMAGE_HEIGHT, IMAGE_HEIGHT_SMALL, IMAGE_WIDTH, IMAGE_WIDTH_SMALL} from './CameraStyles.js';
+import { THUMBNAIL_HEIGHT, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT_SMALL, THUMBNAIL_WIDTH_SMALL } from './CameraStyles.js';
 const PreviewScreen = ({route, navigation}) => {
   const {photo, backPhoto} = route.params;
   const [showFront, setShowFront] = useState(true);
   const [caption, setCaption] = useState('');
-  const IMAGE_HEIGHT = Dimensions.get('window').width * 1.5;
-  const IMAGE_HEIGHT_SMALL = IMAGE_HEIGHT / 3;
-  const THUMBNAIL_HEIGHT = IMAGE_HEIGHT / 4;
-  const THUMBNAIL_HEIGHT_SMALL = THUMBNAIL_HEIGHT / 3;
   const keyboardHeight = useRef(new Animated.Value(0)).current;
   const imageHeight = useRef(new Animated.Value(IMAGE_HEIGHT)).current;
+  const imageWidth = useRef(new Animated.Value(IMAGE_WIDTH)).current;
   const thumbnailHeight = useRef(new Animated.Value(THUMBNAIL_HEIGHT)).current;
+  const thumbnailWidth = useRef(new Animated.Value(THUMBNAIL_WIDTH)).current;
 
   console.log("Actual image height: " + IMAGE_HEIGHT);
   console.log(imageHeight);
@@ -43,9 +42,19 @@ const PreviewScreen = ({route, navigation}) => {
         toValue: IMAGE_HEIGHT_SMALL,
         useNativeDriver: false
       }),
+      Animated.timing(imageWidth, {
+        duration: event.duration,
+        toValue: IMAGE_WIDTH_SMALL,
+        useNativeDriver: false
+      }),
       Animated.timing(thumbnailHeight, {
         duration: event.duration,
         toValue: THUMBNAIL_HEIGHT_SMALL,
+        useNativeDriver: false
+      }),
+      Animated.timing(thumbnailWidth, {
+        duration: event.duration,
+        toValue: THUMBNAIL_WIDTH_SMALL,
         useNativeDriver: false
       }),
     ]).start();
@@ -63,11 +72,20 @@ const PreviewScreen = ({route, navigation}) => {
         duration: 100,
         toValue: IMAGE_HEIGHT,
         useNativeDriver: false
-
+      }),
+      Animated.timing(imageWidth, {
+        duration: 100,
+        toValue: IMAGE_WIDTH,
+        useNativeDriver: false
       }),
       Animated.timing(thumbnailHeight, {
         duration: 100,
         toValue: THUMBNAIL_HEIGHT,
+        useNativeDriver: false
+      }),
+      Animated.timing(thumbnailWidth, {
+        duration: 100,
+        toValue: THUMBNAIL_WIDTH,
         useNativeDriver: false
       }),
     ]).start();
@@ -87,7 +105,7 @@ const PreviewScreen = ({route, navigation}) => {
         <Animated.Image 
           style={[
             styles.thumbnail,
-            {height: thumbnailHeight, width: thumbnailHeight},
+            {height: thumbnailHeight, width: thumbnailWidth},
           ]} 
           source={{
             uri: "" + (showFront ? backPhoto.uri: photo.uri)
@@ -115,36 +133,4 @@ const PreviewScreen = ({route, navigation}) => {
 
   };
 
-const styles = StyleSheet.create({
-  preview: {
-    alignSelf: 'stretch',
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    borderRadius: 30
-  }, 
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black'
-  },
-  input: {
-    backgroundColor: 'black',
-    color: 'white',
-    margin: 5,
-    width: "100%"
-    
-  },
-  horizontalLayout: {
-    flexDirection:'row'
-  }, 
-  thumbnail: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        
-        
-    },
-})
 export default PreviewScreen;
