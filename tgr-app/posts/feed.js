@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Dimensions, StyleSheet, FlatList, Text, Image, View } from 'react-native';
+import { Dimensions, StyleSheet, FlatList, Text, Image, View, TouchableOpacity } from 'react-native';
 import { Foundation, MaterialIcons, Ionicons } from '@expo/vector-icons';
+
 
 const {width} = Dimensions.get('window');
 
@@ -91,13 +92,13 @@ const styles = StyleSheet.create({
   interactionsText: {
     position: 'absolute',
     color: '#adadad',
-    right: 50,
+    right: 60,
     fontWeight: 'bold',
-    bottom: 11
+    bottom: 9
   }
 });
 
-export default function App() {
+export default function Feed({navigation}) {
   const [posts, setPosts] = useState([]);
   const [firstPost, setFirst] = useState();
   useMemo(() => {
@@ -172,13 +173,21 @@ export default function App() {
                                       
                                       {/* Space in between who posted and the post itself */}
                                       <View style={{padding: 5}}></View>
+                                      
+                                      <TouchableOpacity onPress={() => navigation.navigate('Camera')}>
+                                        {/* User's bigger photo */}
+                                        <Image
+                                                style={styles.bigImage} 
+                                                source={{uri: item.post_front}}
+                                                // Easy blur effect for when the user hasn't posted
+                                                // blurRadius={30}
+                                                />
+                                      </TouchableOpacity>
 
-                                      {/* User's bigger photo */}
+                                      {/* User's smaller photo */}
                                       <Image
-                                              style={styles.bigImage} 
-                                              source={{uri: item.post_front}}
-                                              // Easy blur effect for when the user hasn't posted
-                                              // blurRadius={30}
+                                                style={styles.smallImage} 
+                                                source={{uri: item.post_back}}
                                       />
 
                                       {/* Space in between the big photo and interactions */}
@@ -190,31 +199,24 @@ export default function App() {
                                           data={item.post_interactions}
                                           ItemSeparatorComponent={() => <View style={{width: 20}} />}
                                           renderItem={({ filler, index }) =>
-                                                                  // style={{ opacity: (1 -0.1 * index)}}
-                                                                  <View style={{backgroundColor: 'rgba(0, 0, 0, 0.7)'}}>
+                                                                  <View>
                                                                           <Image
                                                                             style={{width: '560%',
-                                                                                    height: width * 0.08,
+                                                                                    height: width * 0.075,
                                                                                     borderRadius: 30,
                                                                                     borderWidth: 2.8,
                                                                                     borderColor: 'white',
                                                                                     // opacity: (1 -0.1 * index),
-                                                                                    
                                                                             }} 
                                                                             source={{uri: item.post_interactions[index]}}
                                                                           />
                                                                   </View>
                                           }
                                         />
+                                        <Text style={styles.interactionsText}>View interactions ({item.post_comments})</Text>
                                       </View>
 
-                                      <Text style={styles.interactionsText}>View interactions ({item.post_comments})</Text>
 
-                                      {/* User's smaller photo */}
-                                      <Image
-                                                style={styles.smallImage} 
-                                                source={{uri: item.post_back}}
-                                      />
 
                                     </View>}
         ItemSeparatorComponent={() => <View style={{height: 100}} />}
