@@ -1,234 +1,230 @@
-import { Dimensions, StyleSheet, FlatList, Text, Image, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Dimensions, StyleSheet, FlatList, Text, Image, View, TouchableOpacity } from 'react-native';
+import { Foundation, MaterialIcons, Ionicons } from '@expo/vector-icons';
 
-const posts = [
-  {
-      "author_username": "alan.ly",
-      "author_netid": "4",
-      "author_icon": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-      "author_streak": 13,
-      "author_streak_emoji": "😊",
-      "post_id": 1,
-      "post_front": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766374296006747/image.png",
-      "post_back": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766498959114261/image.png",
-      "post_time": 1672262161,
-      "post_interactions": [
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930204864693/peter.jpg",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930418761838/andrew.jpg",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://media.licdn.com/dms/image/C4E03AQGtT25maW04tg/profile-displayphoto-shrink_100_100/0/1516338583025?e=1677715200&v=beta&t=7qDzsBljaYZ1nGEvy84CH0fwmUP9bH0MozgNGDA3i3o",
-          "https://media.licdn.com/dms/image/D5635AQEyzxEuRPXMRQ/profile-framedphoto-shrink_100_100/0/1669091968868?e=1672869600&v=beta&t=_tiCxrVddUT8dLCwblDQZb0IxGqTQpykWH9HkTs7wcY",
-          "https://media.licdn.com/dms/image/C5603AQERNWw2wbOJYA/profile-displayphoto-shrink_100_100/0/1647314550869?e=1677715200&v=beta&t=7BFmGWfylfhuGHVpoKr9WCgMls0v5Zx-kzye39Ky9CA",
-          "https://media.licdn.com/dms/image/C5603AQFcfpzBSI61pg/profile-displayphoto-shrink_100_100/0/1659928232261?e=1677715200&v=beta&t=j8D8kDOmqnxws9xvR66GiVH_KQ3wmaSPXm3lGoNAum8"
-      ],
-      "post_comments": 16
-  },
-  {
-      "author_username": "haidang",
-      "author_netid": "6",
-      "author_icon": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770381445972048/image.png",
-      "author_streak": 15,
-      "author_streak_emoji": "🔥",
-      "post_id": 3,
-      "post_front": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770153519104122/image.png",
-      "post_back": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770258129231952/image.png",
-      "post_time": 1672262179,
-      "post_interactions": [
-          "https://media.licdn.com/dms/image/C5603AQERNWw2wbOJYA/profile-displayphoto-shrink_100_100/0/1647314550869?e=1677715200&v=beta&t=7BFmGWfylfhuGHVpoKr9WCgMls0v5Zx-kzye39Ky9CA",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930204864693/peter.jpg",
-          "https://media.licdn.com/dms/image/C4E03AQGtT25maW04tg/profile-displayphoto-shrink_100_100/0/1516338583025?e=1677715200&v=beta&t=7qDzsBljaYZ1nGEvy84CH0fwmUP9bH0MozgNGDA3i3o",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930418761838/andrew.jpg",
-          "https://media.licdn.com/dms/image/D5635AQEyzxEuRPXMRQ/profile-framedphoto-shrink_100_100/0/1669091968868?e=1672869600&v=beta&t=_tiCxrVddUT8dLCwblDQZb0IxGqTQpykWH9HkTs7wcY",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://media.licdn.com/dms/image/C5603AQFcfpzBSI61pg/profile-displayphoto-shrink_100_100/0/1659928232261?e=1677715200&v=beta&t=j8D8kDOmqnxws9xvR66GiVH_KQ3wmaSPXm3lGoNAum8"
-      ],
-      "post_comments": 32
-  },
-  {
-      "author_username": "alannnnn",
-      "author_netid": "4",
-      "author_icon": "https://media.licdn.com/dms/image/C5603AQERNWw2wbOJYA/profile-displayphoto-shrink_100_100/0/1647314550869?e=1677715200&v=beta&t=7BFmGWfylfhuGHVpoKr9WCgMls0v5Zx-kzye39Ky9CA",
-      "author_streak": 23,
-      "author_streak_emoji": "😊",
-      "post_id": 5,
-      "post_front": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766498959114261/image.png",
-      "post_back": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766374296006747/image.png",
-      "post_time": 1672262181,
-      "post_interactions": [
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://media.licdn.com/dms/image/C4E03AQGtT25maW04tg/profile-displayphoto-shrink_100_100/0/1516338583025?e=1677715200&v=beta&t=7qDzsBljaYZ1nGEvy84CH0fwmUP9bH0MozgNGDA3i3o",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://media.licdn.com/dms/image/C5603AQFcfpzBSI61pg/profile-displayphoto-shrink_100_100/0/1659928232261?e=1677715200&v=beta&t=j8D8kDOmqnxws9xvR66GiVH_KQ3wmaSPXm3lGoNAum8",
-          "https://media.licdn.com/dms/image/D5635AQEyzxEuRPXMRQ/profile-framedphoto-shrink_100_100/0/1669091968868?e=1672869600&v=beta&t=_tiCxrVddUT8dLCwblDQZb0IxGqTQpykWH9HkTs7wcY",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930204864693/peter.jpg",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930418761838/andrew.jpg"
-      ],
-      "post_comments": 3
-  },
-  {
-      "author_username": "haid",
-      "author_netid": "6",
-      "author_icon": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770381445972048/image.png",
-      "author_streak": 15,
-      "author_streak_emoji": "🔥",
-      "post_id": 6,
-      "post_front": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770153519104122/image.png",
-      "post_back": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770258129231952/image.png",
-      "post_time": 1672262199,
-      "post_interactions": [
-          "https://media.licdn.com/dms/image/C5603AQERNWw2wbOJYA/profile-displayphoto-shrink_100_100/0/1647314550869?e=1677715200&v=beta&t=7BFmGWfylfhuGHVpoKr9WCgMls0v5Zx-kzye39Ky9CA",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930204864693/peter.jpg",
-          "https://media.licdn.com/dms/image/C4E03AQGtT25maW04tg/profile-displayphoto-shrink_100_100/0/1516338583025?e=1677715200&v=beta&t=7qDzsBljaYZ1nGEvy84CH0fwmUP9bH0MozgNGDA3i3o",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930418761838/andrew.jpg",
-          "https://media.licdn.com/dms/image/D5635AQEyzxEuRPXMRQ/profile-framedphoto-shrink_100_100/0/1669091968868?e=1672869600&v=beta&t=_tiCxrVddUT8dLCwblDQZb0IxGqTQpykWH9HkTs7wcY",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://media.licdn.com/dms/image/C5603AQFcfpzBSI61pg/profile-displayphoto-shrink_100_100/0/1659928232261?e=1677715200&v=beta&t=j8D8kDOmqnxws9xvR66GiVH_KQ3wmaSPXm3lGoNAum8"
-      ],
-      "post_comments": 32
-  },
-  {
-      "author_username": "alan.lyy",
-      "author_netid": "4",
-      "author_icon": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-      "author_streak": 13,
-      "author_streak_emoji": "😊",
-      "post_id": 7,
-      "post_front": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766374296006747/image.png",
-      "post_back": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766498959114261/image.png",
-      "post_time": 1672262211,
-      "post_interactions": [
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930204864693/peter.jpg",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930418761838/andrew.jpg",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://media.licdn.com/dms/image/C4E03AQGtT25maW04tg/profile-displayphoto-shrink_100_100/0/1516338583025?e=1677715200&v=beta&t=7qDzsBljaYZ1nGEvy84CH0fwmUP9bH0MozgNGDA3i3o",
-          "https://media.licdn.com/dms/image/D5635AQEyzxEuRPXMRQ/profile-framedphoto-shrink_100_100/0/1669091968868?e=1672869600&v=beta&t=_tiCxrVddUT8dLCwblDQZb0IxGqTQpykWH9HkTs7wcY",
-          "https://media.licdn.com/dms/image/C5603AQERNWw2wbOJYA/profile-displayphoto-shrink_100_100/0/1647314550869?e=1677715200&v=beta&t=7BFmGWfylfhuGHVpoKr9WCgMls0v5Zx-kzye39Ky9CA",
-          "https://media.licdn.com/dms/image/C5603AQFcfpzBSI61pg/profile-displayphoto-shrink_100_100/0/1659928232261?e=1677715200&v=beta&t=j8D8kDOmqnxws9xvR66GiVH_KQ3wmaSPXm3lGoNAum8"
-      ],
-      "post_comments": 16
-  },
-  {
-      "author_username": "hoeli",
-      "author_netid": "1",
-      "author_icon": "https://media.licdn.com/dms/image/C5603AQFcfpzBSI61pg/profile-displayphoto-shrink_100_100/0/1659928232261?e=1677715200&v=beta&t=j8D8kDOmqnxws9xvR66GiVH_KQ3wmaSPXm3lGoNAum8",
-      "author_streak": 2,
-      "author_streak_emoji": "",
-      "post_id": 8,
-      "post_front": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770258129231952/image.png",
-      "post_back": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770153519104122/image.png",
-      "post_time": 1672262232,
-      "post_interactions": [
-          "https://media.licdn.com/dms/image/C5603AQERNWw2wbOJYA/profile-displayphoto-shrink_100_100/0/1647314550869?e=1677715200&v=beta&t=7BFmGWfylfhuGHVpoKr9WCgMls0v5Zx-kzye39Ky9CA",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930204864693/peter.jpg",
-          "https://media.licdn.com/dms/image/C4E03AQGtT25maW04tg/profile-displayphoto-shrink_100_100/0/1516338583025?e=1677715200&v=beta&t=7qDzsBljaYZ1nGEvy84CH0fwmUP9bH0MozgNGDA3i3o",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930418761838/andrew.jpg",
-          "https://media.licdn.com/dms/image/D5635AQEyzxEuRPXMRQ/profile-framedphoto-shrink_100_100/0/1669091968868?e=1672869600&v=beta&t=_tiCxrVddUT8dLCwblDQZb0IxGqTQpykWH9HkTs7wcY",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057770381445972048/image.png"
-      ],
-      "post_comments": 32
-  },
-  {
-      "author_username": "andrewkim",
-      "author_netid": "2",
-      "author_icon": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930418761838/andrew.jpg",
-      "author_streak": 23,
-      "author_streak_emoji": "😊",
-      "post_id": 9,
-      "post_front": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766374296006747/image.png",
-      "post_back": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766498959114261/image.png",
-      "post_time": 1672262265,
-      "post_interactions": [
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930204864693/peter.jpg",
-          "https://media.licdn.com/dms/image/C5603AQERNWw2wbOJYA/profile-displayphoto-shrink_100_100/0/1647314550869?e=1677715200&v=beta&t=7BFmGWfylfhuGHVpoKr9WCgMls0v5Zx-kzye39Ky9CA",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://media.licdn.com/dms/image/C4E03AQGtT25maW04tg/profile-displayphoto-shrink_100_100/0/1516338583025?e=1677715200&v=beta&t=7qDzsBljaYZ1nGEvy84CH0fwmUP9bH0MozgNGDA3i3o",
-          "https://media.licdn.com/dms/image/D5635AQEyzxEuRPXMRQ/profile-framedphoto-shrink_100_100/0/1669091968868?e=1672869600&v=beta&t=_tiCxrVddUT8dLCwblDQZb0IxGqTQpykWH9HkTs7wcY",
-          "https://media.licdn.com/dms/image/C5603AQFcfpzBSI61pg/profile-displayphoto-shrink_100_100/0/1659928232261?e=1677715200&v=beta&t=j8D8kDOmqnxws9xvR66GiVH_KQ3wmaSPXm3lGoNAum8"
-      ],
-      "post_comments": 13
-  },
-  {
-      "author_username": "lilpete",
-      "author_netid": "3",
-      "author_icon": "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930204864693/peter.jpg",
-      "author_streak": 32,
-      "author_streak_emoji": "🔥",
-      "post_id": 10,
-      "post_front": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770153519104122/image.png",
-      "post_back": "https://cdn.discordapp.com/attachments/1034184646067486720/1057770258129231952/image.png",
-      "post_time": 1672263267,
-      "post_interactions": [
-          "https://media.licdn.com/dms/image/C5603AQERNWw2wbOJYA/profile-displayphoto-shrink_100_100/0/1647314550869?e=1677715200&v=beta&t=7BFmGWfylfhuGHVpoKr9WCgMls0v5Zx-kzye39Ky9CA",
-          "https://media.licdn.com/dms/image/D5635AQEyzxEuRPXMRQ/profile-framedphoto-shrink_100_100/0/1669091968868?e=1672869600&v=beta&t=_tiCxrVddUT8dLCwblDQZb0IxGqTQpykWH9HkTs7wcY",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766744145539102/image.png",
-          "https://media.licdn.com/dms/image/C4E03AQGtT25maW04tg/profile-displayphoto-shrink_100_100/0/1516338583025?e=1677715200&v=beta&t=7qDzsBljaYZ1nGEvy84CH0fwmUP9bH0MozgNGDA3i3o",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057770381445972048/image.png",
-          "https://cdn.discordapp.com/attachments/1034184646067486720/1057766930418761838/andrew.jpg",
-          "https://media.licdn.com/dms/image/C5603AQFcfpzBSI61pg/profile-displayphoto-shrink_100_100/0/1659928232261?e=1677715200&v=beta&t=j8D8kDOmqnxws9xvR66GiVH_KQ3wmaSPXm3lGoNAum8"
-      ],
-      "post_comments": 63
-  }
-]
 
 const {width} = Dimensions.get('window');
 
-const ITEM_LENGTH = width * 0.8; // Item is a square. Therefore, its height and width are of the same length.
-const BORDER_RADIUS = 20;
+const ITEM_LENGTH = width;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black'
-},
-  itemImage: {
+  },
+  profile: {
+    position: 'absolute',
+    right: 7,
+    top: 25,
+    width: '10%',
+    height: width * 0.09,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'white'
+  },
+  bigImage: {
+    padding: 10,
     width: '100%',
-    height: ITEM_LENGTH,
-    borderRadius: BORDER_RADIUS,
-    resizeMode: 'cover',
+    height: ITEM_LENGTH * 1.5,
+    borderRadius: 20,
+  },
+  smallImage: {
+    position: 'absolute',
+    top: 70,
+    left: 20,
+    width: '45%',
+    height: ITEM_LENGTH * 0.6,
+    borderRadius: 20,
+    borderColor: 'black',
+    borderWidth: 3
+  },
+  profImage: {
+    width: '10%',
+    height: width * 0.10,
+    borderRadius: 60,
+    borderWidth: 1,
+    borderColor: 'white'
   },
   logo: {
-    flex: 0.05,
-    padding: 20,
+    top: 30,
+    flex: 0.06,
+    padding: 30,
   },
   navbar: {
     flex: 0.05,
     padding: 20,
   },
+  navbar_home: {
+    position: 'absolute',
+    left: (width * 0.23)-5,
+    bottom: 30
+  },
+  navbar_public: {
+    position: 'absolute',
+    left: (width * 0.5)-20,
+    bottom: 30
+  }, 
+  navbar_friends: {
+    position: 'absolute',
+    left: (width * 0.76)-20,
+    bottom: 30
+  }, 
   feed: {
     flex: 1
+  },
+  profileInfo: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  profileInfoText: {
+
+  },
+  userContainer: {
+    flexDirection: 'row',
+  },
+  // item_reaction: {
+  //   width: '560%',
+  //   height: width * 0.08,
+  //   borderRadius: 30,
+  //   borderWidth: 2.8,
+  //   borderColor: 'white'
+  // },
+  interactionsText: {
+    position: 'absolute',
+    color: '#adadad',
+    right: 60,
+    fontWeight: 'bold',
+    bottom: 9
   }
 });
 
-export default function App() {
+export default function Feed({navigation}) {
+  const [posts, setPosts] = useState([]);
+  const [firstPost, setFirst] = useState();
+  useMemo(() => {
+    const fetchData = fetch('https://haosenli.com/data/tgr_dummy_posts.json').then(res => res.json()).then(data => {
+      setPosts(data);
+      setFirst(data[0].author_icon);
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
+      {/* Logo */}
       <View style={styles.logo}>
         <Text style={{
                      fontSize: 20,
+                     fontWeight: 'bold',
                      color: 'white',
-                     }}>_.tgr</Text>
+                     }}>_.tgr
+        </Text>
+        <Image
+          style={styles.profile} 
+          source={{uri: firstPost}}
+        />
         
       </View>
       <FlatList
         style={styles.feed}
         data={posts}
-        keyExtractor={({ author_username }) => author_username.toString()}
-        renderItem={({ item }) =><View style={styles.itemImage}> 
-                                    <Image
-                                            style={styles.itemImage} 
-                                            source={{uri: item.post_front}}
-                                    />
-                                </View>}
-        ItemSeparatorComponent={() => <View style={{height: 20}} />}
+        renderItem={({ item }) =>
+                                    <View>
+                                      {/* Profile portion of post */}
+                                      <View style={styles.profileInfo}>
+                                        <Image
+                                                style={styles.profImage} 
+                                                source={{uri: item.author_icon}}
+                                        />
+
+                                        {/* Username and info on post */}
+                                        <View style={{
+                                          margin: 5,
+                                        }}>
+                                          <View style={styles.userContainer}>
+                                            <Text style={{
+                                              color: 'white',
+                                            }}>{item.author_username}
+                                            </Text>
+
+                                            <Text style={{
+                                              color: '#adadad',
+                                              fontSize: 10,
+                                              position: "relative",
+                                              left: 4,
+                                              top: 2
+                                            }}>{item.author_streak}
+                                            </Text>
+
+                                            <Text style={{
+                                              color: 'white',
+                                              fontSize: 10,
+                                              position: "relative",
+                                              left: 4,
+                                              top: 2.5
+                                            }}>{item.author_streak_emoji}
+                                            </Text>
+                                          </View>
+                                          <Text style={{
+                                              color: '#adadad',
+                                            }}>{ parseInt((parseInt(Date.now() / 1000) - item.post_time) / 3600)} hr Late
+                                          </Text>
+                                        </View>
+                                      </View>
+                                      
+                                      {/* Space in between who posted and the post itself */}
+                                      <View style={{padding: 5}}></View>
+                                      
+                                      <TouchableOpacity onPress={() => navigation.navigate('Camera')}>
+                                        {/* User's bigger photo */}
+                                        <Image
+                                                style={styles.bigImage} 
+                                                source={{uri: item.post_front}}
+                                                // Easy blur effect for when the user hasn't posted
+                                                // blurRadius={30}
+                                                />
+                                      </TouchableOpacity>
+
+                                      {/* User's smaller photo */}
+                                      <Image
+                                                style={styles.smallImage} 
+                                                source={{uri: item.post_back}}
+                                      />
+
+                                      {/* Space in between the big photo and interactions */}
+                                      <View style={{padding: 10}}></View>
+                                      <View style={{left: 15}}>
+                                        <FlatList
+                                          horizontal={true}
+                                          scrollEnabled={false}
+                                          data={item.post_interactions}
+                                          ItemSeparatorComponent={() => <View style={{width: 20}} />}
+                                          renderItem={({ filler, index }) =>
+                                                                  <View>
+                                                                          <Image
+                                                                            style={{width: '560%',
+                                                                                    height: width * 0.075,
+                                                                                    borderRadius: 30,
+                                                                                    borderWidth: 2.8,
+                                                                                    borderColor: 'white',
+                                                                                    // opacity: (1 -0.1 * index),
+                                                                            }} 
+                                                                            source={{uri: item.post_interactions[index]}}
+                                                                          />
+                                                                  </View>
+                                          }
+                                        />
+                                        <Text style={styles.interactionsText}>View interactions ({item.post_comments})</Text>
+                                      </View>
+
+
+
+                                    </View>}
+        ItemSeparatorComponent={() => <View style={{height: 100}} />}
       />
       <View style={styles.navbar}>
-        <Text style={{padding: 30,
-                     fontSize: 20,
-                     color: 'white',
-                     marginLeft: "27%",
-                     marginTop: "-7%"
-                     }}>temp navbar</Text>
+        <Foundation style={styles.navbar_home} name="home" size={35} color="white" />
+        <MaterialIcons style={styles.navbar_public} name="public" size={35} color="white" />
+        <Ionicons style={styles.navbar_friends} name="people" size={35} color="white" />
       </View>
     </View>
   );
