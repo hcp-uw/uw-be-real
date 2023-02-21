@@ -96,7 +96,7 @@ const PreviewScreen = ({route, navigation}) => {
       <Pressable  onPress={() => setShowFront(!showFront)}>
         <Animated.Image
           style={[
-            {height: imageHeight, width: imageHeight}
+            {height: imageHeight, width: imageWidth}
           ]} 
           source={{
             uri: "" +  (showFront ? photo.uri: backPhoto.uri)
