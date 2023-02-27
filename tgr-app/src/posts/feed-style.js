@@ -5,7 +5,6 @@ export const {width} = Dimensions.get('window');
 export const ITEM_LENGTH = width;
 
 export const styles = StyleSheet.create({
-  
   container: {
     flex: 1,
     backgroundColor: 'black'
