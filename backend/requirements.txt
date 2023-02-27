@@ -1,3 +1,4 @@
 python-dotenv
 flask
 neo4j
+boto3
