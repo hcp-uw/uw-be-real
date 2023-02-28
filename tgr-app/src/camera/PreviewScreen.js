@@ -27,6 +27,7 @@ const PreviewScreen = ({route, navigation}) => {
   }, []);
 
   let sharePic = () => {
+    navigation.navigate("PostPhoto", {photo: photo, backPhoto: backPhoto});
   }
   
   const keyboardWillShow = (event) => {

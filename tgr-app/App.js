@@ -5,6 +5,7 @@ import CameraScreen from "./src/camera/CameraScreen";
 import PreviewScreen from "./src/camera/PreviewScreen";
 import Feed from "./posts/feed";
 import Profile from "./posts/profile";
+import PostScreen from "./src/camera/PostScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -38,6 +39,7 @@ function App() {
                         // headerTintColor: '#fff',
                       }}/>
         <Stack.Screen name="Profile" component={Profile}/>
+        <Stack.Screen name="PostPhoto" component={PostScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
