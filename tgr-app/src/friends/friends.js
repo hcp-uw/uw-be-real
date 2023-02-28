@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react';
-import { FlatList, Text, Image, View, TouchableWithoutFeedback } from 'react-native';
+import { FlatList, Text, Image, View, TouchableWithoutFeedback, TextInput, ScrollView } from 'react-native';
 import { Foundation, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { styles } from './friends-style';
 
 export default function Friends({navigation, route}) {
-  const [firstPost, setFirst] = useState();
+  const [profilePic, setProfilePic] = useState();
     useMemo(() => {
-      const fetchData = fetch('https://haosenli.com/data/tgr_dummy_posts.json').then(res => res.json()).then(data => {
-      setFirst(data[0].author_icon);
+      const fetchProfile = fetch('https://haosenli.com/data/tgr_dummy_posts.json').then(res => res.json()).then(data => {
+        setProfilePic(data[0].author_icon);
+      });
+
+      const fetchFriends = fetch('https://haosenli.com/data/tgr_dummy_friends.json').then(res => res.json()).then(data => {
+        // setProfilePic(data[0].author_icon);
       });
   }, []);
 
@@ -22,10 +26,19 @@ export default function Friends({navigation, route}) {
         }>
             <Image
               style={styles.userProfilePic}
-              source={{uri: firstPost}}
+              source={{uri: profilePic}}
             />
         </TouchableWithoutFeedback >
       </View>
+
+      {/* Friend search bar */}
+      {/* <View> */}
+      <ScrollView keyboardShouldPersistTaps='handled'
+                  scrollEnabled={false}>
+          <TextInput style={styles.input} placeholder="Add or search friends"
+                    placeholderTextColor="#5A5A5A"></TextInput>
+      </ScrollView>
+      {/* </View> */}
 
       {/* Navbar */}
       <View style={styles.navbar}>
