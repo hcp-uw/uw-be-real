@@ -9,11 +9,11 @@ export default function Friends({navigation, route}) {
   const [numFriends, setNumFriends] = useState(0);
 
     useEffect(() => {
-      const fetchProfile = fetch('https://haosenli.com/data/tgr_dummy_posts.json').then(res => res.json()).then(data => {
+      const fetchProfile = fetch('https://drive.google.com/uc?export=view&id=1ywYz5du-nQn19uwKjhkO-KD0s7ii9Yzz').then(res => res.json()).then(data => {
         setProfilePic(data[0].author_icon);
       });
 
-      const fetchFriends = fetch('https://haosenli.com/data/tgr_dummy_friends.json').then(res => res.json()).then(data => {
+      const fetchFriends = fetch('https://drive.google.com/uc?export=view&id=171vCiyn9rLvz3kF1k1eUF2D3vFI38K8S').then(res => res.json()).then(data => {
         setFriends(data.friends);
         setNumFriends(Object.keys(data.friends).length);
       });
@@ -31,7 +31,7 @@ export default function Friends({navigation, route}) {
               style={styles.userProfilePic}
               source={{uri: profilePic}}
             />
-        </TouchableWithoutFeedback >
+        </TouchableWithoutFeedback>
       </View>
 
       {/* Friend search bar */}
@@ -72,7 +72,8 @@ export default function Friends({navigation, route}) {
       />
 
       <Text style={styles.pendingFriendsText}>Pending Requests ({numFriends}) </Text>
-
+      
+      {/* Requests list */}
       <FlatList
         data={friends}
         scrollEnabled={false}

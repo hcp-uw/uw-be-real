@@ -7,7 +7,7 @@ export default function Feed({navigation, route}) {
   const [posts, setPosts] = useState([]);
   const [firstPost, setFirst] = useState();
   useMemo(() => {
-    const fetchData = fetch('https://haosenli.com/data/tgr_dummy_posts.json').then(res => res.json()).then(data => {
+    const fetchData = fetch('https://drive.google.com/uc?export=view&id=1ywYz5du-nQn19uwKjhkO-KD0s7ii9Yzz').then(res => res.json()).then(data => {
       setPosts(data);
       setFirst(data[0].author_icon);
     });
