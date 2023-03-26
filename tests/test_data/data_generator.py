@@ -10,6 +10,10 @@ from random import choice
 import os
 import json
 
+"""
+WARNING: The code below is garb and should not be used in the actual app.
+"""
+
 # classes
 class User:
     """This class defines a User in the _tgr app."""
