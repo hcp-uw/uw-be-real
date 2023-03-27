@@ -6,12 +6,14 @@ import PreviewScreen from "./src/camera/PreviewScreen";
 import Feed from "./posts/feed";
 import Profile from "./posts/profile";
 import PostScreen from "./src/camera/PostScreen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
+      <GestureHandlerRootView style={{flex: 1}}>
       <Stack.Navigator initialRouteName="Feed">
         <Stack.Screen name="Camera" component={CameraScreen} options={{
           unmountOnBlur: true,
@@ -40,7 +42,7 @@ function App() {
                       }}/>
         <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="PostPhoto" component={PostScreen}/>
-      </Stack.Navigator>
+      </Stack.Navigator></GestureHandlerRootView>
     </NavigationContainer>
   );
 }
