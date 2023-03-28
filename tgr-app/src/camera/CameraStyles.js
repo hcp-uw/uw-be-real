@@ -60,6 +60,30 @@ export default StyleSheet.create({
     color: 'white',
     fontSize: 30,
     fontWeight: 'bold'
+  },
+  postOptionsLayout: {
+    flexDirection: 'column'
+  },
+  postOptionsHeaderText: {
+    fontSize: 20,
+    color: 'white',
+    marginLeft: 24
+  },
+  separator: {
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderBottomColor: '#737373',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  postOptionBlock: {
+    flexDirection: 'row',
+    backgroundColor: 'black',
+    padding: 10
+  },
+  postOptionBlockSelected: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    padding: 10
   }
 
 })

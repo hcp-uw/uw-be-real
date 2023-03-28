@@ -5,11 +5,14 @@ import styles,{ IMAGE_HEIGHT, IMAGE_HEIGHT_SMALL, IMAGE_WIDTH, IMAGE_WIDTH_SMALL
 import { THUMBNAIL_HEIGHT, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT_SMALL, THUMBNAIL_WIDTH_SMALL } from './CameraStyles.js';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
+import PostOptionBackground from './components/PostOptionsBackground.js';
+import PostOptions from './components/PostOptions.js';
 
 const PreviewScreen = ({route, navigation}) => {
   const {photo, backPhoto} = route.params;
   const [showFront, setShowFront] = useState(true);
   const [caption, setCaption] = useState('');
+  const [postGlobal, setPostGlobal] = useState(false);
   const keyboardHeight = useRef(new Animated.Value(0)).current;
   const imageHeight = useRef(new Animated.Value(IMAGE_HEIGHT)).current;
   const imageWidth = useRef(new Animated.Value(IMAGE_WIDTH)).current;
@@ -45,32 +48,32 @@ const PreviewScreen = ({route, navigation}) => {
     }
   }, []);
   
-  const shrinkPreview = (event) => {
+  const shrinkPreview = () => {
     Animated.parallel([
       Animated.timing(imageHeight, {
-        duration: event.duration,
+        duration: 100,
         toValue: IMAGE_HEIGHT_SMALL,
         useNativeDriver: false
       }),
       Animated.timing(imageWidth, {
-        duration: event.duration,
+        duration: 100,
         toValue: IMAGE_WIDTH_SMALL,
         useNativeDriver: false
       }),
       Animated.timing(thumbnailHeight, {
-        duration: event.duration,
+        duration: 100,
         toValue: THUMBNAIL_HEIGHT_SMALL,
         useNativeDriver: false
       }),
       Animated.timing(thumbnailWidth, {
-        duration: event.duration,
+        duration: 100,
         toValue: THUMBNAIL_WIDTH_SMALL,
         useNativeDriver: false
       }),
     ]).start();
   };
 
-  const enlargenPreview = (event) => {
+  const enlargenPreview = () => {
     Animated.parallel([
       Animated.timing(keyboardHeight, {
         duration: 100,
@@ -99,7 +102,13 @@ const PreviewScreen = ({route, navigation}) => {
       }),
     ]).start();
   };
-  
+  const previewChange = (fromIndex, toIndex) => {
+    if (toIndex == 1) {
+      shrinkPreview();
+    } else {
+      enlargenPreview();
+    }
+  };
   const keyboardWillShow = (event) => {
     console.log("Keyboard appearing: " + imageHeight);
     Animated.parallel([
@@ -208,8 +217,9 @@ const PreviewScreen = ({route, navigation}) => {
       </View>
       <BottomSheet ref={bottomSheetRef} index={-1} 
       snapPoints={snapPoints} 
-      backdropComponent={renderBackdrop}>
-        <Text style={{color: "white"}}>BOTTOM SHEET OMEGALUL</Text>
+      backdropComponent={renderBackdrop} onAnimate={previewChange}
+      backgroundComponent={PostOptionBackground}>
+        <PostOptions/>
       </BottomSheet>
     </SafeAreaView>
     </NativeViewGestureHandler>
