@@ -1,19 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
-import { FlatList, Text, Image, View, TouchableWithoutFeedback, TextInput, ScrollView } from 'react-native';
-import { Foundation, MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { useMemo, useState } from 'react';
+import { FlatList, Text, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { SearchBar } from "@rneui/base";
 import { styles } from './friends-style';
+import Header from "../header/header";
+import Navbar from "../navbar/navbar";
 
 export default function Friends({navigation, route}) {
-  const [profilePic, setProfilePic] = useState();
+  const { pfp } = route.params
+
   const [friends, setFriends] = useState();
   const [numFriends, setNumFriends] = useState(0);
 
-    useEffect(() => {
-      const fetchProfile = fetch('https://drive.google.com/uc?export=view&id=1ywYz5du-nQn19uwKjhkO-KD0s7ii9Yzz').then(res => res.json()).then(data => {
-        setProfilePic(data[0].author_icon);
-      });
-
-      const fetchFriends = fetch('https://drive.google.com/uc?export=view&id=171vCiyn9rLvz3kF1k1eUF2D3vFI38K8S').then(res => res.json()).then(data => {
+    useMemo(() => {
+      const fetchFriends = fetch('https://raw.githubusercontent.com/AantLe12/DummyData/main/dummy_friends.json').then(res => res.json()).then(data => {
         setFriends(data.friends);
         setNumFriends(Object.keys(data.friends).length);
       });
@@ -21,103 +20,21 @@ export default function Friends({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>_.tgr</Text>
-        <TouchableWithoutFeedback  onPress={() => 
-          navigation.navigate('Profile')
-        }>
-            <Image
-              style={styles.userProfilePic}
-              source={{uri: profilePic}}
-            />
-        </TouchableWithoutFeedback>
-      </View>
+      <Header navigation={navigation} 
+              pfp={pfp}/>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.searchContainer}>
+            <SearchBar
+              inputContainerStyle={{backgroundColor: '#1A1A1A'}}
+              containerStyle={{backgroundColor: 'black', borderRadius: 100, height: 20}}
+              placeholderTextColor={'#C0C0C0'}
+              placeholder={'Add or search friends'}
+          />
+        </View>
+      </TouchableWithoutFeedback>
 
-      {/* Friend search bar */}
-      <View style={styles.searchBar}>
-        <ScrollView keyboardShouldPersistTaps='handled'
-                    scrollEnabled={false}>
-            <TextInput style={styles.input} placeholder="Add or search friends"
-                      placeholderTextColor="#C0C0C0"></TextInput>
-        </ScrollView>
-      </View>
-
-      <Text style={styles.myFriendsText}>My Friends ({numFriends}) </Text>
-
-      {/* Friends list */}
-      <FlatList
-        style={styles.friendsList}
-        data={friends}
-        scrollEnabled={false}
-        renderItem={({ item }) =>                    
-          <View style={styles.friendsContainer}>
-            <TouchableWithoutFeedback  onPress={() => 
-              navigation.navigate('Profile')
-            }>
-              <Image
-                      style={styles.friendProfPic} 
-                      source={{uri: item.icon}}
-              />
-            </TouchableWithoutFeedback>
-
-            {/* Username and info on post */}
-            <View>
-            <Text style={styles.userText}>
-              {item.username}
-            </Text>
-            </View>
-          </View>}
-        ItemSeparatorComponent={() => <View style={{height: 20}} />}
-      />
-
-      <Text style={styles.pendingFriendsText}>Pending Requests ({numFriends}) </Text>
-      
-      {/* Requests list */}
-      <FlatList
-        data={friends}
-        scrollEnabled={false}
-        renderItem={({ item }) =>                    
-          <View style={styles.requestsContainer}>
-            <TouchableWithoutFeedback  onPress={() => 
-              navigation.navigate('Profile')
-            }>
-              <Image
-                      style={styles.friendProfPic} 
-                      source={{uri: item.icon}}
-              />
-            </TouchableWithoutFeedback>
-
-            {/* Username and info on post */}
-            <View>
-            <Text style={styles.userText}>
-              {item.username}
-            </Text>
-            </View>
-          </View>}
-        ItemSeparatorComponent={() => <View style={{height: 20}} />}
-      />
-
-      {/* Navbar */}
-      <View style={styles.navbar}>
-        <TouchableWithoutFeedback  onPress={() => 
-            navigation.navigate('Feed')
-        }>
-          <Foundation style={styles.navbar_home} name="home" size={35} color="white" />
-        </TouchableWithoutFeedback>
-        
-        <TouchableWithoutFeedback  onPress={() => 
-          navigation.navigate('Profile')
-        }>
-          <MaterialIcons style={styles.navbar_public} name="public" size={35} color="white" />
-        </TouchableWithoutFeedback>
-        
-        <TouchableWithoutFeedback  onPress={() => 
-          navigation.navigate('Friends')
-        }>
-          <Ionicons style={styles.navbar_friends} name="people" size={35} color="white" />
-        </TouchableWithoutFeedback>
-      </View>
+      <Navbar navigation={navigation} 
+              pfp={pfp}/>
     </View>
   );
 }
