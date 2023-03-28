@@ -5,13 +5,8 @@ const {width} = Dimensions.get('window');
 
 export default styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: 'black'
     },
     profile: {
-      position: 'absolute',
-      right: 7,
-      top: 25,
       width: '10%',
       height: width * 0.09,
       borderRadius: 20,
