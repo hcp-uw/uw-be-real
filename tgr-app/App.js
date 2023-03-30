@@ -5,6 +5,7 @@ import CameraScreen from "./src/camera/CameraScreen"
 import PreviewScreen from "./src/camera/PreviewScreen"
 import Feed from "./posts/feed"
 import Profile from "./profile/profile"
+import Edit from "./profile/profile-edit/profile-edit"
 
 const Stack = createNativeStackNavigator();
 function App() {
@@ -22,10 +23,15 @@ function App() {
                         // },
                         // headerTintColor: '#fff',
                       }}/>
-        <Stack.Screen name="Profile" component={Profile}
+        <Stack.Screen name="Edit" component={Edit} 
         options={{
           headerShown: false,
+          animation: "slide_from_right",
           }}/>
+        <Stack.Screen name="Profile" component={Profile} 
+          options={{
+            headerShown: false,
+            }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

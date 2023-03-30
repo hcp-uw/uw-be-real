@@ -7,21 +7,23 @@ import {
   View, 
   Text 
 } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import styles from './profile-style.js';
 import Header from './profile-header/profile-header';
 import Recap from './profile-recap/profile-recap';
+import Edit from './profile-edit/profile-edit';
+import { ProfileContext } from './ProfileContext.js';
 
 
-const Profile = ({navigation, route}) => {
+const Profile = ({ navigation }) => {
 
   const [userData, setData] = useState(null);
   const [dummyPosts, setDummyPosts] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [username, setUsername] = useState(null);
+  const [bio, setBio] = useState(null);
+  const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const [testPhoto, setPhoto] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -42,14 +44,26 @@ const Profile = ({navigation, route}) => {
     const dummyPosts = await resp.json();
 
     setDummyPosts(dummyPosts);
-    setPhoto(dummyPosts[0].content.front_image);
     setLoading(false);
+  }
+
+  const profileState = {
+    profilePhoto,
+    username,
+    bio,
+    location,
   }
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <Header navigation={navigation}/>
+      <Header 
+        navigation={navigation}
+        leftnav={'Feed'}
+        mid={'Profile'}
+        rightnav={'Edit'}
+        info={profileState}
+      />
 
       {/* Profile Image */}
       <View style={styles.center}>
@@ -67,7 +81,7 @@ const Profile = ({navigation, route}) => {
         <Text style={styles.text3}>Bio</Text>
         <Text style={styles.text4}>Location</Text>
       </View>
-      
+            
 
       {/* Recap List */}
       <View style={styles.recap}>
@@ -79,6 +93,5 @@ const Profile = ({navigation, route}) => {
     </SafeAreaView>
   );
 }
-
 
 export default Profile;
