@@ -62,7 +62,8 @@ export default StyleSheet.create({
     fontWeight: 'bold'
   },
   postOptionsLayout: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    alignContent: 'center'
   },
   postOptionsHeaderText: {
     fontSize: 20,
@@ -78,12 +79,23 @@ export default StyleSheet.create({
   postOptionBlock: {
     flexDirection: 'row',
     backgroundColor: 'black',
-    padding: 10
+    padding: 20
   },
   postOptionBlockSelected: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    padding: 10
+    padding: 20
+  },
+  postButton: {
+    color: 'black',
+    borderRadius: 100,
+    width: width * 0.3,
+    backgroundColor: 'white',
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center', 
+    marginTop: 20,
+    alignSelf: 'center'
   }
 
 })
