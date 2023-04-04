@@ -1,14 +1,14 @@
 import { memo } from 'react';
 import { Text, Image, View, TouchableWithoutFeedback } from 'react-native';
-import { styles } from './social-list-style';
+import { styles } from './friend-list-style';
 
 
-function SocialList({ navigation, item }) {
+function FriendList({ navigation, item }) {
   return (
     <View>
         <TouchableWithoutFeedback  onPress={() => 
             navigation.navigate('Profile')
-            }>
+        }>
                 <Image
                         style={styles.postProfPic} 
                         source={{uri: item.icon}}
@@ -20,4 +20,4 @@ function SocialList({ navigation, item }) {
     </View>)
 }
 
-export default memo(SocialList);
+export default memo(FriendList);

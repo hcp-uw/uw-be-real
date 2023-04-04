@@ -4,7 +4,8 @@ import { SearchBar } from "@rneui/base";
 import { styles } from './social-style';
 import Header from "../header/header";
 import Navbar from "../navbar/navbar";
-import SocialList from "./social-list";
+import FriendList from "./friend-list";
+import RequestList from "./request-list";
 
 export default function Social({navigation, route}) {
   const { pfp } = route.params
@@ -46,13 +47,13 @@ export default function Social({navigation, route}) {
       <FlatList
         style={styles.friendsList}
         data={friends}
-        renderItem={({ item }) => <SocialList item={item}
+        renderItem={({ item }) => <FriendList item={item}
                                                navigation={navigation}/>}
         // ItemSeparatorComponent={() => <View style={{height: 100}} />}
       />
 
+      {/* Filler space */}
       <View style={{margin: 10}}></View>
-
 
       <Text style={styles.requestsText}>Pending Requests ({numRequests})</Text>
 
@@ -60,7 +61,7 @@ export default function Social({navigation, route}) {
       <FlatList
         style={styles.requestList}
         data={requests}
-        renderItem={({ item }) => <SocialList item={item}
+        renderItem={({ item }) => <RequestList item={item}
                                                navigation={navigation}/>}
         // ItemSeparatorComponent={() => <View style={{height: 100}} />}
       />
