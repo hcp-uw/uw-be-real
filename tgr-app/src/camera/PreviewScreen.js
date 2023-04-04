@@ -28,7 +28,7 @@ const PreviewScreen = ({route, navigation}) => {
     props => (
       <BottomSheetBackdrop
         {...props}
-        opacity={0.5}
+        opacity={0.1}
         pressBehavior='close'
         
       />

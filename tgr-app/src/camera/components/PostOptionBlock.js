@@ -8,7 +8,7 @@ const PostOptionBlock = (props) => {
   return (
     <View style={props.selected ? styles.postOptionBlockSelected : styles.postOptionBlock}> 
       <Ionicons name={props.icon} size={23} color={curColor}/>
-      <Text size={20} color={curColor}>{props.text}</Text>
+      <Text size={20} style={{color: curColor, paddingLeft: 10}}>{props.text}</Text>
     </View>
   );
 };
