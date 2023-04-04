@@ -3,6 +3,9 @@ import { StyleSheet, Dimensions } from 'react-native';
 export const {width} = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
+    item: {
+        height: width * 0.15
+    },
     postProfPic: {
         width: '10%',
         height: width * 0.10,

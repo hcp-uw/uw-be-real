@@ -5,7 +5,7 @@ import { styles } from './request-list-style';
 
 function RequestList({ navigation, item }) {
   return (
-    <View>
+    <View style={styles.item}>
         <TouchableWithoutFeedback  onPress={() => 
             navigation.navigate('Profile')
         }>
@@ -16,7 +16,7 @@ function RequestList({ navigation, item }) {
         </TouchableWithoutFeedback>
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.username}>{item.username}</Text>
-        
+
         <TouchableOpacity
           style={styles.submitBtn}
         >

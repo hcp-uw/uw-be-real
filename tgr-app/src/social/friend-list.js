@@ -5,7 +5,7 @@ import { styles } from './friend-list-style';
 
 function FriendList({ navigation, item }) {
   return (
-    <View>
+    <View style={styles.item}>
         <TouchableWithoutFeedback  onPress={() => 
             navigation.navigate('Profile')
         }>
