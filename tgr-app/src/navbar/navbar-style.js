@@ -6,18 +6,18 @@ export const ITEM_LENGTH = width;
 
 export const styles = StyleSheet.create({
   navbar: {
-    flex: 0.05,
-    padding: 20,
+    height: width * 0.15
   },
   navbar_home: {
-    left: (width * 0.2)-5,
+    left: (width * 0.15),
+    top: 10
   },
   navbar_public: {
-    left: (width * 0.45)-20,
-    top: -34
+    left: (width * 0.44),
+    top: -25
   }, 
   navbar_friends: {
-    left: (width * 0.70)-20,
-    top: -70
+    left: (width * 0.75),
+    top: -65
   },
 });

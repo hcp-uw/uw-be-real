@@ -6,7 +6,7 @@ import PreviewScreen from "./src/camera/PreviewScreen"
 import Feed from "./src/posts/feed"
 import Profile from "./src/posts/profile"
 import Interactions from "./src/interactions/interactions"
-import Friends from "./src/friends/friends"
+import Social from "./src/social/social"
 
 const Stack = createNativeStackNavigator();
 function App() {
@@ -17,19 +17,14 @@ function App() {
         <Stack.Screen name="Preview" component={PreviewScreen}/>
         <Stack.Screen name="Feed" component={Feed}
                       options={{
-                        // title: 'Feed',
                         headerShown: false,
-                        // headerStyle: {
-                        //   backgroundColor: 'white',
-                        // },
-                        // headerTintColor: '#fff',
                       }}/>
         <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="Interactions" component={Interactions}
                       options={{
                         headerShown: false,
                       }}/>
-        <Stack.Screen name="Friends" component={Friends}
+        <Stack.Screen name="Social" component={Social}
                       options={{
                         headerShown: false,
                       }}/>

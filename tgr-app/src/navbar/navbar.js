@@ -18,7 +18,7 @@ export default function Navbar({navigation, route, pfp}) {
         </TouchableWithoutFeedback>
         
         <TouchableWithoutFeedback  onPress={() => 
-        navigation.navigate('Friends', { pfp: pfp})
+        navigation.navigate('Social', { pfp: pfp})
         }>
           <Ionicons style={styles.navbar_friends} name="people" size={35} color="white" />
         </TouchableWithoutFeedback>

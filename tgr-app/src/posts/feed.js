@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { FlatList, Text, Image, View, TouchableWithoutFeedback } from 'react-native';
-import { styles, width } from './feed-style.js';
+import { FlatList, View } from 'react-native';
+import { styles } from './feed-style.js';
 import Header from "../header/header";
 import Navbar from "../navbar/navbar";
 import Post from "../posts/post";
@@ -25,7 +25,8 @@ export default function Feed({navigation, route}) {
       <FlatList
         style={styles.feed}
         data={posts}
-        renderItem={({ item }) => <Post item={item} />}
+        renderItem={({ item }) => <Post navigation={navigation} 
+                                        item={item} />}
         ItemSeparatorComponent={() => <View style={{height: 100}} />}
       />
 

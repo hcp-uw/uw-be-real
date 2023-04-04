@@ -1,10 +1,9 @@
-import { useMemo, useState } from 'react';
-import { Text, Image, View, TouchableWithoutFeedback } from 'react-native';
+import { Text, Image, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
 import { styles } from './header-style';
 
 export default function Header({navigation, route, pfp}) {
   return (
-    <View style={styles.header}>
+    <SafeAreaView style={styles.header}>
         <Text style={styles.headerText}>_.tgr</Text>
         <TouchableWithoutFeedback  onPress={() => 
             navigation.navigate('Profile')}>
@@ -13,6 +12,6 @@ export default function Header({navigation, route, pfp}) {
                 source={{uri: pfp}}
             />
         </TouchableWithoutFeedback>
-    </View>
+    </SafeAreaView>
   );
 }
