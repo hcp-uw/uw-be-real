@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import { FlatList, Text, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { SearchBar } from "@rneui/base";
 import { styles } from './social-style';
 import Header from "../header/header";
 import Navbar from "../navbar/navbar";
 import FriendList from "./friend-list";
 import RequestList from "./request-list";
+import CustomSearchBar from './search-bar';
 
 export default function Social({navigation, route}) {
   const { pfp } = route.params
@@ -30,32 +30,31 @@ export default function Social({navigation, route}) {
       <Header navigation={navigation} 
               pfp={pfp}/>
               
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.searchContainer}>
-            <SearchBar
-              inputContainerStyle={{backgroundColor: '#1A1A1A'}}
-              containerStyle={{backgroundColor: 'black', borderRadius: 100, height: 20}}
-              placeholderTextColor={'#C0C0C0'}
-              placeholder={'Add or search friends'}
-          />
-        </View>
-      </TouchableWithoutFeedback>
+      <CustomSearchBar/>
 
-      <Text style={styles.friendsText}>My Friends ({numFriends})</Text>
+      <TouchableWithoutFeedback  onPress={() => 
+        navigation.navigate('ExpandedFriends', { pfp: pfp, friends: friends, numFriends: numFriends })
+      }>
+        <Text style={styles.friendsText}>My Friends ({numFriends})</Text>
+      </TouchableWithoutFeedback>
 
       {/* List of friends */}
       <FlatList
         style={styles.friendsList}
         data={friends}
         renderItem={({ item }) => <FriendList item={item}
-                                               navigation={navigation}/>}
-        // ItemSeparatorComponent={() => <View style={{height: 100}} />}
+                                              navigation={navigation}/>}
       />
 
       {/* Filler space */}
       <View style={{margin: 10}}></View>
 
-      <Text style={styles.requestsText}>Pending Requests ({numRequests})</Text>
+
+      <TouchableWithoutFeedback  onPress={() => 
+        navigation.navigate('ExpandedRequests', { pfp: pfp, requests: requests, numRequests: numRequests })
+      }>
+        <Text style={styles.requestsText}>Pending Requests ({numRequests})</Text>  
+      </TouchableWithoutFeedback>
 
       {/* List of requests */}
       <FlatList
@@ -63,9 +62,7 @@ export default function Social({navigation, route}) {
         data={requests}
         renderItem={({ item }) => <RequestList item={item}
                                                navigation={navigation}/>}
-        // ItemSeparatorComponent={() => <View style={{height: 100}} />}
       />
-
 
       <Navbar navigation={navigation} 
               pfp={pfp}/>

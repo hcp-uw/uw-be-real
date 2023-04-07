@@ -8,6 +8,8 @@ import Profile from "./profile/profile"
 import Edit from "./profile/profile-edit/profile-edit"
 import Interactions from "./src/interactions/interactions"
 import Social from "./src/social/social"
+import ExpandedFriends from "./src/social/expanded-friends";
+import ExpandedRequests from "./src/social/expanded-requests";
 
 const Stack = createNativeStackNavigator();
 function App() {
@@ -34,6 +36,14 @@ function App() {
                         headerShown: false,
                       }}/>
         <Stack.Screen name="Social" component={Social}
+                      options={{
+                        headerShown: false,
+                      }}/>
+        <Stack.Screen name="ExpandedFriends" component={ExpandedFriends}
+                      options={{
+                        headerShown: false,
+                      }}/>
+        <Stack.Screen name="ExpandedRequests" component={ExpandedRequests}
                       options={{
                         headerShown: false,
                       }}/>

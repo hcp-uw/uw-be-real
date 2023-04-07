@@ -9,10 +9,10 @@ function RequestList({ navigation, item }) {
         <TouchableWithoutFeedback  onPress={() => 
             navigation.navigate('Profile')
         }>
-                <Image
-                        style={styles.postProfPic} 
-                        source={{uri: item.icon}}
-                />
+            <Image
+                    style={styles.postProfPic} 
+                    source={{uri: item.icon}}
+            />
         </TouchableWithoutFeedback>
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.username}>{item.username}</Text>

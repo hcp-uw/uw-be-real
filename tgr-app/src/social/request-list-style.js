@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
         color: '#000000'
     },
     rejectBtn: {
-        top: -105,
+        top: -103,
         left: 300,
         width: width * 0.2,
         justifyContent: 'center',
