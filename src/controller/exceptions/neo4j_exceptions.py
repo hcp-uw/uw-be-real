@@ -5,6 +5,14 @@ class ConnectionFailureException(Exception):
     
     def __str__(self) -> str:
         return self.msg
+        
+class ConnectionValuesInvalidException(Exception):
+    """Raised when there are at least one invalid connection argument."""
+    def __init__(self) -> None:
+        self.msg = "One or more of the connection arguments are invalid."
+    
+    def __str__(self) -> str:
+        return self.msg
     
 class ConnectionAlreadyClosedException(Exception):
     """Raised when trying to close a closed connection."""

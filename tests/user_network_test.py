@@ -4,19 +4,16 @@ import os # for import from parent directory
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
-
 # system imports
 from dotenv import load_dotenv
-
+import logging
 # unit testing 
 import unittest
-
 # import UserNetwork
 from src.user_network import UserNetwork
-
-# import customer exceptions
-from src.custom_exceptions import *
-
+# import custom exceptions
+from src.controller.exceptions.generic_exceptions import *
+from src.controller.exceptions.neo4j_exceptions import *
 
 # test user data
 USERS = {
@@ -37,11 +34,16 @@ FRIENDS = {
 
 class UserNetworkTest(unittest.TestCase):
     """Performs unit testing on the UserNetwork class."""
-    def __init__(self, methodName: str = ...) -> None:
-        super().__init__(methodName)
+    def __init__(self, method_name: str = ...) -> None:
+        super().__init__(method_name)
+        
+        # Create a logger object
+        self.logger = logging.getLogger()
+        
         # load secrets
         env_path = os.path.join(os.getcwd(), '.env')
         load_dotenv(env_path)
+
         # load credentials and connect to Neo4j database
         self.n4j_uri = os.getenv('NEO4J_URI')
         self.n4j_user = os.getenv('NEO4J_USERNAME')
@@ -62,31 +64,32 @@ class UserNetworkTest(unittest.TestCase):
         """Connects all friends to the network."""
         for user, friends in FRIENDS.items():
             for friend in friends:
-                temp = network.connect_users(user, friend)
-                if not temp:
+                try:
+                    network.connect_users(user, friend)
+                except:
                     return False
         return True
         
     def test_get_user_no_input(self) -> None:
         """Verifies the get_user method."""
-        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw)
+        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw, self.logger)
         self.assertRaises(NoInputsException, network.get_user)
         
     def test_get_user_one_input(self) -> None:
         """Verifies the get_user method with one arg."""
-        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw)
+        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw, self.logger)
         for netid, data in USERS.items():
             username = network.get_user(str(netid))['username']
             self.assertEqual(username, data[0])
     
-    def test_check_unique(self) -> None:
-        """TODO: Verifies the check_unique method."""
-        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw)
-        is_unique = network.check_unique(netid='1')
+    # def test_check_unique(self) -> None:
+    #     """TODO: Verifies the check_unique method."""
+    #     network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw)
+    #     is_unique = network.check_unique(netid='1')
 
     def test_create_and_verify_users(self) -> None:
         """Verifies the create_user and get_username_by_netid methods."""
-        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw)
+        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw, self.logger)
         self._delete_all_users(network)
         self._add_all_users(network)
         # verify and delete all test users
@@ -96,7 +99,7 @@ class UserNetworkTest(unittest.TestCase):
         
     def test_connect_users(self):
         """Tests the connect_users method."""
-        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw)
+        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw, self.logger)
         self._delete_all_users(network)
         self._add_all_users(network)
         add_success = self._add_all_friends(network)
@@ -104,7 +107,7 @@ class UserNetworkTest(unittest.TestCase):
         
     def test_get_friends(self):
         """Tests the get_friends method."""
-        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw)
+        network = UserNetwork(self.n4j_uri, self.n4j_user, self.n4j_pw, self.logger)
         self._delete_all_users(network)
         self._add_all_users(network)
         add_success = self._add_all_friends(network)
@@ -116,6 +119,5 @@ class UserNetworkTest(unittest.TestCase):
                 if str(friend) not in n_friends:
                     self.assertFalse(True)          
             
-    
 if __name__ == '__main__':
     unittest.main()

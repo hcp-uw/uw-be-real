@@ -5,3 +5,11 @@ class NoInputsException(Exception):
     
     def __str__(self) -> str:
         return self.msg
+    
+class IncorrectObjectTypeException(Exception):
+    """Raised when an incorrect object type is passed in."""
+    def __init__(self) -> None:
+        self.msg = "An incorrect object is passed in."
+    
+    def __str__(self) -> str:
+        return self.msg

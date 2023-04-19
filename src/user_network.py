@@ -2,6 +2,7 @@
 import os
 from dotenv import load_dotenv
 from logging import Logger
+from logging import RootLogger
 # Neo4j imports
 from neo4j import GraphDatabase
 from neo4j import Result
@@ -12,6 +13,7 @@ from src.controller.exceptions import *
 # model imports
 from src.model.constants import *
 from src.model.queries import *
+
 
 class UserNetwork:
     """The UserNetwork class...
@@ -24,18 +26,26 @@ class UserNetwork:
             uri (str): The URI of the database to connect to.
             user (str): The username for the database.
             password (str): The password for the database.
-            logger (Logger): A Logger object.
+            logger (Logger ): A Logger object.
 
         Returns:
             None.
 
         Exceptions:
-            Throws an exception if the connection to the database fails.
+            Throws a ConnectionValuesInvalidException if uri, user, or password is invalid.
+            Throws a ConnectionFailureException if the connection to the database fails.
         """
-        self.logger = logger
+        # Validate input values
+        if not (uri and user and password):
+            raise neo4j_exceptions.ConnectionValuesInvalidException()
+
+        # Instantiate class properties
+        self.logger: Logger = logger
         self.driver: Driver = GraphDatabase.driver(uri, auth=(user, password))
-        self._verify_driver()
-        self._verify_constraints()
+
+        # TODO: Do we need these? It has high performance impact on cold starts.
+        # self._verify_driver()
+        # self._verify_constraints()
 
     def __del__(self) -> None:
         """Automatically disconnects the Neo4j driver connection on 
@@ -49,6 +59,7 @@ class UserNetwork:
             Throws a ConnectionAlreadtClosedException if connection is already closed."""
         try:
             self.driver.close()
+            # TODO: Add constants for log messages
             self.logger.info('Connection to database closed')
         except Exception as e:
             self.logger.error(f'Connection to database not closed: {e}')
@@ -72,7 +83,8 @@ class UserNetwork:
         constraints = neo4j_constants.UNIQUE_USER_PROPERTIES
         for constraint, property in constraints.items():
             # TODO: add validation check for constraint and property
-            query = neo4j_queries.unique_property_constraint(constraint, property)
+            query = neo4j_queries.unique_property_constraint(
+                constraint, property)
             self._database_query(query)
 
     def _database_query(self, query: str) -> Result:
@@ -123,17 +135,8 @@ class UserNetwork:
                 f'User {user} already exists under the netID {netid}')
             raise
 
-        query = f'''
-            CREATE (user:User{{
-                username: '{username}', 
-                fullname: '{fullname}', 
-                netid: '{netid}', 
-                email: '{email}', 
-                phone: '{phone}'
-                }})
-            '''
+        query = neo4j_queries.create_user(username, fullname, netid, email, phone)
         self._database_query(query)
-        return True
 
     def get_user(self, netid: str = None, email: str = None, phone: str = None) -> dict:
         """Returns all user information associated with the given 
@@ -151,7 +154,7 @@ class UserNetwork:
         # verify arguments
         if not (netid or email or phone):
             raise generic_exceptions.NoInputsException()
-        
+
         # helper method
         def _get_user(tx):
             props = []
@@ -161,39 +164,40 @@ class UserNetwork:
                 props.append(f'email: "{email}"')
             if phone:
                 props.append(f'phone: "{phone}"')
-            query = f'''
-                MATCH (user:User{{{', '.join(props)}}})
-                RETURN user
-                '''
+            query = neo4j_queries.get_user(props)
             result: Record = tx.run(query)
             data = result.data()
             if data:
                 return data[0]['user']
             return None
+
         # start session
         with self.driver.session() as session:
             result = session.execute_read(_get_user)
         return result
 
     def get_friends(self, netid: str) -> list[str]:
+        """Returns a list of friend netids from a user netid."""
         # helper method
         def _get_friends(tx):
-            query = f'''
-                MATCH (user: User{{netid: '{netid}'}})-[:Friend]-(friend) 
-                RETURN friend.netid AS netid
-            '''
+            query = neo4j_queries.get_friends(netid)
             result: Record = tx.run(query)
             return result.value('netid')
+
         # start session
         with self.driver.session() as session:
             result = session.execute_read(_get_friends)
         return result
 
-    def check_unique(self, netid: str = None, email: str = None, phone: str = None) -> bool:
+    def check_unique(self,
+                     netid: str = None,
+                     email: str = None,
+                     phone: str = None) -> bool:
+        """Checks if a user already exists by their netid, email, or phone number."""
         # verify arguments
         if not (netid or email or phone):
             raise generic_exceptions.NoInputsException()
-        
+
         # helper method
         def _check_unique(tx):
             props = []
@@ -203,13 +207,10 @@ class UserNetwork:
                 props.append(f'email: "{email}"')
             if phone:
                 props.append(f'phone: "{phone}"')
-            query = f'''
-                MATCH (user:User{{{', '.join(props)}}})
-                RETURN user.username AS username
-                '''
+            query = neo4j_queries.check_unique(props)
             result: Record = tx.run(query)
             return result.value('username', False)
-        
+
         # start session
         with self.driver.session() as session:
             result = session.execute_read(_check_unique)
@@ -217,31 +218,10 @@ class UserNetwork:
 
     def delete_user(self, netid: str) -> None:
         """Deletes a user from the Neo4j database with the given netid."""
-        query = f"MATCH (user:User{{netid: '{netid}'}}) DELETE (user)"
+        query = neo4j_queries.delete_user(netid)
         self._database_query(query)
 
-    def connect_users(self, sender_netid: str, recipient_netid: str) -> bool:
-        """Connect two users by their netid and returns True if they are 
-        connected successfully.
-
-        Args:
-            sender_netid (str): The friend invite sender netid.
-            recipient_netid (str): The friend invite recipient netid.
-
-        Returns:
-            True if the uesrs are connected successfully, False otherwise.
-        """
-        # check if users are already connected
-        friends = self.get_friends(sender_netid)
-        if recipient_netid in friends:
-            return False
-        query = f'''
-            MATCH 
-                (sender: User), (recipient: User)
-            WHERE
-                sender.netid = '{sender_netid}' AND recipient.netid = '{recipient_netid}'
-            CREATE
-                (sender)-[connect: Friend]->(recipient)
-        '''
+    def connect_users(self, sender_netid: str, recipient_netid: str) -> None:
+        """Connect two users by their netids."""
+        query = neo4j_queries.connect_users(sender_netid, recipient_netid)
         self._database_query(query)
-        return True
