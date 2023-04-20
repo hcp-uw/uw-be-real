@@ -3,7 +3,7 @@ import { Text, SafeAreaView, Button, StyleSheet, Pressable, TextInput, Animated,
 import { useState, useRef, useMemo, useCallback } from 'react';
 import styles,{ IMAGE_HEIGHT, IMAGE_HEIGHT_SMALL, IMAGE_WIDTH, IMAGE_WIDTH_SMALL} from './CameraStyles.js';
 import { THUMBNAIL_HEIGHT, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT_SMALL, THUMBNAIL_WIDTH_SMALL } from './CameraStyles.js';
-import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+import BottomSheet, {BottomSheetBackdrop, useBottomSheetDynamicSnapPoints} from '@gorhom/bottom-sheet';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 import PostOptionBackground from './components/PostOptionsBackground.js';
 import PostOptions from './components/PostOptions.js';
@@ -19,9 +19,10 @@ const PreviewScreen = ({route, navigation}) => {
   const thumbnailHeight = useRef(new Animated.Value(THUMBNAIL_HEIGHT)).current;
   const thumbnailWidth = useRef(new Animated.Value(THUMBNAIL_WIDTH)).current;
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ['25%', '50'], []);
+  const snapPoints = useMemo(() => ['25%', '50%' ], []);
   const openOptions = () => bottomSheetRef.current.expand();
-  
+  const previewPadding = useRef(new Animated.Value(0)).current;
+  const bottomSheetPosition = useRef(new Animated.Value(0)).current;
   
   // renders
   const renderBackdrop = useCallback(
@@ -70,6 +71,11 @@ const PreviewScreen = ({route, navigation}) => {
         toValue: THUMBNAIL_WIDTH_SMALL,
         useNativeDriver: false
       }),
+      Animated.timing(previewPadding, {
+        duration: 100,
+        toValue: IMAGE_WIDTH / 1.5,
+        useNativeDriver: false
+      })
     ]).start();
   };
 
@@ -100,6 +106,11 @@ const PreviewScreen = ({route, navigation}) => {
         toValue: THUMBNAIL_WIDTH,
         useNativeDriver: false
       }),
+      Animated.timing(previewPadding, {
+        duration: 100,
+        toValue: 0,
+        useNativeDriver: false
+      })
     ]).start();
   };
   const previewChange = (fromIndex, toIndex) => {
@@ -112,7 +123,7 @@ const PreviewScreen = ({route, navigation}) => {
   const keyboardWillShow = (event) => {
     console.log("Keyboard appearing: " + imageHeight);
     Animated.parallel([
-      Animated.timing(keyboardHeight, {
+      Animated.timing(previewPadding, {
         duration: event.duration,
         toValue: event.endCoordinates.height,
         useNativeDriver: false
@@ -143,7 +154,7 @@ const PreviewScreen = ({route, navigation}) => {
   const keyboardWillHide = (event) => {
     console.log(imageHeight);
     Animated.parallel([
-      Animated.timing(keyboardHeight, {
+      Animated.timing(previewPadding, {
         duration: 100,
         toValue: 0,
         useNativeDriver: false
@@ -179,7 +190,7 @@ const PreviewScreen = ({route, navigation}) => {
   return (
     <NativeViewGestureHandler>
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.container, {paddingBottom: keyboardHeight},]} >
+      <Animated.View style={[styles.container, {paddingBottom: previewPadding},]} >
       <Pressable onPress={() => setShowFront(!showFront)}>
         <Animated.Image
           style={[
@@ -218,7 +229,8 @@ const PreviewScreen = ({route, navigation}) => {
       <BottomSheet ref={bottomSheetRef} index={-1} 
       snapPoints={snapPoints} 
       backdropComponent={renderBackdrop} onAnimate={previewChange}
-      backgroundComponent={PostOptionBackground}>
+      backgroundComponent={PostOptionBackground}
+      animatedPosition={bottomSheetPosition}>
         <PostOptions/>
       </BottomSheet>
     </SafeAreaView>
