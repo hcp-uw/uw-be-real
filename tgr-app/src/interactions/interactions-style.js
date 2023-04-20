@@ -9,50 +9,38 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black'
   },
-  header: {
-    top: 30,
-    flex: 0.06,
-    padding: 30
+  backArrow: {
+    top: width * 0.01,
+    left: width * 0.05,
+    width: width * 0.1
   },
-  headerText: {
-    fontSize: 20,
+  username: {
+    color: '#FFFFFF',
+    textAlign: 'center',
     fontWeight: 'bold',
-    color: 'white',
+    top: width * 0.01
   },
-  userProfilePic: {
-    position: 'absolute',
-    right: 7,
-    top: 25,
-    width: '10%',
-    height: width * 0.09,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'white'
+  tabs: {
+    justifyContent: 'space-around',
+    flexDirection: 'row'
   },
-  navbar: {
-    flex: 0.05,
-    padding: 20,
+  commentsText: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: width * 0.05,
+    width: width * 0.3,
   },
-  navbar_home: {
-    position: 'absolute',
-    left: (width * 0.23)-5,
-    bottom: -680
+  underlineContainer: {
+    borderBottomColor: 'white',
+    borderBottomWidth: 1
   },
-  navbar_public: {
-    position: 'absolute',
-    left: (width * 0.5)-20,
-    bottom: -680
-  }, 
-  navbar_friends: {
-    position: 'absolute',
-    left: (width * 0.76)-20,
-    bottom: -680
-  }, 
-  profileInfo: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  userContainer: {
-    flexDirection: 'row',
-  },
+  reactionsText: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: width * 0.05,
+    width: width * 0.3
+  }
+
 });

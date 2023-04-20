@@ -1,52 +1,62 @@
 import { useMemo, useState } from 'react';
-import { FlatList, Text, Image, View, TouchableWithoutFeedback } from 'react-native';
-import { Foundation, MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { FlatList, Text, View, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { styles } from './interactions-style';
 
 export default function Interactions({navigation, route}) {
-  const [firstPost, setFirst] = useState();
-    useMemo(() => {
-      const fetchData = fetch('https://haosenli.com/data/tgr_dummy_posts.json').then(res => res.json()).then(data => {
-      setFirst(data[0].author_icon);
-      });
+  const [interactions, setInteractions] = useState([]);
+  const [commentsBool, setCommentsBool] = useState(true);
+  const { username } = route.params;
+
+  useMemo(() => {
+    const fetchData = fetch('https://raw.githubusercontent.com/AantLe12/DummyData/main/dummy_interactions.json').then(res => res.json()).then(data => {
+      setInteractions(data);
+    }).catch(err => { console.log("ERROR")});
   }, []);
 
-
-  return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>_.tgr</Text>
-        <TouchableWithoutFeedback  onPress={() => 
-          navigation.navigate('Profile')
-        }>
-            <Image
-              style={styles.userProfilePic}
-              source={{uri: firstPost}}
-            />
-        </TouchableWithoutFeedback >
-      </View>
-
-      {/* Navbar */}
-      <View style={styles.navbar}>
-        <TouchableWithoutFeedback  onPress={() => 
-            navigation.navigate('Feed')
-        }>
-          <Foundation style={styles.navbar_home} name="home" size={35} color="white" />
-        </TouchableWithoutFeedback>
-        
-        <TouchableWithoutFeedback  onPress={() => 
-          navigation.navigate('Profile')
-        }>
-          <MaterialIcons style={styles.navbar_public} name="public" size={35} color="white" />
-        </TouchableWithoutFeedback>
-        
-        <TouchableWithoutFeedback  onPress={() => 
-          navigation.navigate('Friends')
-        }>
-          <Ionicons style={styles.navbar_friends} name="people" size={35} color="white" />
-        </TouchableWithoutFeedback>
-      </View>
-    </View>
-  );
+  if (commentsBool) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <TouchableWithoutFeedback onPress={() => 
+          navigation.navigate('Feed')
+          }>
+            <AntDesign style={styles.backArrow} name="arrowleft" size={35} color="white" />
+        </TouchableWithoutFeedback>    
+  
+        <Text style={styles.username}>{username}</Text>
+        <View style={styles.tabs}>
+          <TouchableWithoutFeedback  onPress={() => setCommentsBool(1) }>
+            <View style={styles.underlineContainer}>
+              <Text style={styles.commentsText}>Comments</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback  onPress={() => setCommentsBool(0) }>
+              <Text style={styles.reactionsText} onClick>Reactions</Text>
+          </TouchableWithoutFeedback>
+        </View>
+      </SafeAreaView>
+    );
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        <TouchableWithoutFeedback onPress={() => 
+          navigation.navigate('Feed')
+          }>
+            <AntDesign style={styles.backArrow} name="arrowleft" size={35} color="white" />
+        </TouchableWithoutFeedback>    
+  
+        <Text style={styles.username}>{username}</Text>
+        <View style={styles.tabs}>
+          <TouchableWithoutFeedback  onPress={() => setCommentsBool(1) }>
+              <Text style={styles.commentsText}>Comments</Text>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback  onPress={() => setCommentsBool(0) }>
+            <View style={styles.underlineContainer}>
+              <Text style={styles.reactionsText} onClick>Reactions</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </SafeAreaView>
+    );
+  }
 }

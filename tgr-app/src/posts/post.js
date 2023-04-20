@@ -52,10 +52,6 @@ function Post({ navigation, item }) {
         {/* Space in between the big photo and interactions */}
         <View style={{padding: 10}}></View>
 
-        {/* Interactions section of post */}
-        <TouchableWithoutFeedback  onPress={() => 
-            navigation.navigate('Interactions')
-        }>
             <View style={{left: 15}}>
             <FlatList
                 horizontal={true}
@@ -64,9 +60,13 @@ function Post({ navigation, item }) {
                 ItemSeparatorComponent={() => <View style={{width: 20}} />}
                 renderItem={({ filler, index }) => <InteractionsList item={item} index={index}/>}
                 />
-            <Text style={styles.interactionsText}>View interactions ({item.post_comments})</Text>
+            {/* Interactions section of post */}
+            <TouchableWithoutFeedback  onPress={() => 
+                navigation.navigate('Interactions', { username: item.author_username })
+            }>
+                <Text style={styles.interactionsText}>View interactions ({item.post_comments})</Text>
+            </TouchableWithoutFeedback>
             </View>
-        </TouchableWithoutFeedback>
     </View>)
 }
 
