@@ -2,15 +2,20 @@ import { useMemo, useState } from 'react';
 import { FlatList, Text, View, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from './interactions-style';
+import Reaction from './reaction';
 
 export default function Interactions({navigation, route}) {
-  const [interactions, setInteractions] = useState([]);
-  const [commentsBool, setCommentsBool] = useState(true);
   const { username } = route.params;
+  // const [interactions, setInteractions] = useState([]);
+  const [commentsBool, setCommentsBool] = useState(true);
+  const [commentsList, setCommentsList] = useState([]);
+  const [reactionsList, setReactionsList] = useState([]);
 
   useMemo(() => {
-    const fetchData = fetch('https://raw.githubusercontent.com/AantLe12/DummyData/main/dummy_interactions.json').then(res => res.json()).then(data => {
-      setInteractions(data);
+    const fetchInteractions = fetch('https://raw.githubusercontent.com/AantLe12/DummyData/main/dummy_interactions.json').then(res => res.json()).then(data => {
+      // setInteractions(data);
+      setCommentsList(data.comments);
+      setReactionsList(data.reactions);
     }).catch(err => { console.log("ERROR")});
   }, []);
 
@@ -56,6 +61,13 @@ export default function Interactions({navigation, route}) {
             </View>
           </TouchableWithoutFeedback>
         </View>
+        <FlatList
+          style={styles.reactionsList}
+          data={reactionsList}
+          renderItem={({ item }) => <Reaction item={item}
+                                                 navigation={navigation}/>}
+          ItemSeparatorComponent={() => <View style={styles.itemSpace} />}
+        />
       </SafeAreaView>
     );
   }

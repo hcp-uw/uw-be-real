@@ -41,6 +41,12 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: width * 0.05,
     width: width * 0.3
+  },
+  reactionsList: {
+    flex: 0.1,
+    left: 5
+  },
+  itemSpace: {
+    height: width * 0.1
   }
-
 });

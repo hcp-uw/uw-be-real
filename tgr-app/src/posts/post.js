@@ -59,7 +59,7 @@ function Post({ navigation, item }) {
                 data={item.post_interactions}
                 ItemSeparatorComponent={() => <View style={{width: 20}} />}
                 renderItem={({ filler, index }) => <InteractionsList item={item} index={index}/>}
-                />
+            />
             {/* Interactions section of post */}
             <TouchableWithoutFeedback  onPress={() => 
                 navigation.navigate('Interactions', { username: item.author_username })
