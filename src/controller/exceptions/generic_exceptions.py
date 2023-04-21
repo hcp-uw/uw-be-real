@@ -13,3 +13,4 @@ class IncorrectObjectTypeException(Exception):
     
     def __str__(self) -> str:
         return self.msg
+    

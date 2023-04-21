@@ -11,7 +11,7 @@ import logging
 # unit testing 
 import unittest
 # import UserNetwork
-from src.user_network import UserNetwork
+from src.controller.api.user_network import UserNetwork
 # import custom exceptions
 from src.controller.exceptions.generic_exceptions import *
 from src.controller.exceptions.neo4j_exceptions import *
@@ -37,15 +37,15 @@ def main():
     logger = logging.getLogger()
 
     # load secrets
-    env_path = os.path.join(os.getcwd(), '.env')
-    load_dotenv(env_path)
+    neo4j_env_path = os.path.join(os.getcwd(), 'secrets', 'neo4j', '.env')
+    load_dotenv(neo4j_env_path)
 
     # load credentials and connect to Neo4j database
     n4j_uri = os.getenv('NEO4J_URI')
     n4j_user = os.getenv('NEO4J_USERNAME')
     n4j_pw = os.getenv('NEO4J_PASSWORD')
 
-    un = UserNetwork(n4j_uri, n4j_user, n4j_pw, logger)
+    un = UserNetwork((n4j_uri, n4j_user, n4j_pw), logger)
 
     un.create_user('haosenli', 'Li, Haosen', '123456789', 'haosen@uw.edu', '2041239958')
 

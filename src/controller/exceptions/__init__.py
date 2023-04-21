@@ -1,1 +1,5 @@
-__all__ = ['generic_exceptions', 'neo4j_exceptions']
+__all__ = [
+    'database_exceptions', 
+    'generic_exceptions', 
+    'neo4j_exceptions',
+    ]

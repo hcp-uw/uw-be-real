@@ -15,7 +15,7 @@ from flask import request
 from flask import jsonify
 
 # custom imports
-from src.user_network import UserNetwork
+from user_network import UserNetwork
 
 # load secrets
 env_path = os.path.join(os.getcwd(), '.env')

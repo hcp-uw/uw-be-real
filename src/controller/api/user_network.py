@@ -1,8 +1,4 @@
-# system imports
-import os
-from dotenv import load_dotenv
 from logging import Logger
-from logging import RootLogger
 # Neo4j imports
 from neo4j import GraphDatabase
 from neo4j import Result
@@ -16,17 +12,19 @@ from src.model.queries import *
 
 
 class UserNetwork:
-    """The UserNetwork class...
-    """
+    """The UserNetwork class is a Python API layer for querying Neo4j 
+    specific to social network applications."""
 
-    def __init__(self, uri: str, user: str, password: str, logger: Logger) -> None:
-        """Creates a new UserNetwork connected to the given database.
+    def __init__(self, neo4j_creds: tuple[str, str, str], logger: Logger) -> None:
+        """Creates a new UserNetwork connected to a Neo4j database.
 
         Args:
-            uri (str): The URI of the database to connect to.
-            user (str): The username for the database.
-            password (str): The password for the database.
-            logger (Logger ): A Logger object.
+            neo4j_creds (tuple): Should contain the following Neo4j credentials:
+                - uri (str): The URI of the database to connect to.
+                - user (str): The username for the database.
+                - password (str): The password for the database.
+
+            logger (Logger): A Logger object.
 
         Returns:
             None.
@@ -35,13 +33,16 @@ class UserNetwork:
             Throws a ConnectionValuesInvalidException if uri, user, or password is invalid.
             Throws a ConnectionFailureException if the connection to the database fails.
         """
+        # Credentials tuple destructuring
+        uri, user, password = neo4j_creds
+
         # Validate input values
         if not (uri and user and password):
-            raise neo4j_exceptions.ConnectionValuesInvalidException()
+            raise database_exceptions.ConnectionValuesInvalidException(neo4j_constants.NAME)
 
-        # Instantiate class properties
-        self.logger: Logger = logger
+        # Connect to Neo4j
         self.driver: Driver = GraphDatabase.driver(uri, auth=(user, password))
+        self.logger: Logger = logger
 
         # TODO: Do we need these? It has high performance impact on cold starts.
         # self._verify_driver()
