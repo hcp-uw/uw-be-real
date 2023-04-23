@@ -1,1 +1,1 @@
-__all__ = ['neo4j_queries']
+__all__ = ["neo4j_queries"]

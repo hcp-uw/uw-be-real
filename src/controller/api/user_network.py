@@ -1,18 +1,21 @@
 from logging import Logger
+
 # Neo4j imports
 from neo4j import GraphDatabase
 from neo4j import Result
 from neo4j import Record
 from neo4j import Driver
+
 # controller imports
 from src.controller.exceptions import *
+
 # model imports
 from src.model.constants import *
 from src.model.queries import *
 
 
 class UserNetwork:
-    """The UserNetwork class is a Python API layer for querying Neo4j 
+    """The UserNetwork class is a Python API layer for querying Neo4j
     specific to social network applications."""
 
     def __init__(self, neo4j_creds: tuple[str, str, str], logger: Logger) -> None:
@@ -38,7 +41,9 @@ class UserNetwork:
 
         # Validate input values
         if not (uri and user and password):
-            raise database_exceptions.ConnectionValuesInvalidException(neo4j_constants.NAME)
+            raise database_exceptions.ConnectionValuesInvalidException(
+                neo4j_constants.NAME
+            )
 
         # Connect to Neo4j
         self.driver: Driver = GraphDatabase.driver(uri, auth=(user, password))
@@ -49,7 +54,7 @@ class UserNetwork:
         # self._verify_constraints()
 
     def __del__(self) -> None:
-        """Automatically disconnects the Neo4j driver connection on 
+        """Automatically disconnects the Neo4j driver connection on
         garbage collection or program end."""
         self._close_driver()
 
@@ -57,13 +62,14 @@ class UserNetwork:
         """Close the connection to the database.
 
         Exception:
-            Throws a ConnectionAlreadtClosedException if connection is already closed."""
+            Throws a ConnectionAlreadtClosedException if connection is already closed.
+        """
         try:
             self.driver.close()
             # TODO: Add constants for log messages
-            self.logger.info('Connection to database closed')
+            self.logger.info("Connection to database closed")
         except Exception as e:
-            self.logger.error(f'Connection to database not closed: {e}')
+            self.logger.error(f"Connection to database not closed: {e}")
             raise neo4j_exceptions.ConnectionAlreadyClosedException()
 
     def _verify_driver(self) -> None:
@@ -74,9 +80,9 @@ class UserNetwork:
         """
         try:
             self.driver.verify_connectivity()
-            self.logger.info('Connected to database successfully')
+            self.logger.info("Connected to database successfully")
         except Exception as e:
-            self.logger.error(f'Connection to database failed: {e}')
+            self.logger.error(f"Connection to database failed: {e}")
             raise neo4j_exceptions.ConnectionFailureException()
 
     def _verify_constraints(self) -> None:
@@ -84,8 +90,7 @@ class UserNetwork:
         constraints = neo4j_constants.UNIQUE_USER_PROPERTIES
         for constraint, property in constraints.items():
             # TODO: add validation check for constraint and property
-            query = neo4j_queries.unique_property_constraint(
-                constraint, property)
+            query = neo4j_queries.unique_property_constraint(constraint, property)
             self._database_query(query)
 
     def _database_query(self, query: str) -> Result:
@@ -110,12 +115,9 @@ class UserNetwork:
                 raise neo4j_exceptions.QueryFailureException(query)
         return result
 
-    def create_user(self,
-                    username: str,
-                    fullname: str,
-                    netid: str,
-                    email: str,
-                    phone: str) -> bool:
+    def create_user(
+        self, username: str, fullname: str, netid: str, email: str, phone: str
+    ) -> bool:
         """Create a new user in the database and returns True if successful.
 
         Args:
@@ -132,15 +134,14 @@ class UserNetwork:
         # check if user already exists
         user = self.get_user(netid)
         if user is not None:
-            self.logger.info(
-                f'User {user} already exists under the netID {netid}')
+            self.logger.info(f"User {user} already exists under the netID {netid}")
             raise
 
         query = neo4j_queries.create_user(username, fullname, netid, email, phone)
         self._database_query(query)
 
     def get_user(self, netid: str = None, email: str = None, phone: str = None) -> dict:
-        """Returns all user information associated with the given 
+        """Returns all user information associated with the given
         netid, email, and/or phone. Returns None if no user matches.
 
         Args:
@@ -149,7 +150,7 @@ class UserNetwork:
             phone (str, optional): The phone number of the user.
 
         Returns:
-            A dict of information of the associated user, 
+            A dict of information of the associated user,
             None if no users are associated with the given args.
         """
         # verify arguments
@@ -169,7 +170,7 @@ class UserNetwork:
             result: Record = tx.run(query)
             data = result.data()
             if data:
-                return data[0]['user']
+                return data[0]["user"]
             return None
 
         # start session
@@ -179,21 +180,21 @@ class UserNetwork:
 
     def get_friends(self, netid: str) -> list[str]:
         """Returns a list of friend netids from a user netid."""
+
         # helper method
         def _get_friends(tx):
             query = neo4j_queries.get_friends(netid)
             result: Record = tx.run(query)
-            return result.value('netid')
+            return result.value("netid")
 
         # start session
         with self.driver.session() as session:
             result = session.execute_read(_get_friends)
         return result
 
-    def check_unique(self,
-                     netid: str = None,
-                     email: str = None,
-                     phone: str = None) -> bool:
+    def check_unique(
+        self, netid: str = None, email: str = None, phone: str = None
+    ) -> bool:
         """Checks if a user already exists by their netid, email, or phone number."""
         # verify arguments
         if not (netid or email or phone):
@@ -210,7 +211,7 @@ class UserNetwork:
                 props.append(f'phone: "{phone}"')
             query = neo4j_queries.check_unique(props)
             result: Record = tx.run(query)
-            return result.value('username', False)
+            return result.value("username", False)
 
         # start session
         with self.driver.session() as session:

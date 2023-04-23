@@ -1,1 +1,1 @@
-NAME = 'Redis'
+NAME = "Redis"

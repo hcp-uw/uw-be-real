@@ -1,1 +1,1 @@
-NAME = 'AWS S3'
+NAME = "AWS S3"
