@@ -46,7 +46,16 @@ export const styles = StyleSheet.create({
     flex: 0.1,
     left: 5
   },
-  itemSpace: {
+  commentsList: {
+    flex: 0.1,
+    left: 5,
+    // backgroundColor: 'white',
+    // height: width * 0.6
+  },
+  commentSpace: {
+    height: width * 0.1
+  },
+  reactionSpace: {
     height: width * 0.1
   }
 });
