@@ -6,10 +6,11 @@ from neo4j import Result
 from neo4j import Record
 from neo4j import Driver
 
-# controller imports
+# Controller imports
 from src.controller.exceptions import *
+from src.controller.validations.user_network_validator import *
 
-# model imports
+# Model imports
 from src.model.constants import *
 from src.model.queries import *
 
@@ -36,17 +37,7 @@ class UserNetwork:
             Throws a ConnectionValuesInvalidException if uri, user, or password is invalid.
             Throws a ConnectionFailureException if the connection to the database fails.
         """
-        # Credentials tuple destructuring
-        uri, user, password = neo4j_creds
-
-        # Validate input values
-        if not (uri and user and password):
-            raise database_exceptions.ConnectionValuesInvalidException(
-                neo4j_constants.NAME
-            )
-
-        # Connect to Neo4j
-        self.driver: Driver = GraphDatabase.driver(uri, auth=(user, password))
+        self.driver: Driver = self._connect_neo4j(neo4j_creds)
         self.logger: Logger = logger
 
         # TODO: Do we need these? It has high performance impact on cold starts.
@@ -57,6 +48,11 @@ class UserNetwork:
         """Automatically disconnects the Neo4j driver connection on
         garbage collection or program end."""
         self._close_driver()
+
+    def _connect_neo4j(neo4j_creds) -> Driver:
+        """Returns a Neo4j Driver from the provided credentials."""
+        uri, user, password = neo4j_creds
+        return GraphDatabase.driver(uri, auth=(user, password))
 
     def _close_driver(self) -> None:
         """Close the connection to the database.
