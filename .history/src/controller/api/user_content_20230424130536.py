@@ -17,7 +17,6 @@ from src.controller.exceptions import *
 from src.controller.validations.user_content_validator import *
 
 # Model imports
-from src.model.classes import User
 from src.model.constants import *
 from src.model.queries import *
 
@@ -83,8 +82,3 @@ class UserContent:
         """Returns a Redis client from the provided credentials."""
         redis_host, redis_port, redis_password = redis_creds
         return redis.Redis(host=redis_host, port=redis_port, password=redis_password)
-    
-    def create_post(self, author: User, images: tuple, caption: tuple) -> None:
-        """
-        """
-        pass

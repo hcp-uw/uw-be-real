@@ -120,6 +120,7 @@ class UserNetwork:
             username (str): The display name of the new user.
             fullname (str): The full name of the new user (Last, First).
             netid (str): A [unique] UW NetID of the new user.
+            password (str): The password of the new user.
             email (str): A [unique] email of the new user.
             phone (str): A [unique] phone number of the new user.
 
@@ -130,9 +131,8 @@ class UserNetwork:
         user = self.get_user(netid)
         if user is not None:
             self.logger.info(f"User {user} already exists under the netID {netid}")
-            # TODO: raise exception
             raise
-        
+
         query = neo4j_queries.create_user(username, fullname, netid, email, phone)
         self._database_query(query)
 

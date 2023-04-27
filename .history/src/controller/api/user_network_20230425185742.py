@@ -130,9 +130,8 @@ class UserNetwork:
         user = self.get_user(netid)
         if user is not None:
             self.logger.info(f"User {user} already exists under the netID {netid}")
-            # TODO: raise exception
             raise
-        
+
         query = neo4j_queries.create_user(username, fullname, netid, email, phone)
         self._database_query(query)
 

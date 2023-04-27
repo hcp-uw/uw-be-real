@@ -84,7 +84,7 @@ class UserContent:
         redis_host, redis_port, redis_password = redis_creds
         return redis.Redis(host=redis_host, port=redis_port, password=redis_password)
     
-    def create_post(self, author: User, images: tuple, caption: tuple) -> None:
+    def create_post(self, images: tuple, caption: tuple, author: ) -> None:
         """
         """
         pass
