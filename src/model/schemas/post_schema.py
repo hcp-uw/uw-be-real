@@ -1,4 +1,4 @@
-from model.constants.schema_constants import *
+from src.model.constants.schema_constants import *
 
 
 POST_API_SCHEMA = {
@@ -12,7 +12,7 @@ POST_API_SCHEMA = {
                 "regex": UUIDV4_REGEX,
             },
             "author_id": {"required": True, "type": NETID},
-            "date": {"required": True, "type": "datetime", "coerce": TO_DATE},
+            "post_datetime": {"required": True, "type": "datetime"},
             # Optional properties
             "location": {"required": False, "type": "string"},
         },

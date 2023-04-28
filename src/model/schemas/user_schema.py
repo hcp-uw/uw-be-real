@@ -1,9 +1,14 @@
 # Constants imports
-from model.constants.schema_constants import *
+from src.model.constants.schema_constants import *
 
-# Other validator imports
-from model.schemas.post_schema import *
+# Schema imports
+from src.model.schemas.post_schema import *
 
+SIMPLE_USER_SCHEMA = {
+    "netid": {"required": True, "type": NETID},
+    "username": {"required": True, "type": "string"},
+    "fullname": {"required": True, "type": FULLNAME_REGEX},
+}
 
 USER_API_SCHEMA = {
     "info": {
@@ -31,5 +36,14 @@ USER_API_SCHEMA = {
             },
         },
     },
-    "todays_post": {"required": False, "type": "dict", "schema": POST_API_SCHEMA},
+    "activity": {
+        "type": "dict",
+        "schema": {
+            "daily_post": {
+                "required": False,
+                "type": "dict",
+                "schema": POST_API_SCHEMA,
+            },
+        },
+    },
 }
