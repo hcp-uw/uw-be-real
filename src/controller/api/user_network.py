@@ -8,7 +8,7 @@ from neo4j import Driver
 
 # Controller imports
 from src.controller.exceptions import *
-from src.controller.validations.user_network_validator import *
+from src.controller.validations.credential_validator import *
 
 # Model imports
 from src.model.constants import *
@@ -37,10 +37,16 @@ class UserNetwork:
             Throws a ConnectionValuesInvalidException if uri, user, or password is invalid.
             Throws a ConnectionFailureException if the connection to the database fails.
         """
+        # Validate inputs
+        validate_user_network_credentials(neo4j_creds)
+        
+        # Connect to Neo4j
         self.driver: Driver = self._connect_neo4j(neo4j_creds)
+        
+        # Logger
         self.logger: Logger = logger
-
-        # TODO: Do we need these? It has high performance impact on cold starts.
+        
+        # TODO: Do we need these? It has high performance impact on cold starts. -> Create an admin account that manages the constraints instead
         # self._verify_driver()
         # self._verify_constraints()
 
@@ -79,7 +85,7 @@ class UserNetwork:
             self.logger.info("Connected to database successfully")
         except Exception as e:
             self.logger.error(f"Connection to database failed: {e}")
-            raise neo4j_exceptions.ConnectionFailureException()
+            raise database_exceptions.ConnectionFailureException(neo4j_constants.NAME)
 
     def _verify_constraints(self) -> None:
         """Ensures that constraints for unique user properties are added."""

@@ -14,10 +14,10 @@ from redis import Redis
 
 # Controller imports
 from src.controller.exceptions import *
-from src.controller.validations.user_content_validator import *
+from src.controller.validations.credential_validator import *
 
 # Model imports
-from src.model.classes import User
+from src.model.classes.user import User
 from src.model.constants import *
 from src.model.queries import *
 
@@ -57,13 +57,14 @@ class UserContent:
             Throws a ConnectionValuesInvalidException if database/storage credentials are invalid.
         """
         # Validate inputs
-        validate_credentials(s3_creds, mongo_uri, redis_creds)
+        validate_user_content_credentials(s3_creds, mongo_uri, redis_creds)
 
         # Connect database clients
         self.s3: ServiceResource = self._connect_s3(s3_creds)
         self.mongo: MongoClient = self._connect_mongo(mongo_uri)
         self.redis: Redis = self._connect_redis(redis_creds)
 
+        # Logger
         self.logger: Logger = logger
 
     def _connect_s3(self, s3_creds: tuple[str, str]) -> ServiceResource:
