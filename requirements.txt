@@ -1,5 +1,5 @@
 python-dotenv
-validator
+Cerberus
 flask
 neo4j
 boto3
