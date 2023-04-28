@@ -1,5 +1,5 @@
+# Constants imports
 from src.model.constants.schema_constants import *
-
 
 POST_API_SCHEMA = {
     "metadata": {
@@ -14,7 +14,7 @@ POST_API_SCHEMA = {
             "author_id": {"required": True, "type": NETID},
             "post_datetime": {"required": True, "type": "datetime"},
             # Optional properties
-            "location": {"required": False, "type": "string"},
+            "location": {"type": "string"},
         },
     },
     "content": {

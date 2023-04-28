@@ -7,7 +7,7 @@ from src.model.schemas.post_schema import *
 SIMPLE_USER_SCHEMA = {
     "netid": {"required": True, "type": NETID},
     "username": {"required": True, "type": "string"},
-    "fullname": {"required": True, "type": FULLNAME_REGEX},
+    "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
 }
 
 USER_API_SCHEMA = {
@@ -15,22 +15,25 @@ USER_API_SCHEMA = {
         "type": "dict",
         "schema": {
             # Required properties
+            "netid": {"required": True, "type": NETID},
             "username": {"required": True, "type": "string"},
             "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
-            "netid": {"required": True, "type": NETID},
             "email": {
                 "required": True,
                 "type": "string",
                 "regex": UW_EMAIL_REGEX,
             },
-            "friends": {"required": True, "type": "list", "schema": {"type": NETID}},
+            "friends": {
+                "required": True,
+                "type": "list",
+                "schema": {"type": "dict", "schema": SIMPLE_USER_SCHEMA},
+            },
             # Optional properties
-            "phone": {"required": False, "type": "string", "regex": PHONE_REGEX},
-            "birthdate": {"required": False, "type": "datetime", "coerce": TO_DATE},
-            "campus": {"required": False, "type": "string", "regex": UW_CAMPUS_REGEX},
-            "major": {"required": False, "type": "string"},
+            "phone": {"type": "string", "regex": PHONE_REGEX},
+            "birthdate": {"type": "datetime", "coerce": TO_DATE},
+            "campus": {"type": "string", "regex": UW_CAMPUS_REGEX},
+            "major": {"type": "string"},
             "interests": {
-                "required": False,
                 "type": "list",
                 "schema": {"type": "string"},
             },
@@ -40,7 +43,6 @@ USER_API_SCHEMA = {
         "type": "dict",
         "schema": {
             "daily_post": {
-                "required": False,
                 "type": "dict",
                 "schema": POST_API_SCHEMA,
             },
