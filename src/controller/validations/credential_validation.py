@@ -1,12 +1,16 @@
 # Exceptions
 from src.controller.exceptions.database_exceptions import *
 
+
 def validate_user_network_credentials(neo4j_creds: tuple[str, str, str]) -> None:
     """Validates the credentials used in instantiating the UserNetwork class.
     Exception is thrown on invalid credentials.
 
     Args:
-        None.
+        neo4j_creds (tuple): Should contain the following Neo4j credentials in order:
+            - uri (str): The URI of the database to connect to.
+            - user (str): The username for the database.
+            - password (str): The password for the database.
 
     Returns:
         None.
@@ -26,6 +30,7 @@ def validate_user_network_credentials(neo4j_creds: tuple[str, str, str]) -> None
             f"Expected a tuple in the form of (uri, user, password) in neo4j_creds, received {len(neo4j_creds)} value(s) in tuple instead."
         )
 
+
 def validate_user_content_credentials(
     s3_creds: tuple[str, str],
     mongo_uri: str,
@@ -35,7 +40,17 @@ def validate_user_content_credentials(
     Exception is thrown on invalid credentials.
 
     Args:
-        None.
+        s3_creds (tuple): Should contain the following AWS S3 credentials in order:
+            - aws_access_key_id (str): A valid AWS IAM user's access key id.
+            - aws_secret_access_key (str): A valid AWS IAM user's secret access key.
+
+        mongo_uri (str): The URI of the database to connect to.
+            Username and password should be included in the URI.
+
+        redis_creds (tuple): Should contain the following Redis credentials in order:
+            - host (str): The hostname of the Redis database to connect to.
+            - port (int): The port number of the Redis database.
+            - password (str): The password for the Redis database.
 
     Returns:
         None.

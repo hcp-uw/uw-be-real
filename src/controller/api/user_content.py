@@ -1,8 +1,11 @@
 from logging import Logger
 
+# Image decoding
+import base64
+
 # AWS S3 import
 import boto3
-from boto3.resources.base import ServiceResource
+from mypy_boto3_s3 import S3ServiceResource
 
 # Mongo imports
 from pymongo.mongo_client import MongoClient
@@ -14,7 +17,8 @@ from redis import Redis
 
 # Controller imports
 from src.controller.exceptions import *
-from src.controller.validations.credential_validator import *
+from src.controller.validations.credential_validation import *
+from src.controller.validations.s3_validation import *
 
 # Model imports
 from src.model.classes.user import User
@@ -60,14 +64,14 @@ class UserContent:
         validate_user_content_credentials(s3_creds, mongo_uri, redis_creds)
 
         # Connect database clients
-        self.s3: ServiceResource = self._connect_s3(s3_creds)
+        self.s3: S3ServiceResource = self._connect_s3(s3_creds)
         self.mongo: MongoClient = self._connect_mongo(mongo_uri)
         self.redis: Redis = self._connect_redis(redis_creds)
 
         # Logger
         self.logger: Logger = logger
 
-    def _connect_s3(self, s3_creds: tuple[str, str]) -> ServiceResource:
+    def _connect_s3(self, s3_creds: tuple[str, str]) -> S3ServiceResource:
         """Returns an AWS S3 Resource from the provided credentials."""
         s3_access_key, s3_secret_access_key = s3_creds
         return boto3.resource(
@@ -84,8 +88,45 @@ class UserContent:
         """Returns a Redis client from the provided credentials."""
         redis_host, redis_port, redis_password = redis_creds
         return redis.Redis(host=redis_host, port=redis_port, password=redis_password)
-    
+
+    def _s3_upload_image(
+        self,
+        bucket_name: str,
+        image_name: str,
+        encoded_image: bytes,
+        acl_perm: str = "public-read",
+    ) -> str:
+        """Uploads an image to AWS S3.
+
+        Args:
+        - bucket_name (str): Name of S3 bucket.
+        - image_name (str): filename of the image.
+        - encoded_image (bytes): A Base64 encoded bytes-like image object.
+        - acl_perm (str): ACL permission for the uploaded object.
+
+        Returns:
+            A str url of the uploaded image.
+
+        Exceptions:
+            Throws an InvalidS3BucketNameException if bucket_name is invalid.
+            Throws an IncorrectFileExtensionTypeException if image_name is not a valid image file.
+            Throws an InvalidS3AclPermissionException if the acl_perm is invalid.
+        """
+        validate_s3_upload_image(bucket_name, image_name, acl_perm)
+
+        # StackOverflow reference: https://stackoverflow.com/questions/43816346/most-efficient-way-to-upload-image-to-amazon-s3-with-python-using-boto3
+        decoded_image = base64.b64decode(encoded_image)
+        image_extension = image_name.split(".")[-1]
+        # Upload image to S3
+        # TODO: Could also use .upload_fileobj
+        self.s3.Bucket(bucket_name).put_object(
+            key=image_name,
+            Body=decoded_image,
+            ContentType=f"image/{image_extension}",
+            ACL=acl_perm,
+        )
+        # TODO: get image url
+
     def create_post(self, author: User, images: tuple, caption: tuple) -> None:
-        """
-        """
+        """"""
         pass

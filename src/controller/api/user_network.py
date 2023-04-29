@@ -8,7 +8,7 @@ from neo4j import Driver
 
 # Controller imports
 from src.controller.exceptions import *
-from src.controller.validations.credential_validator import *
+from src.controller.validations.credential_validation import *
 
 # Model imports
 from src.model.constants import *
@@ -39,13 +39,13 @@ class UserNetwork:
         """
         # Validate inputs
         validate_user_network_credentials(neo4j_creds)
-        
+
         # Connect to Neo4j
         self.driver: Driver = self._connect_neo4j(neo4j_creds)
-        
+
         # Logger
         self.logger: Logger = logger
-        
+
         # TODO: Do we need these? It has high performance impact on cold starts. -> Create an admin account that manages the constraints instead
         # self._verify_driver()
         # self._verify_constraints()
@@ -118,7 +118,12 @@ class UserNetwork:
         return result
 
     def create_user(
-        self, username: str, fullname: str, netid: str, email: str, phone: str
+        self,
+        username: str,
+        fullname: str,
+        netid: str,
+        email: str,
+        profile_image_url: str,
     ) -> bool:
         """Create a new user in the database and returns True if successful.
 
@@ -127,7 +132,7 @@ class UserNetwork:
             fullname (str): The full name of the new user (Last, First).
             netid (str): A [unique] UW NetID of the new user.
             email (str): A [unique] email of the new user.
-            phone (str): A [unique] phone number of the new user.
+            profile_image_url (str): An image url containing a user's profile picture.
 
         Returns:
             True if new user is successfully created, False otherwise.
@@ -138,25 +143,26 @@ class UserNetwork:
             self.logger.info(f"User {user} already exists under the netID {netid}")
             # TODO: raise exception
             raise
-        
-        query = neo4j_queries.create_user(username, fullname, netid, email, phone)
+
+        query = neo4j_queries.create_user(
+            username, fullname, netid, email, profile_image_url
+        )
         self._database_query(query)
 
-    def get_user(self, netid: str = None, email: str = None, phone: str = None) -> dict:
+    def get_user(self, netid: str = None, email: str = None) -> dict:
         """Returns all user information associated with the given
         netid, email, and/or phone. Returns None if no user matches.
 
         Args:
             netid (str, optional): The netid of the user.
             email (str, optional): The email of the user.
-            phone (str, optional): The phone number of the user.
 
         Returns:
             A dict of information of the associated user,
             None if no users are associated with the given args.
         """
         # verify arguments
-        if not (netid or email or phone):
+        if not (netid or email):
             raise generic_exceptions.NoInputsException()
 
         # helper method
@@ -166,8 +172,6 @@ class UserNetwork:
                 props.append(f'netid: "{netid}"')
             if email:
                 props.append(f'email: "{email}"')
-            if phone:
-                props.append(f'phone: "{phone}"')
             query = neo4j_queries.get_user(props)
             result: Record = tx.run(query)
             data = result.data()
@@ -194,12 +198,10 @@ class UserNetwork:
             result = session.execute_read(_get_friends)
         return result
 
-    def check_unique(
-        self, netid: str = None, email: str = None, phone: str = None
-    ) -> bool:
-        """Checks if a user already exists by their netid, email, or phone number."""
+    def check_unique(self, netid: str = None, email: str = None) -> bool:
+        """Checks if a user already exists by their netid or email"""
         # verify arguments
-        if not (netid or email or phone):
+        if not (netid or email):
             raise generic_exceptions.NoInputsException()
 
         # helper method
@@ -209,8 +211,6 @@ class UserNetwork:
                 props.append(f'netid: "{netid}"')
             if email:
                 props.append(f'email: "{email}"')
-            if phone:
-                props.append(f'phone: "{phone}"')
             query = neo4j_queries.check_unique(props)
             result: Record = tx.run(query)
             return result.value("username", False)
@@ -219,6 +219,14 @@ class UserNetwork:
         with self.driver.session() as session:
             result = session.execute_read(_check_unique)
         return not bool(result)
+
+    def deactivate_user(self, netid: str) -> None:
+        """Deactivates the user associated with the given netid."""
+        pass
+
+    def ban_user(self, netid: str, ban_reason: str) -> None:
+        """Bans the user associated with the given netid."""
+        pass
 
     def delete_user(self, netid: str) -> None:
         """Deletes a user from the Neo4j database with the given netid."""

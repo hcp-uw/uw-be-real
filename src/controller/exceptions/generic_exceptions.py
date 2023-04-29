@@ -16,3 +16,13 @@ class IncorrectObjectTypeException(Exception):
 
     def __str__(self) -> str:
         return self.msg
+
+
+class IncorrectFileExtensionTypeException(Exception):
+    """Raised when an incorrect file extension type is passed in."""
+
+    def __init__(self, error_msg: str) -> None:
+        self.msg = error_msg
+
+    def __str__(self) -> str:
+        return self.msg

@@ -8,6 +8,12 @@ SIMPLE_USER_SCHEMA = {
     "netid": {"required": True, "type": NETID},
     "username": {"required": True, "type": "string"},
     "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
+    "profile-image": {"required": True, "type": URL},
+    "account-status": {
+        "required": True,
+        "type": "string",
+        "regex": ACCOUNT_STATUS_REGEX,
+    },
 }
 
 USER_API_SCHEMA = {
@@ -18,6 +24,12 @@ USER_API_SCHEMA = {
             "netid": {"required": True, "type": NETID},
             "username": {"required": True, "type": "string"},
             "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
+            "profile-image": {"required": True, "type": URL},
+            "account-status": {
+                "required": True,
+                "type": "string",
+                "regex": ACCOUNT_STATUS_REGEX,
+            },
             "email": {
                 "required": True,
                 "type": "string",
