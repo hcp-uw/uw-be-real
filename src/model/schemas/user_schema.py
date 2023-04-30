@@ -6,7 +6,7 @@ from src.model.schemas.post_schema import *
 
 SIMPLE_USER_SCHEMA = {
     "netid": {"required": True, "type": NETID},
-    "username": {"required": True, "type": "string"},
+    "username": {"required": True, "type": "string", "regex": USERNAME_REGEX},
     "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
     "profile-image": {"required": True, "type": URL},
     "account-status": {
@@ -22,7 +22,7 @@ USER_API_SCHEMA = {
         "schema": {
             # Required properties
             "netid": {"required": True, "type": NETID},
-            "username": {"required": True, "type": "string"},
+            "username": {"required": True, "type": "string", "regex": USERNAME_REGEX},
             "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
             "profile-image": {"required": True, "type": URL},
             "account-status": {
