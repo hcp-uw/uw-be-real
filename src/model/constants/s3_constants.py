@@ -1,7 +1,7 @@
 NAME = "AWS S3"
 
 # Enums
-S3_BUCKETS = ["tgr-us-west-0"]
+S3_BUCKETS = ["tgr-us-west-0", "tgr-us-west-1", "tgr-us-west-2"]
 
 # ACL permissions details here:
 # https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html
