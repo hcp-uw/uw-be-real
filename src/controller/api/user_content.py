@@ -96,11 +96,23 @@ class UserContent:
         encoded_image: bytes,
         acl_perm: str = "public-read",
     ) -> str:
-        """Uploads an image to AWS S3.
+        """Uploads an image to a structured AWS S3 bucket.
 
         Args:
         - bucket_name (str): Name of S3 bucket.
-        - image_name (str): filename of the image.
+            Available bucket names are:
+            - tgr-us-west-0
+            - tgr-us-west-1
+            - tgr-us-west-2
+            - tgr-us-west-3
+            - tgr-us-west-4
+            - tgr-us-west-5
+            - tgr-us-west-6
+
+        - image_name (str): file name of the image.
+            The name must start with post_images/ or post_reactions/.
+            Example: post_images/image.png or post_reactions/image.png
+
         - encoded_image (bytes): A Base64 encoded bytes-like image object.
         - acl_perm (str): ACL permission for the uploaded object.
 

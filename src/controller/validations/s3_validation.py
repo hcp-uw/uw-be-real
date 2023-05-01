@@ -37,7 +37,7 @@ def validate_s3_upload_image(
     # Validate image name
     if not re.match(IMAGE_EXTENSION_REGEX, image_name):
         raise IncorrectFileExtensionTypeException(
-            f"Only {', '.join(ALLOWED_IMAGE_EXTENSIONS)} file types are allowed."
+            f"The image name must begin with post_images/ or post_reactions/ and have {', '.join(ALLOWED_IMAGE_EXTENSIONS)} file types."
         )
 
     # Validate ACL permissions
