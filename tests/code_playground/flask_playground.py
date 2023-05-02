@@ -40,8 +40,8 @@ def add_resources(
     api: Api, user_network: UserNetwork, user_content: UserContent
 ) -> None:
     api.add_resource(
-        resource=UploadImage,
-        url="/api/upload-image",
+        UploadImage,
+        "/api/upload-image",
         resource_class_kwargs={
             "user_network": user_network,
             "user_content": user_content,
@@ -50,7 +50,10 @@ def add_resources(
 
 
 def main():
+    # Logger
     logger: Logger = getLogger()
+
+    # App processes
     user_network: UserNetwork = UserNetwork(
         ENV.neo4j_creds,
         logger,
@@ -70,7 +73,7 @@ def main():
     add_resources(api, user_network, user_content)
 
     # Run Flask application
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=5555)
 
 
 if __name__ == "__main__":
