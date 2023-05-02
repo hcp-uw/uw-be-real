@@ -1,4 +1,5 @@
 from logging import Logger
+from datetime import timedelta
 
 # Image decoding
 import base64
@@ -124,20 +125,33 @@ class UserContent:
             Throws an IncorrectFileExtensionTypeException if image_name is not a valid image file.
             Throws an InvalidS3AclPermissionException if the acl_perm is invalid.
         """
+        # Validate arguments
         validate_s3_upload_image(bucket_name, image_name, acl_perm)
 
         # StackOverflow reference: https://stackoverflow.com/questions/43816346/most-efficient-way-to-upload-image-to-amazon-s3-with-python-using-boto3
         decoded_image = base64.b64decode(encoded_image)
         image_extension = image_name.split(".")[-1]
+
         # Upload image to S3
-        # TODO: Could also use .upload_fileobj
+        # Could also use .upload_fileobj depending on how an image is read from Flask.
         self.s3.Bucket(bucket_name).put_object(
             key=image_name,
             Body=decoded_image,
             ContentType=f"image/{image_extension}",
             ACL=acl_perm,
         )
-        # TODO: get image url
+
+        # Generate an image url that expires in 7 days.
+        image_url: str = self.s3.meta.client.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": bucket_name,
+                "Key": image_name,
+            },
+            ExpiresIn=timedelta(days=7).total_seconds(),
+        )
+
+        return image_url
 
     def create_post(self, author: User, images: tuple, caption: tuple) -> None:
         """"""
