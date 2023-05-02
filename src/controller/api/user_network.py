@@ -55,7 +55,7 @@ class UserNetwork:
         garbage collection or program end."""
         self._close_driver()
 
-    def _connect_neo4j(neo4j_creds) -> Driver:
+    def _connect_neo4j(self, neo4j_creds: tuple[str, str, str]) -> Driver:
         """Returns a Neo4j Driver from the provided credentials."""
         uri, user, password = neo4j_creds
         return GraphDatabase.driver(uri, auth=(user, password))

@@ -1,5 +1,9 @@
 from dotenv import load_dotenv
-from os import listdir, getcwd, getenv
+from os import (
+    listdir,
+    getcwd,
+    getenv,
+)
 from os.path import join
 
 
@@ -24,12 +28,32 @@ class EnvLoader:
         self.neo4j: dict = credentials[2]
         self.redis: dict = credentials[3]
 
+        # UserNetwork-compatible data
+        self.neo4j_creds: tuple[str, str, str] = (
+            self.neo4j["uri"],
+            self.neo4j["username"],
+            self.neo4j["password"],
+        )
+
+        # UserContent-compatible data
+        self.s3_creds: tuple[str, str] = (
+            self.aws_s3["access_key"],
+            self.aws_s3["secret_access_key"],
+        )
+        self.mongo_uri: str = self.mongodb["uri"]
+        self.redis_creds: tuple[str, str, str] = (
+            self.redis["host"],
+            self.redis["port"],
+            self.redis["password"],
+        )
+
     def _load_env(self) -> tuple[dict, dict, dict, dict]:
         """Loads env variables and returns a tuple of dict for
         (aws_s3, mongodb, neo4j, redis) credentials."""
         # Load env variables
-        for env_path in listdir(join(getcwd(), "secrets")):
-            load_dotenv(join(env_path, ".env"))
+        secrets_path = join(getcwd(), "secrets")
+        for env_path in listdir(secrets_path):
+            load_dotenv(join(secrets_path, env_path, ".env"))
 
         aws_s3: dict = {
             "access_key": getenv("ACCESS_KEY"),
@@ -52,4 +76,4 @@ class EnvLoader:
         return aws_s3, mongodb, neo4j, redis
 
 
-SECRETS = EnvLoader()
+ENV = EnvLoader()

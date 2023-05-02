@@ -1,6 +1,7 @@
 python-dotenv
 Cerberus
 flask
+flask-restful
 neo4j
 boto3
 boto3-stubs[s3]
