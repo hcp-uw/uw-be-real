@@ -39,14 +39,14 @@ function Post({ navigation, item }) {
 
         {/* User's big post photo */}
         <Image
-                style={styles.bigPostImg} 
-                source={{uri: item.post_front}}
+            style={styles.bigPostImg} 
+            source={{uri: item.post_front}}
         />
 
         {/* User's small post photo */}
         <Image
-                    style={styles.smallPostImg} 
-                    source={{uri: item.post_back}}
+            style={styles.smallPostImg} 
+            source={{uri: item.post_back}}
         />
 
         {/* Space in between the big photo and interactions */}

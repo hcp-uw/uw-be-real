@@ -22,7 +22,8 @@ export const styles = StyleSheet.create({
   },
   tabs: {
     justifyContent: 'space-around',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingBottom: '3%'
   },
   commentsText: {
     color: '#FFFFFF',
@@ -53,9 +54,9 @@ export const styles = StyleSheet.create({
     // height: width * 0.6
   },
   commentSpace: {
-    height: width * 0.1
+    height: '6%'
   },
   reactionSpace: {
-    height: width * 0.1
+    height: '1%'
   }
 });

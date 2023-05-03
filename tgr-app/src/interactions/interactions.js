@@ -75,6 +75,7 @@ export default function Interactions({navigation, route}) {
                                                  navigation={navigation}/>}
           ItemSeparatorComponent={() => <View style={styles.reactionSpace} />}
         />
+        
       </SafeAreaView>
     );
   }
