@@ -1,8 +1,9 @@
+# Generic imports
 from logging import Logger
 from datetime import timedelta
 
-# Image decoding
-import base64
+# Image typing
+from werkzeug.datastructures import FileStorage
 
 # AWS S3 import
 import boto3
@@ -90,14 +91,50 @@ class UserContent:
         redis_host, redis_port, redis_password = redis_creds
         return redis.Redis(host=redis_host, port=redis_port, password=redis_password)
 
-    def _s3_upload_image(
-        self,
-        bucket_name: str,
-        image_name: str,
-        encoded_image: bytes,
-        acl_perm: str = "public-read",
+    def _s3_upload_profile_image(
+        self, bucket_name: str, image_name: str, image_file: FileStorage
     ) -> str:
-        """Uploads an image to a structured AWS S3 bucket.
+        """Uploads a public-read user profile-related image to a structured AWS S3 bucket.
+
+        Args:
+        - bucket_name (str): Name of S3 bucket.
+            Available bucket names are:
+            - tgr-user-profile-us-west-0
+
+        - image_name (str): file name of the image.
+            The name must start with post_images/ or post_reactions/.
+            Example: post_images/image.png or post_reactions/image.png
+
+        - image_file (FileStorage): An image file received from a Flask API endpoint.
+
+        Returns:
+            A str url of the uploaded image.
+
+        Exceptions:
+            Throws an InvalidS3BucketNameException if bucket_name is invalid.
+            Throws an IncorrectFileExtensionTypeException if image_name is not a valid image file.
+        """
+        # Validate arguments
+        validate_s3_upload_profile_image(bucket_name, image_name)
+
+        # Upload image to S3
+        # put_object() is used over upload_fileobj() because the image is directly viewable
+        # when put_object() is used, whereas upload_fileobj()'s image needs to be downloaded.
+        image_extension = image_name.split(".")[-1]
+        self.s3.Bucket(bucket_name).put_object(
+            Key=image_name,
+            Body=image_file,
+            ContentType=f"image/{image_extension}",
+            ACL=S3_PUBLIC_READ,
+        )
+
+        # Returns permanent image URL (unless removed)
+        return f"https://{bucket_name}.s3.amazonaws.com/{image_name}"
+
+    def _s3_upload_post_image(
+        self, bucket_name: str, image_name: str, image_file: FileStorage
+    ) -> str:
+        """Uploads a user post-related image to a structured AWS S3 bucket.
 
         Args:
         - bucket_name (str): Name of S3 bucket.
@@ -114,31 +151,24 @@ class UserContent:
             The name must start with post_images/ or post_reactions/.
             Example: post_images/image.png or post_reactions/image.png
 
-        - encoded_image (bytes): A Base64 encoded bytes-like image object.
-        - acl_perm (str): ACL permission for the uploaded object.
+        - image_file (FileStorage): An image file received from a Flask API endpoint.
 
         Returns:
-            A str url of the uploaded image.
+            A str presigned-url of the uploaded image that expires (deletes) in 7 days.
 
         Exceptions:
             Throws an InvalidS3BucketNameException if bucket_name is invalid.
             Throws an IncorrectFileExtensionTypeException if image_name is not a valid image file.
-            Throws an InvalidS3AclPermissionException if the acl_perm is invalid.
         """
         # Validate arguments
-        validate_s3_upload_image(bucket_name, image_name, acl_perm)
-
-        # StackOverflow reference: https://stackoverflow.com/questions/43816346/most-efficient-way-to-upload-image-to-amazon-s3-with-python-using-boto3
-        decoded_image = base64.b64decode(encoded_image)
-        image_extension = image_name.split(".")[-1]
+        validate_s3_upload_post_image(bucket_name, image_name)
 
         # Upload image to S3
-        # Could also use .upload_fileobj depending on how an image is read from Flask.
+        # put_object() is used over upload_fileobj() because the image is directly viewable
+        # when put_object() is used, whereas upload_fileobj()'s image needs to be downloaded.
+        image_extension = image_name.split(".")[-1]
         self.s3.Bucket(bucket_name).put_object(
-            key=image_name,
-            Body=decoded_image,
-            ContentType=f"image/{image_extension}",
-            ACL=acl_perm,
+            Key=image_name, Body=image_file, ContentType=f"image/{image_extension}"
         )
 
         # Generate an image url that expires in 7 days.

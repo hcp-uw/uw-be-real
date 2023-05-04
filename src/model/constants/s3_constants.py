@@ -1,7 +1,10 @@
 NAME = "AWS S3"
 
-# Enums
-S3_BUCKETS = [
+# Constants
+S3_PROFILE_BUCKETS = [
+    "tgr-user-profile-us-west-0",
+]
+S3_POST_BUCKETS = [
     "tgr-us-west-0",
     "tgr-us-west-1",
     "tgr-us-west-2",
@@ -23,3 +26,5 @@ S3_ACL_PERMS = [
     "bucket-owner-full-control",
     "log-delivery-write",
 ]
+
+S3_PUBLIC_READ = "public-read"

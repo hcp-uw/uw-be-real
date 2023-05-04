@@ -2,11 +2,21 @@
 from src.model.constants.s3_constants import *
 
 
-class InvalidS3BucketNameException(Exception):
+class InvalidS3ProfileBucketNameException(Exception):
     """Raised when the given S3 bucket name is invalid."""
 
     def __init__(self, name: str) -> None:
-        self.msg = f'"{name}" is not a valid AWS S3 bucket. Only {", ".join(S3_BUCKETS)} are valid S3 buckets.'
+        self.msg = f'"{name}" is not a valid AWS S3 bucket. Only {", ".join(S3_PROFILE_BUCKETS)} are valid S3 buckets.'
+
+    def __str__(self) -> str:
+        return self.msg
+
+
+class InvalidS3PostBucketNameException(Exception):
+    """Raised when the given S3 bucket name is invalid."""
+
+    def __init__(self, name: str) -> None:
+        self.msg = f'"{name}" is not a valid AWS S3 bucket. Only {", ".join(S3_POST_BUCKETS)} are valid S3 buckets.'
 
     def __str__(self) -> str:
         return self.msg
