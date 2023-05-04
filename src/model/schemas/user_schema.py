@@ -5,10 +5,24 @@ from src.model.constants.schema_constants import *
 from src.model.schemas.post_schema import *
 
 SIMPLE_USER_SCHEMA = {
-    "netid": {"required": True, "type": NETID},
-    "username": {"required": True, "type": "string", "regex": USERNAME_REGEX},
-    "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
-    "profile-image": {"required": True, "type": URL},
+    "netid": {
+        "required": True,
+        "type": NETID,
+    },
+    "username": {
+        "required": True,
+        "type": "string",
+        "regex": USERNAME_REGEX,
+    },
+    "fullname": {
+        "required": True,
+        "type": "string",
+        "regex": FULLNAME_REGEX,
+    },
+    "profile-image": {
+        "required": True,
+        "type": URL,
+    },
     "account-status": {
         "required": True,
         "type": "string",
@@ -21,10 +35,24 @@ USER_API_SCHEMA = {
         "type": "dict",
         "schema": {
             # Required properties
-            "netid": {"required": True, "type": NETID},
-            "username": {"required": True, "type": "string", "regex": USERNAME_REGEX},
-            "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
-            "profile-image": {"required": True, "type": URL},
+            "netid": {
+                "required": True,
+                "type": NETID,
+            },
+            "username": {
+                "required": True,
+                "type": "string",
+                "regex": USERNAME_REGEX,
+            },
+            "fullname": {
+                "required": True,
+                "type": "string",
+                "regex": FULLNAME_REGEX,
+            },
+            "profile-image": {
+                "required": True,
+                "type": URL,
+            },
             "account-status": {
                 "required": True,
                 "type": "string",
@@ -38,13 +66,27 @@ USER_API_SCHEMA = {
             "friends": {
                 "required": True,
                 "type": "list",
-                "schema": {"type": "dict", "schema": SIMPLE_USER_SCHEMA},
+                "schema": {
+                    "type": "dict",
+                    "schema": SIMPLE_USER_SCHEMA,
+                },
             },
             # Optional properties
-            "phone": {"type": "string", "regex": PHONE_REGEX},
-            "birthdate": {"type": "datetime", "coerce": TO_DATE},
-            "campus": {"type": "string", "regex": UW_CAMPUS_REGEX},
-            "major": {"type": "string"},
+            "phone": {
+                "type": "string",
+                "regex": PHONE_REGEX,
+            },
+            "birthdate": {
+                "type": "datetime",
+                "coerce": TO_DATE,
+            },
+            "campus": {
+                "type": "string",
+                "regex": UW_CAMPUS_REGEX,
+            },
+            "major": {
+                "type": "string",
+            },
             "interests": {
                 "type": "list",
                 "schema": {"type": "string"},
