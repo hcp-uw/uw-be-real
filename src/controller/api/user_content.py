@@ -1,5 +1,4 @@
-# Generic imports
-from logging import Logger
+# Time conversion
 from datetime import timedelta
 
 # Image typing
@@ -37,7 +36,6 @@ class UserContent:
         s3_creds: tuple[str, str],
         mongo_uri: str,
         redis_creds: tuple[str, str, str],
-        logger: Logger,
     ) -> None:
         """Creates a new UserContent connected to AWS S3, MongoDB, Redis databases.
 
@@ -54,8 +52,6 @@ class UserContent:
                 - port (int): The port number of the Redis database.
                 - password (str): The password for the Redis database.
 
-            logger (Logger): A Logger object.
-
         Returns:
             None.
 
@@ -69,9 +65,6 @@ class UserContent:
         self.s3: S3ServiceResource = self._connect_s3(s3_creds)
         self.mongo: MongoClient = self._connect_mongo(mongo_uri)
         self.redis: Redis = self._connect_redis(redis_creds)
-
-        # Logger
-        self.logger: Logger = logger
 
     def _connect_s3(self, s3_creds: tuple[str, str]) -> S3ServiceResource:
         """Returns an AWS S3 Resource from the provided credentials."""

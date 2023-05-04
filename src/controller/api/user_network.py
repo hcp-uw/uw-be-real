@@ -1,5 +1,3 @@
-from logging import Logger
-
 # Neo4j imports
 from neo4j import GraphDatabase
 from neo4j import Result
@@ -19,7 +17,7 @@ class UserNetwork:
     """The UserNetwork class is a Python API layer for querying Neo4j
     specific to social network applications."""
 
-    def __init__(self, neo4j_creds: tuple[str, str, str], logger: Logger) -> None:
+    def __init__(self, neo4j_creds: tuple[str, str, str]) -> None:
         """Creates a new UserNetwork connected to a Neo4j database.
 
         Args:
@@ -27,8 +25,6 @@ class UserNetwork:
                 - uri (str): The URI of the database to connect to.
                 - user (str): The username for the database.
                 - password (str): The password for the database.
-
-            logger (Logger): A Logger object.
 
         Returns:
             None.
@@ -42,9 +38,6 @@ class UserNetwork:
 
         # Connect to Neo4j
         self.driver: Driver = self._connect_neo4j(neo4j_creds)
-
-        # Logger
-        self.logger: Logger = logger
 
         # TODO: Do we need these? It has high performance impact on cold starts. -> Create an admin account that manages the constraints instead
         # self._verify_driver()
@@ -68,10 +61,7 @@ class UserNetwork:
         """
         try:
             self.driver.close()
-            # TODO: Add constants for log messages
-            self.logger.info("Connection to database closed")
         except Exception as e:
-            self.logger.error(f"Connection to database not closed: {e}")
             raise neo4j_exceptions.ConnectionAlreadyClosedException()
 
     def _verify_driver(self) -> None:
@@ -82,9 +72,7 @@ class UserNetwork:
         """
         try:
             self.driver.verify_connectivity()
-            self.logger.info("Connected to database successfully")
-        except Exception as e:
-            self.logger.error(f"Connection to database failed: {e}")
+        except Exception:
             raise database_exceptions.ConnectionFailureException(neo4j_constants.NAME)
 
     def _verify_constraints(self) -> None:
@@ -111,9 +99,7 @@ class UserNetwork:
         with self.driver.session() as session:
             try:
                 result = session.run(query)
-                self.logger.info(f'"{query}" has been executed')
-            except Exception as e:
-                self.logger.error(f'"{query}" has caused an exception: {e}')
+            except Exception:
                 raise neo4j_exceptions.QueryFailureException(query)
         return result
 
@@ -140,9 +126,7 @@ class UserNetwork:
         # check if user already exists
         user = self.get_user(netid)
         if user is not None:
-            self.logger.info(f"User {user} already exists under the netID {netid}")
-            # TODO: raise exception
-            raise
+            raise neo4j_exceptions.UserAlreadyExistsException(netid)
 
         query = neo4j_queries.create_user(
             username, fullname, netid, email, profile_image_url

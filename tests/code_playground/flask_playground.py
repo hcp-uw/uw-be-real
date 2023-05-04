@@ -54,15 +54,9 @@ def main():
     logger: Logger = getLogger()
 
     # App processes
-    user_network: UserNetwork = UserNetwork(
-        ENV.neo4j_creds,
-        logger,
-    )
+    user_network: UserNetwork = UserNetwork(ENV.neo4j_creds)
     user_content: UserContent = UserContent(
-        ENV.s3_creds,
-        ENV.mongo_uri,
-        ENV.redis_creds,
-        logger,
+        ENV.s3_creds, ENV.mongo_uri, ENV.redis_creds
     )
 
     # Flask application
