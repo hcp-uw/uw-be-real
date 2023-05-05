@@ -15,6 +15,7 @@ from logging import (
     Logger,
     getLogger,
 )
+import logging
 
 # Flask imports
 from flask import (
@@ -67,6 +68,7 @@ def main():
 
     # Enable Cross Origin Resource Sharing
     CORS(app)
+    logging.getLogger("flask_cors").level = logging.DEBUG
 
     # Add API endpoint Resources
     add_resources(api, user_network, user_content)

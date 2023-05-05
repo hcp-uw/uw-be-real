@@ -88,15 +88,14 @@ class UserNetwork:
             query (str): The Cypher query to execute.
 
         Returns:
-            Neo4j Result if successful, None otherwise.
+            Neo4j Result.
 
         Exception:
             Throws a QueryFailureException if the query caused an error.
         """
-        result = None
         with self.driver.session() as session:
             try:
-                result = session.run(query)
+                result: Result = session.run(query)
             except Exception:
                 raise neo4j_exceptions.QueryFailureException(query)
         return result
@@ -136,67 +135,67 @@ class UserNetwork:
             email (str, optional): The email of the user.
 
         Returns:
-            A dict of information of the associated user,
-            None if no users are associated with the given args.
+            A dict of information of the associated user.
+            If no users can be matched, an empty dict is returned.
         """
         # verify arguments
         if not (netid or email):
             raise generic_exceptions.NoInputsException()
 
-        # helper method
-        def _get_user(tx):
-            props = []
-            if netid:
-                props.append(f'netid: "{netid}"')
-            if email:
-                props.append(f'email: "{email}"')
-            query = neo4j_queries.get_user(props)
-            result: Record = tx.run(query)
-            data = result.data()
-            if data:
-                return data[0]["user"]
-            return None
-
         # start session
         with self.driver.session() as session:
-            result = session.execute_read(_get_user)
+            result = session.execute_read(self._get_user, netid, email)
         return result
 
+    @staticmethod
+    def _get_user(tx, netid: str, email: str):
+        """Transaction function to get a user's information."""
+        props: list[str] = []
+        if netid:
+            props.append(f'netid: "{netid}"')
+        if email:
+            props.append(f'email: "{email}"')
+        query: str = neo4j_queries.get_user(props)
+        result: Record = tx.run(query)
+        data: list[dict] = result.data()
+        return data[0]["user"] if data else {}
+
     def get_friends(self, netid: str) -> list[str]:
-        """Returns a list of friend netids from a user netid."""
-
-        # helper method
-        def _get_friends(tx):
-            query = neo4j_queries.get_friends(netid)
-            result: Record = tx.run(query)
-            return result.value("netid")
-
+        """Returns a list of friend information from a user netid."""
         # start session
         with self.driver.session() as session:
-            result = session.execute_read(_get_friends)
+            result = session.execute_read(self._get_friends, netid)
+        return result
+
+    @staticmethod
+    def _get_friends(tx, netid: str) -> list[dict]:
+        """Transaction function to return a list of friend information."""
+        query = neo4j_queries.get_friends(netid)
+        result: Record = tx.run(query)
         return result
 
     def check_unique(self, netid: str = None, email: str = None) -> bool:
-        """Checks if a user already exists by their netid or email"""
+        """Checks if a user already exists by their netid or email."""
         # verify arguments
         if not (netid or email):
             raise generic_exceptions.NoInputsException()
 
-        # helper method
-        def _check_unique(tx):
-            props = []
-            if netid:
-                props.append(f'netid: "{netid}"')
-            if email:
-                props.append(f'email: "{email}"')
-            query = neo4j_queries.check_unique(props)
-            result: Record = tx.run(query)
-            return result.value("username", False)
-
         # start session
         with self.driver.session() as session:
-            result = session.execute_read(_check_unique)
+            result = session.execute_read(self._check_unique, netid, email)
         return not bool(result)
+
+    @staticmethod
+    def _check_unique(tx, netid: str, email: str) -> str:
+        """Transaction function to check if a user already exists."""
+        props = []
+        if netid:
+            props.append(f'netid: "{netid}"')
+        if email:
+            props.append(f'email: "{email}"')
+        query: str = neo4j_queries.check_unique(props)
+        result: Record = tx.run(query)
+        return result.value("username", "")
 
     def deactivate_user(self, netid: str) -> None:
         """Deactivates the user associated with the given netid."""

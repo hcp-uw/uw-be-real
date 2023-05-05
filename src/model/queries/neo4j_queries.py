@@ -28,7 +28,12 @@ def get_user(props: list[str]) -> str:
 def get_friends(netid: str) -> str:
     return f"""
         MATCH (user: User{{netid: '{netid}'}})-[:Friend]-(friend) 
-        RETURN friend.netid AS netid
+        RETURN 
+            friend.netid AS netid,
+            friend.username AS username,
+            friend.fullname AS fullname,
+            friend.profile_image AS profile_image,
+            friend.account_status AS account_status
     """
 
 
@@ -47,10 +52,8 @@ def delete_user(netid: str) -> str:
 
 def connect_users(sender_netid: str, recipient_netid: str) -> str:
     return f"""
-        MATCH 
-            (sender: User), (recipient: User)
-        WHERE
-            sender.netid = '{sender_netid}' AND recipient.netid = '{recipient_netid}'
-        CREATE
-            (sender)-[connect: Friend]->(recipient)
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        OPTIONAL MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        WHERE recipient IS NOT NULL
+        CREATE (sender)-[connect: Friend]->(recipient)
     """

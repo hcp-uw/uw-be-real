@@ -13,7 +13,7 @@ import logging
 import unittest
 
 # import UserNetwork
-from src.controller.api.user_network import UserNetwork
+from src.model.data_access.user_network import UserNetwork
 
 # import custom exceptions
 from src.controller.exceptions.generic_exceptions import *
