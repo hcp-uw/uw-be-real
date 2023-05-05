@@ -103,3 +103,10 @@ USER_API_SCHEMA = {
         },
     },
 }
+
+CREATE_USER_SCHEMA = {
+    "netid": {"required": True, "type": NETID},
+    "email": {"required": True, "type": UW_EMAIL_REGEX},
+    "username": {"required": True, "type": "string", "regex": USERNAME_REGEX},
+    "fullname": {"required": True, "type": "string", "regex": FULLNAME_REGEX},
+}

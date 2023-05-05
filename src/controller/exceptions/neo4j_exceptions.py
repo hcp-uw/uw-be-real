@@ -16,3 +16,13 @@ class QueryFailureException(Exception):
 
     def __str__(self) -> str:
         return self.msg
+
+
+class UserAlreadyExistsException(Exception):
+    """Raised when trying to create a user that is already in Neo4j."""
+
+    def __init__(self, netid: str) -> None:
+        self.msg = f"{netid} already has an account."
+
+    def __str__(self) -> str:
+        return self.msg

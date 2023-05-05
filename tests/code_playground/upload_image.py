@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from werkzeug.datastructures import FileStorage
-from src.controller.api.user_content import UserContent
-from src.controller.api.user_network import UserNetwork
+from src.controller.api_utils.user_content import UserContent
+from src.controller.api_utils.user_network import UserNetwork
 
 
 class UploadImage(Resource):
