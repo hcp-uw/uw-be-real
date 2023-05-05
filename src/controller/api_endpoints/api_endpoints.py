@@ -5,11 +5,6 @@ from os.path import (
     realpath,
 )
 
-# Add src directory to path
-current = dirname(realpath(__file__))
-top = dirname(dirname(current))
-sys.path.append(top)
-
 # Logger imports
 from logging import (
     Logger,
@@ -33,7 +28,7 @@ from src.controller.api_utils.user_network import UserNetwork
 from src.model.classes.env_loader import ENV
 
 # API endpoint imports
-from tests.code_playground.upload_image import UploadImage
+from tests.code_playground.upload_image import UploadImage  # TODO: Remove
 
 
 def add_resources(
@@ -54,7 +49,9 @@ def main():
     logger: Logger = getLogger()
 
     # App processes
-    user_network: UserNetwork = UserNetwork(ENV.neo4j_creds)
+    user_network: UserNetwork = UserNetwork(
+        ENV.neo4j_creds,
+    )
     user_content: UserContent = UserContent(
         ENV.s3_creds, ENV.mongo_uri, ENV.redis_creds
     )

@@ -109,7 +109,6 @@ class UserNetwork:
         fullname: str,
         netid: str,
         email: str,
-        profile_image_url: str,
     ) -> bool:
         """Create a new user in the database and returns True if successful.
 
@@ -118,7 +117,6 @@ class UserNetwork:
             fullname (str): The full name of the new user (Last, First).
             netid (str): A [unique] UW NetID of the new user.
             email (str): A [unique] email of the new user.
-            profile_image_url (str): An image url containing a user's profile picture.
 
         Returns:
             True if new user is successfully created, False otherwise.
@@ -128,9 +126,7 @@ class UserNetwork:
         if user is not None:
             raise neo4j_exceptions.UserAlreadyExistsException(netid)
 
-        query = neo4j_queries.create_user(
-            username, fullname, netid, email, profile_image_url
-        )
+        query = neo4j_queries.create_user(username, fullname, netid, email)
         self._database_query(query)
 
     def get_user(self, netid: str = None, email: str = None) -> dict:

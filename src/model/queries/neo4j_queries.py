@@ -7,16 +7,13 @@ def unique_property_constraint(constraint: str, property: str) -> str:
     """
 
 
-def create_user(
-    username: str, fullname: str, netid: str, email: str, profile_image_url: str
-) -> str:
+def create_user(username: str, fullname: str, netid: str, email: str) -> str:
     return f"""
         CREATE (user:User{{
         username: '{username}', 
         fullname: '{fullname}', 
         netid: '{netid}', 
         email: '{email}', 
-        profile-image-url: '{profile_image_url}'
         }})
     """
 
