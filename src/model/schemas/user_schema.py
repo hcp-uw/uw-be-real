@@ -1,5 +1,6 @@
 # Constants imports
 from src.model.constants.schema_constants import *
+from src.model.constants.schema_error_messages import *
 
 # Schema imports
 from src.model.schemas.post_schema import *
@@ -124,4 +125,11 @@ CREATE_USER_SCHEMA = {
         "type": "string",
         "regex": FULLNAME_REGEX,
     },
+}
+
+CREATE_USER_SCHEMA_ERROR_MSG = {
+    "netid": NETID_ERROR,
+    "email": EMAIL_ERROR,
+    "username": USERNAME_ERROR,
+    "fullname": FULLNAME_ERROR,
 }

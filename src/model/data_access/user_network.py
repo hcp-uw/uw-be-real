@@ -106,8 +106,8 @@ class UserNetwork:
         fullname: str,
         netid: str,
         email: str,
-    ) -> bool:
-        """Create a new user in the database and returns True if successful.
+    ) -> None:
+        """Create a new user in the database.
 
         Args:
             username (str): The display name of the new user.
@@ -116,11 +116,16 @@ class UserNetwork:
             email (str): A [unique] email of the new user.
 
         Returns:
-            True if new user is successfully created, False otherwise.
+            None.
+
+        Exceptions:
+            - NoInputsException: The given netid is invalid.
+            - UserAlreadyExistsException: User already exists, no changes are made.
+            - QueryFailureException: An error occured with the query.
         """
         # check if user already exists
         user = self.get_user(netid)
-        if user is not None:
+        if not user:
             raise neo4j_exceptions.UserAlreadyExistsException(netid)
 
         query = neo4j_queries.create_user(username, fullname, netid, email)
@@ -137,6 +142,9 @@ class UserNetwork:
         Returns:
             A dict of information of the associated user.
             If no users can be matched, an empty dict is returned.
+
+        Exceptions:
+            - NoInputsException: Either the given netid or email is invalid.
         """
         # verify arguments
         if not (netid or email):
