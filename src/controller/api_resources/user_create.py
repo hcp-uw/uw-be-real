@@ -1,5 +1,5 @@
 # Flask imports
-
+from flask_api import status
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
@@ -8,12 +8,12 @@ from cerberus import Validator
 from src.model.schemas.user_schema import CREATE_USER_SCHEMA
 
 # Api util imports
-from src.controller.api_utils.user_content import UserContent
-from src.controller.api_utils.user_network import UserNetwork
+from src.model.data_access.user_content import UserContent
+from src.model.data_access.user_network import UserNetwork
 
 
 class UserCreate(Resource):
-    def __init__(self, user_network: UserNetwork, user_content: UserContent) -> None:
+    def __init__(self, user_network: UserNetwork) -> None:
         """Instantiates a UserCreate API Resource for creating new user accounts.
 
         Methods:
@@ -21,7 +21,6 @@ class UserCreate(Resource):
 
         Args:
             user_network (UserNetwork): A valid UserNetwork.
-            user_content (UserContent): A valid UserContent.
 
         Returns:
             None.
@@ -59,7 +58,7 @@ class UserCreate(Resource):
 
         # 400 Bad request
         if validator.errors:
-            return
+            return validator.errors, status.HTTP_400_BAD_REQUEST
 
         self.user_network.create_user(
             username=args["username"],
@@ -67,3 +66,4 @@ class UserCreate(Resource):
             netid=args["netid"],
             email=args["email"],
         )
+        return status.HTTP_200_OK

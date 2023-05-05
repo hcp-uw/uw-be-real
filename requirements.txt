@@ -1,6 +1,8 @@
 python-dotenv
 Cerberus
 flask
+flask_api
+flask-cors
 flask-restful
 neo4j
 boto3

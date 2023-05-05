@@ -7,14 +7,14 @@ from os import (
 from os.path import join
 
 
-class EnvLoader:
-    """EnvLoader is a classic Singleton class that loads all of the necessary
-    secret .env variables for UserContent and UserNetwork."""
+class Config:
+    """Config is a Singleton class that loads all of the necessary
+    secret .env variables for the application services."""
 
     def __new__(cls) -> None:
         """Ensures Singleton design pattern."""
         if not hasattr(cls, "instance"):
-            cls.instance = super(EnvLoader, cls).__new__(cls)
+            cls.instance = super(Config, cls).__new__(cls)
         return cls.instance
 
     def __init__(self) -> None:
@@ -76,4 +76,4 @@ class EnvLoader:
         return aws_s3, mongodb, neo4j, redis
 
 
-ENV = EnvLoader()
+ENV = Config()

@@ -12,9 +12,11 @@ from src.controller.validations.credential_validation import *
 from src.model.constants import *
 from src.model.queries import *
 
+# TODO: Remove Validation in this
+
 
 class UserNetwork:
-    """The UserNetwork class is a Python API layer for querying Neo4j
+    """The UserNetwork class is a model layer for querying Neo4j
     specific to social network applications."""
 
     def __init__(self, neo4j_creds: tuple[str, str, str]) -> None:
@@ -38,10 +40,6 @@ class UserNetwork:
 
         # Connect to Neo4j
         self.driver: Driver = self._connect_neo4j(neo4j_creds)
-
-        # TODO: Do we need these? It has high performance impact on cold starts. -> Create an admin account that manages the constraints instead
-        # self._verify_driver()
-        # self._verify_constraints()
 
     def __del__(self) -> None:
         """Automatically disconnects the Neo4j driver connection on

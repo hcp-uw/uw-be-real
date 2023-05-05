@@ -28,8 +28,8 @@ from src.model.queries import *
 
 
 class UserContent:
-    """The UserContent class is a Python API layer for AWS S3, MongoDB, and Redis.
-    handling user contents (e.g. posts, images, etc.)"""
+    """The UserContent class is a model layer for accessing AWS S3, MongoDB, and Redis
+    to handle user contents (e.g. posts, images, etc.)"""
 
     def __init__(
         self,
