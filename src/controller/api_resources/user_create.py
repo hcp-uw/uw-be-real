@@ -27,43 +27,52 @@ class UserCreate(Resource):
         """
         self.user_network: UserNetwork = user_network
 
-    def post(self):
-        # Parse request body
-        parse: RequestParser = RequestParser()
+    @staticmethod
+    def _post_request_parser() -> dict:
+        parse: RequestParser = RequestParser(bundle_errors=True)
         parse.add_argument(
             "netid",
             required=True,
             type=str,
+            help="netid must be a non-empty string.",
         )
         parse.add_argument(
             "email",
             required=True,
             type=str,
+            help="email must be a non-empty string and have a @uw.edu domain name.",
         )
         parse.add_argument(
             "username",
             required=True,
             type=str,
+            help="username must be a non-empty string within 64 characters.",
         )
         parse.add_argument(
             "fullname",
             required=True,
             type=str,
+            help="fullname must be a non-empty comma-separated string (last,first) where both names must be within 64 characters.",
         )
-        args: dict = parse.parse_args()
+        return parse.parse_args()
+
+    def post(self):
+        # Parse request body
+        body = self._post_request_parser()
 
         # Validate arguments
         validator: Validator = Validator()
-        validator.validate(args, CREATE_USER_SCHEMA)
+        validator.validate(body, CREATE_USER_SCHEMA)
 
-        # 400 Bad request
+        # 400 Bad request on invalid request
         if validator.errors:
             return validator.errors, status.HTTP_400_BAD_REQUEST
 
-        self.user_network.create_user(
-            username=args["username"],
-            fullname=args["fullname"],
-            netid=args["netid"],
-            email=args["email"],
-        )
         return status.HTTP_200_OK
+
+        self.user_network.create_user(
+            username=body["username"],
+            fullname=body["fullname"],
+            netid=body["netid"],
+            email=body["email"],
+        )
