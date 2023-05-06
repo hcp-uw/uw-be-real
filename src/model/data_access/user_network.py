@@ -32,8 +32,8 @@ class UserNetwork:
             None.
 
         Exceptions:
-            Throws a ConnectionValuesInvalidException if uri, user, or password is invalid.
-            Throws a ConnectionFailureException if the connection to the database fails.
+            ConnectionValuesInvalidException: Uri, user, or password is invalid.
+            ConnectionFailureException: Connection to the database fails.
         """
         # Validate inputs
         validate_user_network_credentials(neo4j_creds)
@@ -55,7 +55,7 @@ class UserNetwork:
         """Close the connection to the database.
 
         Exception:
-            Throws a ConnectionAlreadtClosedException if connection is already closed.
+            ConnectionAlreadtClosedException: Connection is already closed.
         """
         try:
             self.driver.close()
@@ -66,7 +66,7 @@ class UserNetwork:
         """Verifies the driver connection to Neo4j.
 
         Exception:
-            Throws a ConnectionFailureException if driver connection is invalid.
+            ConnectionFailureException: Driver connection is invalid.
         """
         try:
             self.driver.verify_connectivity()
@@ -91,7 +91,7 @@ class UserNetwork:
             Neo4j Result.
 
         Exception:
-            - QueryFailureException: The query caused an error.
+            QueryFailureException: The query caused an error.
         """
         with self.driver.session() as session:
             try:
@@ -119,13 +119,13 @@ class UserNetwork:
             None.
 
         Exceptions:
-            - NoInputsException: The given netid is invalid.
-            - UserAlreadyExistsException: User already exists, no changes are made.
-            - QueryFailureException: An error occured with the query.
+            NoInputsException: The given netid is invalid.
+            UserAlreadyExistsException: User already exists, no changes are made.
+            QueryFailureException: An error occured with the query.
         """
         # check if user already exists
         user = self.get_user(netid)
-        if not user:
+        if user:
             raise neo4j_exceptions.UserAlreadyExistsException(netid)
 
         query = neo4j_queries.create_user(username, fullname, netid, email)
@@ -144,7 +144,7 @@ class UserNetwork:
             If no users can be matched, an empty dict is returned.
 
         Exceptions:
-            - NoInputsException: Either the given netid or email is invalid.
+            NoInputsException: Either the given netid or email is invalid.
         """
         # verify arguments
         if not (netid or email):

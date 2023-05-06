@@ -106,10 +106,6 @@ USER_API_SCHEMA = {
 }
 
 CREATE_USER_SCHEMA = {
-    "netid": {
-        "required": True,
-        "type": NETID,
-    },
     "email": {
         "required": True,
         "type": "string",
@@ -128,7 +124,6 @@ CREATE_USER_SCHEMA = {
 }
 
 CREATE_USER_SCHEMA_ERROR_MSG = {
-    "netid": NETID_ERROR,
     "email": EMAIL_ERROR,
     "username": USERNAME_ERROR,
     "fullname": FULLNAME_ERROR,

@@ -41,12 +41,15 @@ from src.controller.api_resources.user_create import UserCreate
 
 
 def add_resources(
-    api: Api, user_network: UserNetwork, user_content: UserContent
+    api: Api,
+    user_network: UserNetwork,
+    user_content: UserContent,
+    logger: Logger,
 ) -> None:
     api.add_resource(
         UserCreate,
         "/api/user-create",
-        resource_class_kwargs={"user_network": user_network},
+        resource_class_kwargs={"user_network": user_network, "logger": logger},
     )
 
 
@@ -71,7 +74,7 @@ def main():
     logging.getLogger("flask_cors").level = logging.DEBUG
 
     # Add API endpoint Resources
-    add_resources(api, user_network, user_content)
+    add_resources(api, user_network, user_content, logger)
 
     # Run Flask application
     app.run(debug=True, port=5555)

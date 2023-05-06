@@ -13,7 +13,7 @@ def create_user(username: str, fullname: str, netid: str, email: str) -> str:
         username: '{username}', 
         fullname: '{fullname}', 
         netid: '{netid}', 
-        email: '{email}', 
+        email: '{email}'
         }})
     """
 
