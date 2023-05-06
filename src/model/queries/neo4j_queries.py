@@ -57,3 +57,10 @@ def connect_users(sender_netid: str, recipient_netid: str) -> str:
         WHERE recipient IS NOT NULL
         CREATE (sender)-[connect: Friend]->(recipient)
     """
+
+
+def delete_database() -> str:
+    return """
+        MATCH ()-[f:Friend]-() DELETE (f);
+        MATCH (user: User) DELETE (user)
+    """
