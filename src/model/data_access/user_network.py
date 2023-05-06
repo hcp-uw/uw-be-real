@@ -91,7 +91,7 @@ class UserNetwork:
             Neo4j Result.
 
         Exception:
-            Throws a QueryFailureException if the query caused an error.
+            - QueryFailureException: The query caused an error.
         """
         with self.driver.session() as session:
             try:
