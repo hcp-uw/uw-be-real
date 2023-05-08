@@ -77,7 +77,7 @@ def main():
     add_resources(api, user_network, user_content, logger)
 
     # Run Flask application
-    app.run(debug=True, port=5555)
+    app.run(debug=True, port=5000)
 
 
 if __name__ == "__main__":
