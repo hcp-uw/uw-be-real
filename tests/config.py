@@ -17,7 +17,7 @@ from src.model.queries.neo4j_queries import (
 )
 
 # Note: Python modules are singletons by definition.
-BASE_URL: str = "http://127.0.0.1:5555"
+BASE_URL: str = "http://127.0.0.1:5000"
 USER_NETWORK: UserNetwork = UserNetwork(ENV.neo4j_creds)
 
 

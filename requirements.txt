@@ -10,3 +10,4 @@ boto3-stubs[s3]
 mypy-boto3-s3
 pymongo[srv]
 redis[hiredis]
+gunicorn
