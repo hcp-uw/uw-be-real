@@ -1,33 +1,30 @@
-import sys  # for import from parent directory
-import os  # for import from parent directory
+import os
+import sys
 
-# add src directory to path
+# add root directory to path
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-# API requests
-import requests
-
-# unit testing
 import unittest
 
-# import customer exceptions
-from src.custom_exceptions import *
 
+# Discover and run all test files
+def run_tests():
+    # unittest set up
+    loader = unittest.TestLoader()
+    testcase_dir = os.path.join("tests", "controller", "api_resources")
 
-class APIRoutesTest(unittest.TestCase):
-    """Performs unit testing on the UserNetwork class."""
+    # Load all tests into a TestSuite
+    test_suite = loader.discover(
+        start_dir=testcase_dir,
+        pattern="*_testcase.py",
+    )
 
-    def __init__(self, methodName: str = ...) -> None:
-        super().__init__(methodName)
-        self.base_url = ""
-
-    def test_get_posts(self):
-        url = self.base_url + "/api/get-posts/"
-        # payload
-        requests.get()
+    # Run the test suite
+    test_runner = unittest.TextTestRunner(verbosity=3)
+    test_runner.run(test_suite)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    run_tests()

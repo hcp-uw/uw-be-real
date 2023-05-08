@@ -59,8 +59,14 @@ def connect_users(sender_netid: str, recipient_netid: str) -> str:
     """
 
 
-def delete_database() -> str:
+# DO NOT USE THESE IN ACTUAL APPLICATION. TESTING ONLY.
+def delete_all_users() -> str:
     return """
-        MATCH ()-[f:Friend]-() DELETE (f);
         MATCH (user: User) DELETE (user)
+    """
+
+
+def delete_all_friends() -> str:
+    return """
+        MATCH ()-[f:Friend]-() DELETE (f)
     """
