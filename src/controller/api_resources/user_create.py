@@ -90,8 +90,9 @@ class UserCreate(Resource):
                 - New user successfully created.
             400 BAD REQUEST:
                 - Invalid request payload, no changes made.
-            500 INTERNAL SERVER ERROR:
+            409 CONFLICT:
                 - A user account already exists under the provided credentials.
+            500 INTERNAL SERVER ERROR:
                 - Failed to excute query.
                 - Generic error.
         """
@@ -118,7 +119,7 @@ class UserCreate(Resource):
             return e.msg, status.HTTP_400_BAD_REQUEST
 
         except UserAlreadyExistsException as e:
-            return e.msg, status.HTTP_500_INTERNAL_SERVER_ERROR
+            return e.msg, status.HTTP_409_CONFLICT
 
         except QueryFailureException as e:
             self.logger.log(ERROR, e.msg)

@@ -79,3 +79,44 @@ class UserCreateTestCase(unittest.TestCase):
             msg=f"Expected {expected} status code, received {received}.\n"
             + f"{response.text}",
         )
+
+    def test_user_already_exists_should_return_409(self) -> None:
+        ### ARRANGE: Set up necessary preconditions.
+        # Clear all data in database
+        config.clear_database()
+
+        # Request payload - Invalid character(space) in username and fullname, and invalid email domain name.
+        data = {
+            "username": "testuser1",
+            "fullname": "user1,test",
+            "email": "testuser1@uw.edu",
+        }
+
+        # Request header
+        headers = {
+            "content-type": "application/json",
+        }
+
+        ### ACT: Perform action to invoke API.
+        # Send same request twice
+        first_response = requests.post(self.url, json=data, headers=headers)
+        second_response = requests.post(self.url, json=data, headers=headers)
+
+        ### ASSERT: Verify expected outcome.
+        received: str = first_response.status_code
+        expected: str = status.HTTP_201_CREATED
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{first_response.text}",
+        )
+
+        received: str = second_response.status_code
+        expected: str = status.HTTP_409_CONFLICT
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{second_response.text}",
+        )
