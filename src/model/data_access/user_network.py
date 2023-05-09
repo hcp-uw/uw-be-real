@@ -41,11 +41,6 @@ class UserNetwork:
         # Connect to Neo4j
         self.driver: Driver = self._connect_neo4j(neo4j_creds)
 
-    def __del__(self) -> None:
-        """Automatically disconnects the Neo4j driver connection on
-        garbage collection or program end."""
-        self._close_driver()
-
     def _connect_neo4j(self, neo4j_creds: tuple[str, str, str]) -> Driver:
         """Returns a Neo4j Driver from the provided credentials."""
         uri, user, password = neo4j_creds
