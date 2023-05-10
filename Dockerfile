@@ -1,22 +1,22 @@
 FROM python:3.11.3
 
-WORKDIR .
+WORKDIR /app
 
-COPY requirements.txt ./
+COPY ./requirements.txt /app
 
 RUN python -m pip install -r requirements.txt
 
-COPY . .
+COPY . /app
 
 ENV PORT=5000
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD [ "python", "src/app.py" ]
 
 
 # GENERATED DOCKER CODE 
-# # For more information, please refer to https://aka.ms/vscode-docker-python
+# For more information, please refer to https://aka.ms/vscode-docker-python
 # FROM python:3.11.3
 
 # EXPOSE 5000
@@ -32,8 +32,8 @@ CMD [ "python", "src/app.py" ]
 # RUN python -m pip install -r requirements.txt
 
 # WORKDIR /app
-# COPY . .
-# # COPY . /app
+# # COPY . .
+# COPY . /app
 
 # # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
@@ -41,4 +41,5 @@ CMD [ "python", "src/app.py" ]
 # USER appuser
 
 # # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-# CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.app:app"]
+# # CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.app:app"]
+# CMD [ "python", "src/app.py" ]

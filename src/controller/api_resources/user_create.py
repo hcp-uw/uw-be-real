@@ -59,6 +59,7 @@ class UserCreate(Resource):
             type=str,
             help=SCHEMA["username"],
         )
+        # TODO: Separate into first and last names
         parse.add_argument(
             "fullname",
             required=True,
