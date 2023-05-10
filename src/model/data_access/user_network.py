@@ -41,37 +41,18 @@ class UserNetwork:
         # Connect to Neo4j
         self.driver: Driver = self._connect_neo4j(neo4j_creds)
 
-    def __del__(self) -> None:
-        """Automatically disconnects the Neo4j driver connection on
-        garbage collection or program end."""
-        self._close_driver()
-
     def _connect_neo4j(self, neo4j_creds: tuple[str, str, str]) -> Driver:
         """Returns a Neo4j Driver from the provided credentials."""
         uri, user, password = neo4j_creds
         return GraphDatabase.driver(uri, auth=(user, password))
 
     def _close_driver(self) -> None:
-        """Close the connection to the database.
-
-        Exception:
-            ConnectionAlreadtClosedException: Connection is already closed.
-        """
-        try:
-            self.driver.close()
-        except Exception as e:
-            raise neo4j_exceptions.ConnectionAlreadyClosedException()
+        """Close the connection to the database."""
+        self.driver.close()
 
     def _verify_driver(self) -> None:
-        """Verifies the driver connection to Neo4j.
-
-        Exception:
-            ConnectionFailureException: Driver connection is invalid.
-        """
-        try:
-            self.driver.verify_connectivity()
-        except Exception:
-            raise database_exceptions.ConnectionFailureException(neo4j_constants.NAME)
+        """Verifies the driver connection to Neo4j."""
+        self.driver.verify_connectivity()
 
     def _verify_constraints(self) -> None:
         """Ensures that constraints for unique user properties are added."""

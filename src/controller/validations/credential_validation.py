@@ -18,16 +18,20 @@ def validate_user_network_credentials(neo4j_creds: tuple[str, str, str]) -> None
     Exceptions:
         Throws a ConnectionValuesInvalidException if database/storage credentials are invalid.
     """
-    # Neo4j credentials
-    if not (neo4j_creds and len(neo4j_creds) == 3):
+    if not neo4j_creds:
         # No values passed in
-        if not neo4j_creds:
-            raise ConnectionValuesInvalidException(
-                "Expected a tuple in the form of (uri, user, password) in neo4j_creds, received no values."
-            )
+        raise ConnectionValuesInvalidException(f"No credentials given for Neo4j.")
+
+    if len(neo4j_creds) != 3:
         # Incorrect length of values
         raise ConnectionValuesInvalidException(
             f"Expected a tuple in the form of (uri, user, password) in neo4j_creds, received {len(neo4j_creds)} value(s) in tuple instead."
+        )
+
+    if not (neo4j_creds[0] and neo4j_creds[1] and neo4j_creds[2]):
+        # Invalid values
+        raise ConnectionValuesInvalidException(
+            "Some or all of the Neo4j credentials provided are None."
         )
 
 
@@ -59,15 +63,20 @@ def validate_user_content_credentials(
         Throws a ConnectionValuesInvalidException if database/storage credentials are invalid.
     """
     # AWS S3 credentials
-    if not (s3_creds and len(s3_creds) == 2):
+    if not s3_creds:
         # No values passed in
-        if not s3_creds:
-            raise ConnectionValuesInvalidException(
-                "Expected a tuple in the form of (aws_access_key_id, aws_secret_access_key) in s3_creds, received no values."
-            )
+        raise ConnectionValuesInvalidException(f"No credentials given for AWS S3.")
+
+    if len(s3_creds) != 2:
         # Incorrect length of values
         raise ConnectionValuesInvalidException(
             f"Expected a tuple in the form of (aws_access_key_id, aws_secret_access_key) in s3_creds, received {len(s3_creds)} value(s) in tuple instead."
+        )
+
+    if not (s3_creds[0] and s3_creds[1]):
+        # Invalid values
+        raise ConnectionValuesInvalidException(
+            "Some or all of the AWS S3 credentials provided are invalid (None)."
         )
 
     # MongoDB credentials
@@ -77,13 +86,18 @@ def validate_user_content_credentials(
         )
 
     # Redis credentails
-    if not (redis_creds and len(redis_creds) == 3):
+    if not redis_creds:
         # No values passed in
-        if not redis_creds:
-            raise ConnectionValuesInvalidException(
-                "Expected a tuple in the form of (host, port, password) in redis_creds, received no values."
-            )
+        raise ConnectionValuesInvalidException(f"No credentials given for Redis.")
+
+    if len(redis_creds) != 3:
         # Incorrect length of values
         raise ConnectionValuesInvalidException(
             f"Expected a tuple in the form of (host, port, password) in redis_creds, received {len(redis_creds)} value(s) in tuple instead."
+        )
+
+    if not (redis_creds[0] and redis_creds[1] and redis_creds[2]):
+        # Invalid values
+        raise ConnectionValuesInvalidException(
+            "Some or all of the Redis credentials provided are None."
         )
