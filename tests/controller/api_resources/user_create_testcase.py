@@ -28,7 +28,8 @@ class UserCreateTestCase(unittest.TestCase):
         # Request payload
         data = {
             "username": "testuser1",
-            "fullname": "user1,test",
+            "firstname": "user1",
+            "lastname": "test",
             "email": "testuser1@uw.edu",
         }
 
@@ -58,7 +59,8 @@ class UserCreateTestCase(unittest.TestCase):
         # Request payload - Invalid character(space) in username and fullname, and invalid email domain name.
         data = {
             "username": "test user1",
-            "fullname": "user1, test",
+            "firstname": "user1",
+            "lastname": "test ",
             "email": "testuser1@uwww.edu",
         }
 
@@ -88,7 +90,8 @@ class UserCreateTestCase(unittest.TestCase):
         # Request payload - Invalid character(space) in username and fullname, and invalid email domain name.
         data = {
             "username": "testuser1",
-            "fullname": "user1,test",
+            "firstname": "user1",
+            "lastname": "test",
             "email": "testuser1@uw.edu",
         }
 

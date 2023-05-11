@@ -84,7 +84,8 @@ class UserNetwork:
     def create_user(
         self,
         username: str,
-        fullname: str,
+        firstname: str,
+        lastname: str,
         netid: str,
         email: str,
     ) -> None:
@@ -92,7 +93,8 @@ class UserNetwork:
 
         Args:
             username (str): The display name of the new user.
-            fullname (str): The full name of the new user (Last, First).
+            firstname (str): The first name of the new user.
+            lastname (str): The last name of the new user.
             netid (str): A [unique] UW NetID of the new user.
             email (str): A [unique] email of the new user.
 
@@ -109,7 +111,7 @@ class UserNetwork:
         if user:
             raise neo4j_exceptions.UserAlreadyExistsException(netid)
 
-        query = neo4j_queries.create_user(username, fullname, netid, email)
+        query = neo4j_queries.create_user(username, firstname, lastname, netid, email)
         self._database_query(query)
 
     def get_user(self, netid: str = None, email: str = None) -> dict:

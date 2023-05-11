@@ -116,15 +116,21 @@ CREATE_USER_SCHEMA = {
         "type": "string",
         "regex": USERNAME_REGEX,
     },
-    "fullname": {
+    "firstname": {
         "required": True,
         "type": "string",
-        "regex": FULLNAME_REGEX,
+        "regex": FIRSTNAME_REGEX,
+    },
+    "lastname": {
+        "required": True,
+        "type": "string",
+        "regex": LASTNAME_REGEX,
     },
 }
 
 CREATE_USER_SCHEMA_ERROR_MSG = {
     "email": EMAIL_ERROR,
     "username": USERNAME_ERROR,
-    "fullname": FULLNAME_ERROR,
+    "firstname": FIRSTNAME_ERROR,
+    "lastname": LASTNAME_ERROR,
 }

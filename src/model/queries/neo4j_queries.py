@@ -7,11 +7,14 @@ def unique_property_constraint(constraint: str, property: str) -> str:
     """
 
 
-def create_user(username: str, fullname: str, netid: str, email: str) -> str:
+def create_user(
+    username: str, firstname: str, lastname: str, netid: str, email: str
+) -> str:
     return f"""
         CREATE (user:User{{
         username: '{username}', 
-        fullname: '{fullname}', 
+        firstname: '{firstname}', 
+        lastname: '{lastname}', 
         netid: '{netid}', 
         email: '{email}'
         }})
@@ -31,7 +34,8 @@ def get_friends(netid: str) -> str:
         RETURN 
             friend.netid AS netid,
             friend.username AS username,
-            friend.fullname AS fullname,
+            friend.firstname AS firstname,
+            friend.lastname AS lastname,
             friend.profile_image AS profile_image,
             friend.account_status AS account_status
     """

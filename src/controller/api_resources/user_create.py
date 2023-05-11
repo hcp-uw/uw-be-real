@@ -59,15 +59,24 @@ class UserCreate(Resource):
             type=str,
             help=SCHEMA["username"],
         )
-        # TODO: Separate into first and last names
         parse.add_argument(
-            "fullname",
+            "firstname",
             required=True,
             type=str,
-            help=SCHEMA["fullname"],
+            help=SCHEMA["firstname"],
+        )
+        parse.add_argument(
+            "lastname",
+            required=True,
+            type=str,
+            help=SCHEMA["lastname"],
         )
         # Parse body arguments
-        body = parse.parse_args()
+        try:
+            body = parse.parse_args(strict=True)
+        # 400 Bad Request on extra parameters
+        except Exception:
+            return {}, PROPERTY_ERROR
 
         # Validate arguments
         validator: Validator = Validator()
@@ -83,7 +92,8 @@ class UserCreate(Resource):
 
         Args:
             username (str): A username between 1-64 characters (inclusive).
-            fullname (str): A comma separated last,first name. Each name is between 1-64 characters (inclusive).
+            firstname (str): A first name between 1-64 characters (inclusive).
+            lastname (str): A last name between 1-64 characters (inclusive).
             email (str): A [unique] UW email of the new user.
 
         Responses:
@@ -110,7 +120,8 @@ class UserCreate(Resource):
         try:
             self.user_network.create_user(
                 username=body["username"],
-                fullname=body["fullname"],
+                firstname=body["firstname"],
+                lastname=body["lastname"],
                 netid=netid,
                 email=email,
             )
