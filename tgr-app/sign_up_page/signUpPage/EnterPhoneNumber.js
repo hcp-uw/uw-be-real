@@ -3,7 +3,7 @@ import { StyleSheet, Text, SafeAreaView, TextInput } from "react-native";
 
 function EnterPhoneNumber({ navigation, route }) {
     const [number, setNumber] = useState("");
-    const { firstName, middleName, lastName, username } = route.params;
+    const { firstName, lastName, username } = route.params;
 
     return (
         <SafeAreaView style={styles.background}>
@@ -23,7 +23,6 @@ function EnterPhoneNumber({ navigation, route }) {
                     if (this.validatePhone(number)) {
                         navigation.navigate("Email", {
                             firstName: firstName,
-                            middleName: middleName,
                             lastName: lastName,
                             username: username,
                             phoneNumber: number,

@@ -1,63 +1,110 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, SafeAreaView, TextInput, View } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    Keyboard,
+    SafeAreaView,
+    TextInput,
+    View,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const EnterName = () => {
     const navigation = useNavigation();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [middleName, setMiddleName] = useState("");
 
     return (
-        <SafeAreaView style={styles.background}>
-            <Text style={styles.logo}>_tgr.</Text>
-            <Text style={styles.default}>
-                Enter your full name (Middle name Optional)
-            </Text>
-            <TextInput
-                style={styles.textbox}
-                onChangeText={(firstName) => setFirstName(firstName)}
-                textAlign="center"
-                placeholder="First"
-                placeholderTextColor="#3C3C3C"
-                autoCorrect={false}
-            />
-            <TextInput
-                style={styles.textbox}
-                onChangeText={(lastName) => setMiddleName(lastName)}
-                textAlign="center"
-                placeholder="Middle (Opt.)"
-                placeholderTextColor="#3C3C3C"
-                autoCorrect={false}
-            />
-            <TextInput
-                style={styles.textbox}
-                onChangeText={(lastName) => setLastName(lastName)}
-                textAlign="center"
-                placeholder="Last"
-                placeholderTextColor="#3C3C3C"
-                autoCorrect={false}
-            />
-            <Text
-                style={styles.next}
-                onPress={() => {
-                    if (
-                        this.validateName(firstName) &&
-                        this.validateName(lastName)
-                    ) {
-                        navigation.navigate("Username", {
-                            firstName: firstName,
-                            middleName: middleName,
-                            lastName: lastName,
-                        });
-                    } else {
-                        alert("Error: Please enter your full name");
-                    }
-                }}
-            >
-                Next
-            </Text>
-        </SafeAreaView>
+        <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : null}
+            style={{ flex: 1 }}
+        >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <SafeAreaView style={styles.background}>
+                    <Text style={styles.logo}>_tgr.</Text>
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "flex-start",
+                        }}
+                    >
+                        <Text style={styles.default}>Enter your full name</Text>
+                        <SafeAreaView
+                            style={{
+                                //display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                gap: "15%",
+                                marginBottom: 15,
+                            }}
+                        >
+                            <TextInput
+                                style={styles.textbox}
+                                onChangeText={(firstName) =>
+                                    setFirstName(firstName)
+                                }
+                                placeholder="First"
+                                placeholderTextColor="#3C3C3C"
+                                autoCorrect={false}
+                            />
+                            <TextInput
+                                style={styles.textbox}
+                                onChangeText={(lastName) =>
+                                    setLastName(lastName)
+                                }
+                                placeholder="Last"
+                                placeholderTextColor="#3C3C3C"
+                                autoCorrect={false}
+                            />
+                        </SafeAreaView>
+                    </View>
+                    <View
+                        style={{
+                            height: 25,
+                            minHeight: 10,
+                        }}
+                    ></View>
+                    <View
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            gap: "15%",
+                            marginBottom: 15,
+                        }}
+                        behavior="padding"
+                    >
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => navigation.navigate("Home")}
+                        >
+                            <Text style={styles.textbutton}>Back</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => {
+                                if (
+                                    this.validateName(firstName) &&
+                                    this.validateName(lastName)
+                                ) {
+                                    navigation.navigate("Username", {
+                                        firstName: firstName,
+                                        lastName: lastName,
+                                    });
+                                } else {
+                                    alert("Error: Please enter your full name");
+                                }
+                            }}
+                        >
+                            <Text style={styles.textbutton}>Next</Text>
+                        </TouchableOpacity>
+                    </View>
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 };
 
@@ -71,7 +118,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#000",
         flex: 1,
         alignItems: "center",
-        //flexDirection: "row",
     },
     logo: {
         color: "white",
@@ -93,12 +139,20 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 20,
         padding: 20,
+        textAlignVertical: "center",
     },
-    next: {
-        color: "white",
-        fontWeight: "bold",
-        fontSize: 20,
-        padding: 20,
+    textbutton: {
+        color: "#000",
+        fontWeight: "400",
+        fontSize: 19,
+        textAlign: "center",
+    },
+    button: {
+        width: "42.5%",
+        padding: 8.5,
+        paddingHorizontal: 25,
+        borderRadius: 100,
+        backgroundColor: "white",
     },
 });
 

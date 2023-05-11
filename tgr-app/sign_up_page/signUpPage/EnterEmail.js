@@ -1,22 +1,23 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, SafeAreaView, TextInput } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    SafeAreaView,
+    TextInput,
+    View,
+    KeyboardAvoidingView,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    Keyboard,
+} from "react-native";
 import { firebase } from "../config";
 
 function EnterEmail({ navigation, route }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { firstName, middleName, lastName, username, phoneNumber } =
-        route.params;
+    const { firstName, lastName, username } = route.params;
 
-    registerUser = async (
-        email,
-        password,
-        firstName,
-        middleName,
-        lastName,
-        phoneNumber,
-        username
-    ) => {
+    registerUser = async (email, password, firstName, lastName, username) => {
         if (email.endsWith("@uw.edu")) {
             await firebase
                 .auth()
@@ -43,11 +44,9 @@ function EnterEmail({ navigation, route }) {
                                 .doc(firebase.auth().currentUser.uid)
                                 .set({
                                     firstName,
-                                    middleName,
                                     lastName,
                                     username,
                                     email,
-                                    phoneNumber,
                                     username,
                                 });
                         })
@@ -64,49 +63,84 @@ function EnterEmail({ navigation, route }) {
     };
 
     return (
-        <SafeAreaView style={styles.background}>
-            <Text style={styles.logo}>_tgr.</Text>
-            <Text style={styles.default}>
-                Enter your UW Email and set a new password
-            </Text>
-            <TextInput
-                style={styles.textbox}
-                onChangeText={(email) => setEmail(email)}
-                value={email}
-                placeholder="example@uw.edu"
-                placeholderTextColor="#3C3C3C"
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-            />
-            <TextInput
-                style={styles.textbox}
-                onChangeText={(password) => setPassword(password)}
-                value={password}
-                placeholder="password"
-                placeholderTextColor="#3C3C3C"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry={true}
-            />
-            <Text
-                style={styles.next}
-                onPress={() => {
-                    navigation.navigate("WaitVerification"),
-                        registerUser(
-                            email,
-                            password,
-                            firstName,
-                            middleName,
-                            lastName,
-                            phoneNumber,
-                            username
-                        );
-                }}
-            >
-                Next
-            </Text>
-        </SafeAreaView>
+        <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : null}
+            style={{ flex: 1 }}
+        >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <SafeAreaView style={styles.background}>
+                    <Text style={styles.logo}>_tgr.</Text>
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Text style={styles.default}>
+                            Enter your UW Email and set a new password
+                        </Text>
+                        <TextInput
+                            style={styles.textbox}
+                            onChangeText={(email) => setEmail(email)}
+                            value={email}
+                            placeholder="example@uw.edu"
+                            placeholderTextColor="#3C3C3C"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            keyboardType="email-address"
+                        />
+                        <TextInput
+                            style={styles.textbox}
+                            onChangeText={(password) => setPassword(password)}
+                            value={password}
+                            placeholder="password"
+                            placeholderTextColor="#3C3C3C"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            secureTextEntry={true}
+                        />
+                    </View>
+                    <View
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            gap: "15%",
+                            marginBottom: 15,
+                        }}
+                        behavior="padding"
+                    >
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() =>
+                                navigation.navigate("Username", {
+                                    firstName: firstName,
+                                    lastName: lastName,
+                                })
+                            }
+                        >
+                            <Text style={styles.textbutton}>Back</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => {
+                                navigation.navigate("WaitVerification"),
+                                    registerUser(
+                                        email,
+                                        password,
+                                        firstName,
+                                        lastName,
+                                        username
+                                    );
+                            }}
+                        >
+                            <Text style={styles.textbutton}>Next</Text>
+                        </TouchableOpacity>
+                    </View>
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -137,11 +171,18 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding: 20,
     },
-    next: {
-        color: "white",
-        fontWeight: "bold",
-        fontSize: 20,
-        padding: 20,
+    textbutton: {
+        color: "#000",
+        fontWeight: "400",
+        fontSize: 19,
+        textAlign: "center",
+    },
+    button: {
+        width: "42.5%",
+        padding: 8.5,
+        paddingHorizontal: 25,
+        borderRadius: 100,
+        backgroundColor: "white",
     },
 });
 
