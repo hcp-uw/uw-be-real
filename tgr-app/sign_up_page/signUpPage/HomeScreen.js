@@ -26,7 +26,7 @@ const HomeScreen = () => {
                     source={require("../assets/togetherlogo.png")}
                 ></Image>
                 <Text style={styles.text}>Welcome to _tgr!</Text>
-                <SafeAreaView style={{ marginTop: 50 }}></SafeAreaView>
+                <SafeAreaView style={{ marginTop: 70 }}></SafeAreaView>
                 <SafeAreaView
                     style={{
                         display: "flex",
@@ -51,7 +51,7 @@ const HomeScreen = () => {
                 </SafeAreaView>
                 <SafeAreaView
                     style={{
-                        height: 25,
+                        height: 110,
                         minHeight: 10,
                     }}
                 ></SafeAreaView>
@@ -74,12 +74,9 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
     },
     image: {
-        // width: 150,
-        // height: 150,
-        // padding: 20,
-        width: "10%",
-        height: "10%",
-        padding: "20%",
+        width: 130,
+        height: 130,
+        padding: 20,
     },
     text: {
         color: "white",

@@ -26,7 +26,6 @@ function EnterUsername({ navigation, route }) {
                     <View
                         style={{
                             flex: 1,
-                            justifyContent: "flex-start",
                             alignItems: "center",
                         }}
                     >
@@ -47,7 +46,6 @@ function EnterUsername({ navigation, route }) {
                             gap: "15%",
                             marginBottom: 15,
                         }}
-                        behavior="padding"
                     >
                         <TouchableOpacity
                             style={styles.button}
@@ -108,7 +106,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 20,
         padding: 20,
-        textAlignVertical: "center",
+        textAlign: "center",
     },
     textbutton: {
         color: "#000",

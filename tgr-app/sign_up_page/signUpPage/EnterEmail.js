@@ -16,6 +16,7 @@ function EnterEmail({ navigation, route }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { firstName, lastName, username } = route.params;
+    const [textColor, setTextColor] = useState("#3C3C3C");
 
     registerUser = async (email, password, firstName, lastName, username) => {
         if (email.endsWith("@uw.edu")) {
@@ -77,24 +78,45 @@ function EnterEmail({ navigation, route }) {
                             alignItems: "center",
                         }}
                     >
-                        <Text style={styles.default}>
-                            Enter your UW Email and set a new password
-                        </Text>
-                        <TextInput
-                            style={styles.textbox}
-                            onChangeText={(email) => setEmail(email)}
-                            value={email}
-                            placeholder="example@uw.edu"
-                            placeholderTextColor="#3C3C3C"
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            keyboardType="email-address"
-                        />
+                        <Text style={styles.default}>Create an account</Text>
+                        <View style={styles.emailView}>
+                            <TextInput
+                                style={{
+                                    color: "white",
+                                    fontWeight: "bold",
+                                    fontSize: 20,
+                                    paddingRight: 2,
+                                }}
+                                onChangeText={(email) => {
+                                    if (email.length > 0) {
+                                        setTextColor("white");
+                                    } else {
+                                        setTextColor("#3C3C3C");
+                                    }
+                                    setEmail(email);
+                                }}
+                                placeholder="netid"
+                                placeholderTextColor="#3C3C3C"
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                keyboardType="email-address"
+                            />
+                            <Text
+                                style={{
+                                    color: textColor,
+                                    fontWeight: "bold",
+                                    fontSize: 20,
+                                }}
+                            >
+                                @uw.edu
+                            </Text>
+                        </View>
+
                         <TextInput
                             style={styles.textbox}
                             onChangeText={(password) => setPassword(password)}
-                            value={password}
-                            placeholder="password"
+                            // value={password}
+                            placeholder="Password"
                             placeholderTextColor="#3C3C3C"
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -127,7 +149,7 @@ function EnterEmail({ navigation, route }) {
                             onPress={() => {
                                 navigation.navigate("WaitVerification"),
                                     registerUser(
-                                        email,
+                                        email + "@uw.edu",
                                         password,
                                         firstName,
                                         lastName,
@@ -169,6 +191,11 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         fontSize: 20,
+        padding: 20,
+    },
+    emailView: {
+        display: "flex",
+        flexDirection: "row",
         padding: 20,
     },
     textbutton: {

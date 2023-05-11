@@ -28,13 +28,11 @@ const EnterName = () => {
                     <View
                         style={{
                             flex: 1,
-                            justifyContent: "flex-start",
                         }}
                     >
-                        <Text style={styles.default}>Enter your full name</Text>
+                        <Text style={styles.default}>Enter your name</Text>
                         <SafeAreaView
                             style={{
-                                //display: "flex",
                                 flexDirection: "row",
                                 justifyContent: "center",
                                 gap: "15%",
@@ -75,7 +73,6 @@ const EnterName = () => {
                             gap: "15%",
                             marginBottom: 15,
                         }}
-                        behavior="padding"
                     >
                         <TouchableOpacity
                             style={styles.button}
@@ -139,7 +136,9 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 20,
         padding: 20,
-        textAlignVertical: "center",
+        width: "45%",
+        textAlign: "center",
+        overflow: "hidden",
     },
     textbutton: {
         color: "#000",
