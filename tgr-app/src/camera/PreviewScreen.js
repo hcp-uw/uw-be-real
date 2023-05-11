@@ -19,7 +19,7 @@ const PreviewScreen = ({route, navigation}) => {
   const thumbnailHeight = useRef(new Animated.Value(THUMBNAIL_HEIGHT)).current;
   const thumbnailWidth = useRef(new Animated.Value(THUMBNAIL_WIDTH)).current;
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ['25%', '50%' ], []);
+  const snapPoints = useMemo(() => [ '40%', '50%' ], []);
   const openOptions = () => bottomSheetRef.current.expand();
   const previewPadding = useRef(new Animated.Value(0)).current;
   const bottomSheetPosition = useRef(new Animated.Value(0)).current;
@@ -181,11 +181,10 @@ const PreviewScreen = ({route, navigation}) => {
       }),
     ]).start();
   };
-  let sharePic = () => {
+  const sharePic = (postGlobally) => {
     // navigation.navigate("PostPhoto", {photo: photo, backPhoto: backPhoto});
-    console.log("Opened bottom sheet")
-    openOptions();
-    shrinkPreview();
+    console.log("Posting Photo" + postGlobally);
+    
   };
   return (
     <NativeViewGestureHandler>
@@ -230,8 +229,8 @@ const PreviewScreen = ({route, navigation}) => {
       snapPoints={snapPoints} 
       backdropComponent={renderBackdrop} onAnimate={previewChange}
       backgroundComponent={PostOptionBackground}
-      animatedPosition={bottomSheetPosition}>
-        <PostOptions/>
+      animatedPosition={bottomSheetPosition} >
+        <PostOptions postCallback={sharePic}/>
       </BottomSheet>
     </SafeAreaView>
     </NativeViewGestureHandler>

@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import CameraScreen from "./src/camera/CameraScreen"
 import PreviewScreen from "./src/camera/PreviewScreen"
@@ -15,7 +16,8 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Profile">
+      <GestureHandlerRootView style={{flex: 1}}>
+      <Stack.Navigator initialRouteName="Camera">
         <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true}}/>
         <Stack.Screen name="Preview" component={PreviewScreen}/>
         <Stack.Screen name="Feed" component={Feed}
@@ -48,6 +50,7 @@ function App() {
                         headerShown: false,
                       }}/>
       </Stack.Navigator>
+      </GestureHandlerRootView>
     </NavigationContainer>
   );
 }

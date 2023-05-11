@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {View, Text} from 'react-native';
 import styles from '../CameraStyles';
 import PostOptionBlock from './PostOptionBlock';
-const PostOptions = (props) => {
+const PostOptions = ({postCallback}) => {
   const [postGlobal, setPostGlobal] = useState(false);
   return (
       <View style={styles.postOptionsLayout}>
@@ -16,7 +16,7 @@ const PostOptions = (props) => {
         <TouchableOpacity onPress={() => setPostGlobal(true)}>
           <PostOptionBlock icon="earth" text="Everyone (Discovery)" selected={postGlobal}/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.postButton}>
+        <TouchableOpacity style={styles.postButton} onPress={() => postCallback(postGlobal)}>
           <Text style={{color: 'black'}} textAlign='center'>Post</Text>
         </TouchableOpacity>
       </View>
