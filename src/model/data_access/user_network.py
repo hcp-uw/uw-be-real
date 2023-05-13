@@ -111,7 +111,9 @@ class UserNetwork:
         if user:
             raise neo4j_exceptions.UserAlreadyExistsException(netid)
 
-        query = neo4j_queries.create_user(username, firstname, lastname, netid, email)
+        query = neo4j_queries.create_user(
+            username, firstname, lastname, netid, email, "active"
+        )
         self._database_query(query)
 
     def get_user(self, netid: str = None, email: str = None) -> dict:

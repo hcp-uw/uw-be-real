@@ -8,7 +8,12 @@ def unique_property_constraint(constraint: str, property: str) -> str:
 
 
 def create_user(
-    username: str, firstname: str, lastname: str, netid: str, email: str
+    username: str,
+    firstname: str,
+    lastname: str,
+    netid: str,
+    email: str,
+    account_status: str = "active",
 ) -> str:
     return f"""
         CREATE (user:User{{
@@ -16,7 +21,8 @@ def create_user(
         firstname: '{firstname}', 
         lastname: '{lastname}', 
         netid: '{netid}', 
-        email: '{email}'
+        email: '{email}',
+        account_status: '{account_status}'
         }})
     """
 
