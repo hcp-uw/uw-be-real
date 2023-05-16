@@ -21,9 +21,9 @@ def create_user(
     """
 
 
-def get_user(props: list[str]) -> str:
+def get_user(netid: str) -> str:
     return f"""
-        MATCH (user:User{{{', '.join(props)}}})
+        MATCH (user:User{{netid: "{netid}"}})
         RETURN user
     """
 

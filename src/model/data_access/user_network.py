@@ -114,13 +114,12 @@ class UserNetwork:
         query = neo4j_queries.create_user(username, firstname, lastname, netid, email)
         self._database_query(query)
 
-    def get_user(self, netid: str = None, email: str = None) -> dict:
+    def get_user(self, netid: str) -> dict:
         """Returns all user information associated with the given
-        netid, email, and/or phone. Returns None if no user matches.
+        netid. Returns None if no user matches.
 
         Args:
-            netid (str, optional): The netid of the user.
-            email (str, optional): The email of the user.
+            netid (str): The netid of the user.
 
         Returns:
             A dict of information of the associated user.
@@ -131,28 +130,19 @@ class UserNetwork:
             UserNotFoundException: User is not found.
         """
         # Verify arguments
-        if not (netid or email):
+        if not netid:
             raise generic_exceptions.NoInputsException()
 
         # Start session
         with self.driver.session() as session:
-            result = session.execute_read(self._get_user, netid, email)
-        
-        # User is not found 
-        if not result:
-            raise user_exceptions.UserNotFoundException()
-        
+            result = session.execute_read(self._get_user, netid)
+
         return result
 
     @staticmethod
-    def _get_user(tx, netid: str, email: str):
+    def _get_user(tx, netid: str):
         """Transaction function to get a user's information."""
-        props: list[str] = []
-        if netid:
-            props.append(f'netid: "{netid}"')
-        if email:
-            props.append(f'email: "{email}"')
-        query: str = neo4j_queries.get_user(props)
+        query: str = neo4j_queries.get_user(netid)
         result: Record = tx.run(query)
         data: list[dict] = result.data()
         return data[0]["user"] if data else {}
