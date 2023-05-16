@@ -53,12 +53,9 @@ class UserProfile(Resource):
         )
         # Parse body arguments
         try:
-            print(parse.args)
-            body = parse.parse_args(strict=False)
-            print(body)
+            body = parse.parse_args(strict=True)
         # 400 Bad Request on extra parameters
         except Exception as e:
-            print(str(e))
             return {}, PROPERTY_ERROR
 
         # Validate arguments
@@ -71,7 +68,7 @@ class UserProfile(Resource):
         return body, error_msg
     
     def get(self):
-        """Creates a new user from the provided user information in the request payload.
+        """Get user information from the provided information in the request payload.
 
         Args:
             netid (str): The UW NetID of the user.
