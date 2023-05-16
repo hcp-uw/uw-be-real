@@ -105,7 +105,9 @@ USER_API_SCHEMA = {
     },
 }
 
-CREATE_USER_SCHEMA = {
+# Schema for each API endpoints
+# /api/user-create
+USER_CREATE_SCHEMA = {
     "email": {
         "required": True,
         "type": "string",
@@ -128,9 +130,22 @@ CREATE_USER_SCHEMA = {
     },
 }
 
-CREATE_USER_SCHEMA_ERROR_MSG = {
+USER_CREATE_SCHEMA_ERROR_MSG = {
     "email": EMAIL_ERROR,
     "username": USERNAME_ERROR,
     "firstname": FIRSTNAME_ERROR,
     "lastname": LASTNAME_ERROR,
 }
+
+# /api/user-profile
+USER_PROFILE_SCHEMA = {
+    "netid": {
+        "required": True,
+        "type": NETID,
+    },
+}
+
+USER_PROFILE_SCHEMA_ERROR_MSG = {
+    "netid": NETID_ERROR,
+}
+

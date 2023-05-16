@@ -128,14 +128,20 @@ class UserNetwork:
 
         Exceptions:
             NoInputsException: Either the given netid or email is invalid.
+            UserNotFoundException: User is not found.
         """
-        # verify arguments
+        # Verify arguments
         if not (netid or email):
             raise generic_exceptions.NoInputsException()
 
-        # start session
+        # Start session
         with self.driver.session() as session:
             result = session.execute_read(self._get_user, netid, email)
+        
+        # User is not found 
+        if not result:
+            raise user_exceptions.UserNotFoundException()
+        
         return result
 
     @staticmethod
