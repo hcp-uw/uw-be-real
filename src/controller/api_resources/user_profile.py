@@ -91,12 +91,13 @@ class UserProfile(Resource):
         if validator_errors:
             return validator_errors, status.HTTP_400_BAD_REQUEST
         
+        netid: str = body["netid"]
 
         #Query Database
         try:
-            user_info: dict = self.user_network.get_user(
-                netid=body["netid"],
-            )
+            user_info: dict = self.user_network.get_user(netid)
+            if not user_info:
+               raise UserNotFoundException(netid) 
         
         # Return response
         except NoInputsException as e:
