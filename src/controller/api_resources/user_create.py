@@ -1,15 +1,13 @@
 # Flask imports
+from flask import request
 from flask_api import status
 from flask_restful import Resource
-from flask_restful.reqparse import RequestParser
 
-# Validation and Loggingimport
+# from flask_restful.reqparse import RequestParser
+from marshmallow import ValidationError
+
+# Validation and Logging
 from logging import Logger
-from cerberus import Validator
-from src.model.schemas.user_schema import (
-    USER_CREATE_SCHEMA as SCHEMA,
-    USER_CREATE_SCHEMA_ERROR_MSG as SCHEMA_ERROR,
-)
 
 # Controller imports
 from src.controller.exceptions.neo4j_exceptions import (
@@ -17,6 +15,7 @@ from src.controller.exceptions.neo4j_exceptions import (
     QueryFailureException,
 )
 from src.controller.exceptions.generic_exceptions import NoInputsException
+from src.controller.validations.user_create_validator import UserCreateValidator
 
 # Model imports
 from src.model.constants.http_response_messages import *
@@ -40,53 +39,6 @@ class UserCreate(Resource):
         self.logger: Logger = logger
         self.user_network: UserNetwork = user_network
 
-    @staticmethod
-    def _post_request_parser() -> tuple[dict, dict]:
-        """Parses the POST request body and returns a tuple of
-        request payload data (dict) and error messages (dict).
-        """
-        # Setup body argument parser
-        parse: RequestParser = RequestParser(bundle_errors=True)
-        parse.add_argument(
-            "email",
-            required=True,
-            type=str,
-            help=SCHEMA_ERROR["email"],
-        )
-        parse.add_argument(
-            "username",
-            required=True,
-            type=str,
-            help=SCHEMA_ERROR["username"],
-        )
-        parse.add_argument(
-            "firstname",
-            required=True,
-            type=str,
-            help=SCHEMA_ERROR["firstname"],
-        )
-        parse.add_argument(
-            "lastname",
-            required=True,
-            type=str,
-            help=SCHEMA_ERROR["lastname"],
-        )
-        # Parse body arguments
-        try:
-            body = parse.parse_args(strict=True)
-        # 400 Bad Request on extra parameters
-        except Exception:
-            return {}, PROPERTY_ERROR
-
-        # Validate arguments
-        validator: Validator = Validator()
-        validator.validate(body, SCHEMA)
-
-        # Build error message
-        error_msg: dict = {arg: SCHEMA_ERROR[arg] for arg in validator.errors}
-
-        return body, error_msg
-
     def post(self):
         """Creates a new user from the provided user information in the request payload.
 
@@ -108,9 +60,10 @@ class UserCreate(Resource):
                 - Generic error.
         """
         # Parse and validate request body
-        body, validator_errors = self._post_request_parser()
-        if validator_errors:
-            return validator_errors, status.HTTP_400_BAD_REQUEST
+        try:
+            body: dict = UserCreateValidator().load(request.get_json())
+        except ValidationError as e:
+            return e.messages, status.HTTP_400_BAD_REQUEST
 
         # String parse to get NetID from UW email.
         email: str = body["email"]
