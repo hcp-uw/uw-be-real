@@ -4,6 +4,7 @@ flask
 flask_api
 flask-cors
 flask-restful
+marshmallow
 neo4j
 boto3
 boto3-stubs[s3]

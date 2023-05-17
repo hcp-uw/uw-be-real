@@ -22,7 +22,6 @@ from src.controller.validations.credential_validation import *
 from src.controller.validations.s3_validation import *
 
 # Model imports
-from src.model.classes.user import User
 from src.model.constants import *
 from src.model.queries import *
 
@@ -176,6 +175,6 @@ class UserContent:
 
         return image_url
 
-    def create_post(self, author: User, images: tuple, caption: tuple) -> None:
+    def create_post(self, images: tuple, caption: tuple) -> None:
         """"""
         pass
