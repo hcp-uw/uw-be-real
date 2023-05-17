@@ -3,11 +3,9 @@ from flask import request
 from flask_api import status
 from flask_restful import Resource
 
-# from flask_restful.reqparse import RequestParser
-from marshmallow import ValidationError
-
-# Validation and Logging
+# Logging and validation import 
 from logging import Logger
+from marshmallow import ValidationError
 
 # Controller imports
 from src.controller.exceptions.neo4j_exceptions import (
