@@ -131,6 +131,11 @@ USER_CREATE_SCHEMA = {
 
 # /api/user-profile
 USER_PROFILE_SCHEMA = {
+    "username": {
+        "required": True,
+        "type": "string",
+        "regex": USERNAME_REGEX,
+    },
     "netid": {
         "required": True,
         "type": NETID,
