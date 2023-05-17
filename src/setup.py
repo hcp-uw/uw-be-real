@@ -33,7 +33,7 @@ def add_resources(
     )
     api.add_resource(
         UserProfile,
-        "/api/user-profile",
+        "/api/user-profile/<netid>",
         resource_class_kwargs={"user_network": user_network, "logger": logger},
     )
 

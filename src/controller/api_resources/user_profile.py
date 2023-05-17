@@ -1,6 +1,7 @@
 # Flask imports
+from flask import Flask
 from flask_api import status
-from flask_restful import Resource
+from flask_restful import Resource, Api
 from flask_restful.reqparse import RequestParser
 
 # Validation and Loggingimport
@@ -64,8 +65,13 @@ class UserProfile(Resource):
         error_msg: dict = {arg: SCHEMA_ERROR[arg] for arg in validator.errors}
 
         return body, error_msg
+<<<<<<< Updated upstream
 
     def get(self):
+=======
+    
+    def get(self, netid):
+>>>>>>> Stashed changes
         """Get user information from the provided information in the request payload.
 
         Args:
@@ -82,11 +88,24 @@ class UserProfile(Resource):
             500 INTERNAL SERVER ERROR:
                 - Generic error.
         """
+<<<<<<< Updated upstream
         body, validator_errors = self._get_request_parser()
         if validator_errors:
             return validator_errors, status.HTTP_400_BAD_REQUEST
 
         netid: str = body["netid"]
+=======
+        # body, validator_errors = self._get_request_parser()
+        # if validator_errors:
+        #     return validator_errors, status.HTTP_400_BAD_REQUEST
+        
+        # netid: str = body["netid"]
+        # validator: Validator = Validator()
+        # validator.validate(netid, SCHEMA)
+        # validator_errors: dict = {arg: SCHEMA_ERROR[arg] for arg in validator.errors}
+        # if validator_errors:
+        #     return validator_errors, status.HTTP_400_BAD_REQUEST
+>>>>>>> Stashed changes
 
         # Query Database
         try:
@@ -106,3 +125,7 @@ class UserProfile(Resource):
             return GENERIC_INTERNAL_SERVER_ERROR, status.HTTP_500_INTERNAL_SERVER_ERROR
 
         return user_info, status.HTTP_200_OK
+<<<<<<< Updated upstream
+=======
+    
+>>>>>>> Stashed changes
