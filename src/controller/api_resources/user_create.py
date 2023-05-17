@@ -7,8 +7,8 @@ from flask_restful.reqparse import RequestParser
 from logging import Logger
 from cerberus import Validator
 from src.model.schemas.user_schema import (
-    CREATE_USER_SCHEMA as SCHEMA,
-    CREATE_USER_SCHEMA_ERROR_MSG as SCHEMA_ERROR,
+    USER_CREATE_SCHEMA as SCHEMA,
+    USER_CREATE_SCHEMA_ERROR_MSG as SCHEMA_ERROR,
 )
 
 # Controller imports
@@ -51,25 +51,25 @@ class UserCreate(Resource):
             "email",
             required=True,
             type=str,
-            help=SCHEMA["email"],
+            help=SCHEMA_ERROR["email"],
         )
         parse.add_argument(
             "username",
             required=True,
             type=str,
-            help=SCHEMA["username"],
+            help=SCHEMA_ERROR["username"],
         )
         parse.add_argument(
             "firstname",
             required=True,
             type=str,
-            help=SCHEMA["firstname"],
+            help=SCHEMA_ERROR["firstname"],
         )
         parse.add_argument(
             "lastname",
             required=True,
             type=str,
-            help=SCHEMA["lastname"],
+            help=SCHEMA_ERROR["lastname"],
         )
         # Parse body arguments
         try:

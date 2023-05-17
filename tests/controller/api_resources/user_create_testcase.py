@@ -13,7 +13,7 @@ from tests import config
 
 
 class UserCreateTestCase(unittest.TestCase):
-    """UserRoute Unit test module."""
+    """UserCreate Unit test module."""
 
     def setUp(self) -> None:
         """"""
