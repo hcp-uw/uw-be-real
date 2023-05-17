@@ -6,10 +6,7 @@ from flask_restful.reqparse import RequestParser
 # Validation and Loggingimport
 from logging import Logger
 from cerberus import Validator
-from src.model.schemas.user_schema import (
-    USER_PROFILE_SCHEMA as SCHEMA,
-    USER_PROFILE_SCHEMA_ERROR_MSG as SCHEMA_ERROR,
-)
+from src.model.schemas.user_schema import USER_PROFILE_SCHEMA as SCHEMA
 
 # Controller imports
 from src.controller.exceptions.user_exceptions import UserNotFoundException
@@ -20,6 +17,7 @@ from src.controller.exceptions.generic_exceptions import NoInputsException
 from src.model.constants.http_response_messages import *
 from src.model.constants.logger_constants import *
 from src.model.data_access.user_network import UserNetwork
+
 
 class UserProfile(Resource):
     def __init__(self, user_network: UserNetwork, logger: Logger) -> None:
@@ -66,7 +64,7 @@ class UserProfile(Resource):
         error_msg: dict = {arg: SCHEMA_ERROR[arg] for arg in validator.errors}
 
         return body, error_msg
-    
+
     def get(self):
         """Get user information from the provided information in the request payload.
 
@@ -87,22 +85,22 @@ class UserProfile(Resource):
         body, validator_errors = self._get_request_parser()
         if validator_errors:
             return validator_errors, status.HTTP_400_BAD_REQUEST
-        
+
         netid: str = body["netid"]
 
-        #Query Database
+        # Query Database
         try:
             user_info: dict = self.user_network.get_user(netid)
             if not user_info:
-               raise UserNotFoundException(netid) 
-        
+                raise UserNotFoundException(netid)
+
         # Return response
         except NoInputsException as e:
             return e.msg, status.HTTP_400_BAD_REQUEST
-        
+
         except UserNotFoundException as e:
             return e.msg, status.HTTP_400_BAD_REQUEST
-        
+
         except Exception as e:
             self.logger.log(ERROR, str(e))
             return GENERIC_INTERNAL_SERVER_ERROR, status.HTTP_500_INTERNAL_SERVER_ERROR

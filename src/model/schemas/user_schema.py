@@ -1,6 +1,5 @@
 # Constants imports
 from src.model.constants.schema_constants import *
-from src.model.constants.schema_error_messages import *
 
 # Schema imports
 from src.model.schemas.post_schema import *
@@ -130,13 +129,6 @@ USER_CREATE_SCHEMA = {
     },
 }
 
-USER_CREATE_SCHEMA_ERROR_MSG = {
-    "email": EMAIL_ERROR,
-    "username": USERNAME_ERROR,
-    "firstname": FIRSTNAME_ERROR,
-    "lastname": LASTNAME_ERROR,
-}
-
 # /api/user-profile
 USER_PROFILE_SCHEMA = {
     "netid": {
@@ -144,8 +136,3 @@ USER_PROFILE_SCHEMA = {
         "type": NETID,
     },
 }
-
-USER_PROFILE_SCHEMA_ERROR_MSG = {
-    "netid": NETID_ERROR,
-}
-
