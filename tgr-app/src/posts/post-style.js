@@ -3,22 +3,28 @@ import { StyleSheet, Dimensions } from 'react-native';
 export const {width} = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
+    postContainer: {
+        marginHorizontal: '2%',
+        paddingBottom: '5%'
+    },
     profileInfo: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
+        columnGap: width * 0.01
     },
     postProfPic: {
-        width: '10%',
-        height: width * 0.10,
-        borderRadius: 60,
-        borderWidth: 1,
+        width: width * 0.1,
+        height: width * 0.1,
+        borderRadius: width * 0.05,
+        borderWidth: width * 0.005,
         borderColor: 'white'
     },
+    userContainer: {
+        flexDirection: 'column',
+        paddingBottom: '3%'
+    },
     bigPostImg: {
-        padding: 10,
-        width: '100%',
         height: width * 1.5,
-        borderRadius: 20,
+        borderRadius: width * 0.05,
     },
     smallPostImg: {
         position: 'absolute',
@@ -30,27 +36,18 @@ export const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 3
     },
-    userContainer: {
+    interactionsContainer: {
         flexDirection: 'row',
-      },
-    streakText: {
-        color: '#adadad',
-        fontSize: 10,
-        position: "relative",
-        left: 4,
-        top: 2
-    },
-    streakEmoji: {
-        color: 'white',
-        fontSize: 10,
-        position: "relative",
-        left: 4,
-        top: 2.5
+        marginHorizontal: '5%',
+        columnGap: width * 0.1,
+        paddingTop: '1%',
+        textAlign: 'center'
     },
     interactionsText: {
         color: '#adadad',
-        right: -220,
         fontWeight: 'bold',
-        bottom: 25
+    },
+    reactionSpace: {
+        width: width * 0.04
     }
 })

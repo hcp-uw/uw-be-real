@@ -1,25 +1,26 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
 export const {width} = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
   header: {
-    height: width * 0.23,
-    left: 20,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingTop: Platform.OS == 'android' ? (width * 0.02) : 0,
+    marginHorizontal: '3%',
+    flexWrap: 'wrap',
+    height: Platform.OS == 'android' ? (width * 0.14) : (width * 0.24)
   },
   headerText: {
-    fontSize: 20,
-    top: 7,
+    fontSize: width * 0.06,
     fontWeight: 'bold',
     color: 'white',
   },
   userProfilePic: {
-    right: -345,
-    top: -25,
     width: '10%',
     height: width * 0.1,
-    borderRadius: 20,
-    borderWidth: 1,
+    borderRadius: width * 0.05,
+    borderWidth: width * 0.003,
     borderColor: 'white'
   },
 });

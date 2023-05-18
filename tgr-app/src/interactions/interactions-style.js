@@ -1,13 +1,11 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
 export const {width} = Dimensions.get('window');
 
-export const ITEM_LENGTH = width;
-
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'black'
+    backgroundColor: 'black',
+    paddingTop: '10%'
   },
   backArrow: {
     top: width * 0.01,
@@ -18,45 +16,53 @@ export const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
-    top: width * 0.01
+    paddingBottom: '3%'
   },
   tabs: {
     justifyContent: 'space-around',
     flexDirection: 'row',
     paddingBottom: '3%'
   },
-  commentsText: {
+  tabsText: {
     color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: width * 0.05,
-    width: width * 0.3,
   },
   underlineContainer: {
     borderBottomColor: 'white',
-    borderBottomWidth: 1
-  },
-  reactionsText: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: width * 0.05,
-    width: width * 0.3
+    borderBottomWidth: width * 0.001
   },
   reactionsList: {
-    flex: 0.1,
     left: 5
   },
   commentsList: {
-    flex: 0.1,
-    left: 5,
-    // backgroundColor: 'white',
-    // height: width * 0.6
+    left: '3%',
+    height: '80%'
   },
   commentSpace: {
     height: '6%'
   },
   reactionSpace: {
     height: '1%'
+  },
+  input: {
+    width: '90%',
+    borderBottomColor: '#808080',
+    borderBottomWidth: width * 0.001,
+    left: '5%',
+  },
+  sendBtn: {
+      marginLeft: '75%',
+      marginBottom: Platform.OS == 'android' ? '-5%' : '-3%',
+      width: '20%',
+      alignItems: 'center',
+      padding: '2%',
+      borderRadius: width * 0.2,
+      borderWidth: width * 0.001,
+      borderColor: '#808080'
+  },
+  sendText: {
+      color: '#808080'
   }
 });

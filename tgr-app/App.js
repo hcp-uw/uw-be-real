@@ -34,6 +34,7 @@ function App() {
         <Stack.Screen name="Interactions" component={Interactions}
                       options={{
                         headerShown: false,
+                        contentStyle: { backgroundColor: 'black' }
                       }}/>
         <Stack.Screen name="Social" component={Social}
                       options={{

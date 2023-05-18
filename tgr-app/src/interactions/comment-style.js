@@ -5,11 +5,11 @@ export const {width} = Dimensions.get('window');
 export const styles = StyleSheet.create({
     commentContainer: {
         flexDirection: 'row',  
-        columnGap: '10%',
+        columnGap: width * 0.04,
     },
     nonProfContainer: {
-        flexShrink: '1%',
-        width: '85%',
+        flexShrink: width * 0.01,
+        width: width * 0.8,
     },
     postProfPic: {
         width: width * 0.1,
@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     },
     userTimeContainer: {
         flexDirection: 'row',
-        columnGap: '6%',
+        columnGap: width * 0.01,
     },
     username: {
         color: '#FFFFFF',

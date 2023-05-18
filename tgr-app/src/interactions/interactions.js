@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
-import { FlatList, Text, View, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
+import { TextInput, FlatList, Text, View, SafeAreaView, 
+         KeyboardAvoidingView, TouchableWithoutFeedback,
+        TouchableOpacity, Dimensions } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from './interactions-style';
 import Reaction from './reaction';
@@ -10,7 +12,8 @@ export default function Interactions({navigation, route}) {
   const [commentsBool, setCommentsBool] = useState(true);
   const [commentsList, setCommentsList] = useState([]);
   const [reactionsList, setReactionsList] = useState([]);
-
+  paddingSpace = Dimensions.get('window').width * 0.001;
+  
   useMemo(() => {
     const fetchInteractions = fetch('https://raw.githubusercontent.com/AantLe12/DummyData/main/dummy_interactions.json').then(res => res.json()).then(data => {
       setCommentsList(data.comments);
@@ -20,33 +23,43 @@ export default function Interactions({navigation, route}) {
 
   if (commentsBool) {
     return (
-      <SafeAreaView style={styles.container}>
-        <TouchableWithoutFeedback onPress={() => 
-          navigation.navigate('Feed')
-          }>
-            <AntDesign style={styles.backArrow} name="arrowleft" size={35} color="white" />
-        </TouchableWithoutFeedback>    
-  
-        <Text style={styles.username}>{username}</Text>
-        <View style={styles.tabs}>
-          <TouchableWithoutFeedback  onPress={() => setCommentsBool(1) }>
-            <View style={styles.underlineContainer}>
-              <Text style={styles.commentsText}>Comments</Text>
+      <View style={styles.container}>
+          <TouchableWithoutFeedback onPress={() => 
+            navigation.navigate('Feed')
+            }>
+              <AntDesign style={styles.backArrow} name="arrowleft" size={35} color="white" />
+          </TouchableWithoutFeedback>    
+    
+          <Text style={styles.username}>{username}</Text>
+          <View style={styles.tabs}>
+            <TouchableWithoutFeedback  onPress={() => setCommentsBool(1) }>
+              <View style={styles.underlineContainer}>
+                <Text style={styles.tabsText}>Comments</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback  onPress={() => setCommentsBool(0) }>
+                <Text style={styles.tabsText} onClick>Reactions</Text>
+            </TouchableWithoutFeedback>
+          </View>
+
+        <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={5}>
+          <FlatList
+            style={styles.commentsList}
+            data={commentsList}
+            renderItem={({ item }) => <Comment item={item}
+                                              navigation={navigation}/>}
+            ItemSeparatorComponent={() => <View style={styles.commentSpace} />}
+          />
+          <View style={{backgroundColor: 'black'}}>
+            <TouchableOpacity style={styles.sendBtn}>
+            <Text style={styles.sendText}>Send</Text>
+            </TouchableOpacity>
+            <View>
+              <TextInput style={styles.input}/>
             </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback  onPress={() => setCommentsBool(0) }>
-              <Text style={styles.reactionsText} onClick>Reactions</Text>
-          </TouchableWithoutFeedback>
-        </View>
-        <FlatList
-          style={styles.commentsList}
-          data={commentsList}
-          renderItem={({ item }) => <Comment item={item}
-                                             navigation={navigation}/>}
-          ItemSeparatorComponent={() => <View style={styles.commentSpace} />}
-        />
-        {/* <Text styles={styles.commentsText}>Hello</Text> */}
-      </SafeAreaView>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
     );
   } else {
     return (
@@ -60,11 +73,11 @@ export default function Interactions({navigation, route}) {
         <Text style={styles.username}>{username}</Text>
         <View style={styles.tabs}>
           <TouchableWithoutFeedback  onPress={() => setCommentsBool(1) }>
-              <Text style={styles.commentsText}>Comments</Text>
+              <Text style={styles.tabsText}>Comments</Text>
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback  onPress={() => setCommentsBool(0) }>
             <View style={styles.underlineContainer}>
-              <Text style={styles.reactionsText} onClick>Reactions</Text>
+              <Text style={styles.tabsText} onClick>Reactions</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>

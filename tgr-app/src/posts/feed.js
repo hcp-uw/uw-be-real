@@ -27,7 +27,6 @@ export default function Feed({navigation, route}) {
         data={posts}
         renderItem={({ item }) => <Post navigation={navigation} 
                                         item={item} />}
-        ItemSeparatorComponent={() => <View style={{height: 100}} />}
       />
 
       <Navbar navigation={navigation}

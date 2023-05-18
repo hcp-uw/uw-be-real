@@ -20,7 +20,7 @@
     "expo-sharing": "~11.2.2",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
-    "react-native": "0.71.7",
+    "react-native": "0.71.8",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-image-filter-kit": "^0.8.0",
     "react-native-native": "^1.0.0",
