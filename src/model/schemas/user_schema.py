@@ -14,10 +14,15 @@ SIMPLE_USER_SCHEMA = {
         "type": "string",
         "regex": USERNAME_REGEX,
     },
-    "fullname": {
+    "firstname": {
         "required": True,
         "type": "string",
-        "regex": FULLNAME_REGEX,
+        "regex": FIRSTNAME_REGEX
+    },
+    "lastname": {
+        "required": True,
+        "type": "string",
+        "regex": LASTNAME_REGEX
     },
     "profile-image": {
         "required": True,
@@ -44,10 +49,15 @@ USER_API_SCHEMA = {
                 "type": "string",
                 "regex": USERNAME_REGEX,
             },
-            "fullname": {
+            "firstname": {
                 "required": True,
                 "type": "string",
-                "regex": FULLNAME_REGEX,
+                "regex": FIRSTNAME_REGEX
+            },
+            "lastname": {
+                "required": True,
+                "type": "string",
+                "regex": LASTNAME_REGEX
             },
             "profile-image": {
                 "required": True,

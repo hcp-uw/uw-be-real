@@ -126,7 +126,7 @@ class UserNetwork:
             If no users can be matched, an empty dict is returned.
 
         Exceptions:
-            NoInputsException: Either the given netid or email is invalid.
+            NoInputsException: The given netid is invalid.
             UserNotFoundException: User is not found.
         """
         # Verify arguments
@@ -138,6 +138,27 @@ class UserNetwork:
             result = session.execute_read(self._get_user, netid)
 
         return result
+    
+    def update_user(self, netid: str, **data) -> None:
+        """Updates user information in the database.
+
+        Args:
+            netid (str): The netid of the user.
+            **data (dict): Information that will be updated in the database.
+
+        Returns:
+            None.
+
+        Exceptions:
+            NoInputsException: The given netid is invalid.
+            UserNotFoundException: User is not found.
+            QueryFailureException: An error occured with the query.
+        """
+        # Verify arguments
+        if not netid:
+            raise generic_exceptions.NoInputsException()
+        query: str = neo4j_queries.update_user(netid, **data)
+        self._database_query(query)
 
     @staticmethod
     def _get_user(tx, netid: str):

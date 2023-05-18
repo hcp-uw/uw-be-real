@@ -40,6 +40,17 @@ def get_friends(netid: str) -> str:
             friend.account_status AS account_status
     """
 
+def update_user(netid: str, **data: dict[str, str]) -> str:
+    s = f"MATCH (user: User{{netid: '{netid}'}})\n"
+    for count, (key, value) in enumerate(data.items()):
+        if (not value or len(value) == 0):
+            s = s + f"REMOVE user.{key}\n"
+        elif type(value) == str:
+            s = s + f"SET user.{key} = '{value}'\n"
+        else:
+            s = s + f"SET user.{key} = {value}\n"
+    return s
+
 
 def check_unique(props: list[str]) -> str:
     return f"""
