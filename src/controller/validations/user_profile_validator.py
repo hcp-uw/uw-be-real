@@ -26,7 +26,7 @@ def validate_phone(phone: str) -> None:
     if not match(PHONE_REGEX, phone):
         raise ValidationError(PHONE_ERROR)
     
-def validate_birthdate(birthdate: str) -> None:
+def validate_birthdate(birthdate: datetime) -> None:
     if not match(DATE_REGEX, birthdate):
         raise ValidationError(DATE_ERROR)
     
@@ -81,7 +81,7 @@ class UserProfilePutValidator(Schema):
         error_messages={"required": PHONE_ERROR},
         validate=validate_phone,
     )
-    birthdate = fields.Date(
+    birthdate = fields.Str(
         required=False,
         error_messages={"required": DATE_ERROR},
         validate=validate_birthdate,

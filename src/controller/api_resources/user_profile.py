@@ -122,7 +122,7 @@ class UserProfile(Resource):
             body: dict = UserProfilePutValidator().load(request.get_json())
         except ValidationError as e:
             return e.messages, status.HTTP_400_BAD_REQUEST
-        netid = body["netid"]
+        netid: str = body["netid"]
         del body["netid"]
 
         # Query database
