@@ -4,32 +4,32 @@ export const {width} = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 1,
     backgroundColor: 'black'
   },
+  lists: {
+    flex: 1,
+    left: '2%'
+  },
   searchContainer: {
-    paddingBottom: 50,
-    width: width * 0.98,
-    left: 5
+    paddingBottom: '10%',
+    width: '98%',
   },
   friendsText: {
     color: '#FFFFFF',
-    left: 5,
-    paddingBottom: 10,
+    paddingBottom: '2%',
     fontWeight: 'bold'
   },
   friendsList: {
     flex: 0.1,
-    left: 5
+    paddingBottom: '10%'
   },
   requestsText: {
     color: '#FFFFFF',
-    left: 5,
-    paddingBottom: 10,
+    paddingBottom: '2%',
     fontWeight: 'bold'
   },
   requestList: {
     flex: 0.1,
-    left: 5
   },
 });

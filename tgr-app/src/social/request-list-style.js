@@ -3,47 +3,52 @@ import { StyleSheet, Dimensions } from 'react-native';
 export const {width} = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
-    item: {
-        height: width * 0.15
+    requestItem: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        paddingBottom: '5%',
+        marginHorizontal: '1%',
+        marginRight: '4%'
+    },
+    profile: {
+        flexDirection: 'row',
+        columnGap: width * 0.03
     },
     postProfPic: {
-        width: '10%',
-        height: width * 0.10,
-        borderRadius: 60,
-        borderWidth: 1,
+        width: width * 0.1,
+        height: width * 0.1,
+        borderRadius: width * 0.05,
+        borderWidth: width * 0.005,
         borderColor: 'white'
+    },
+    names: {
+        flexDirection: 'column'
     },
     name: {
         color: '#FFFFFF',
-        top: -35,
-        left: 50
     },
     username: {
         color: '#959499',
-        top: -36,
-        left: 50
+    },
+    buttons: {
+        flexDirection: 'row',
+        columnGap: width * 0.03
     },
     submitBtn: {
-        top: -66,
-        left: 200,
         width: width * 0.2,
+        borderRadius: width * 0.1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
-        borderRadius: 100,
         backgroundColor: '#FFFFFF',
     },
     submitText: {
         color: '#000000'
     },
     rejectBtn: {
-        top: -103,
-        left: 300,
         width: width * 0.2,
+        borderRadius: width * 0.1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
-        borderRadius: 100,
         backgroundColor: '#414141',
     },
     rejectText: {

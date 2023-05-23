@@ -14,9 +14,14 @@ export default function ExpandedRequests({navigation, route}) {
       <Header navigation={navigation} 
               pfp={pfp}/>
               
-      <Text style={socialStyles.requestsText}>My Requests ({numRequests})</Text>
-
       <CustomSearchBar/>
+      
+      <Text style={{color: '#FFFFFF',
+                    paddingBottom: '2%',
+                    fontWeight: 'bold',
+                    left: '2%'}}>
+        My Requests ({numRequests})
+      </Text>
 
       {/* List of friends */}
       <FlatList

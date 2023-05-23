@@ -51,6 +51,7 @@ export const styles = StyleSheet.create({
     borderBottomColor: '#808080',
     borderBottomWidth: width * 0.001,
     left: '5%',
+    color: 'white'
   },
   sendBtn: {
       marginLeft: '75%',

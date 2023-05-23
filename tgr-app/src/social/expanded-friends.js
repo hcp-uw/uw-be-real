@@ -14,9 +14,14 @@ export default function ExpandedFriends({navigation, route}) {
       <Header navigation={navigation} 
               pfp={pfp}/>
               
-      <Text style={socialStyles.friendsText}>My Friends ({numFriends})</Text>
-
       <CustomSearchBar/>
+
+      <Text style={{color: '#FFFFFF',
+                    paddingBottom: '2%',
+                    fontWeight: 'bold',
+                    left: '2%'}}>
+        My Friends ({numFriends})
+      </Text>
 
       {/* List of friends */}
       <FlatList

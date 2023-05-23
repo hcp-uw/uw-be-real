@@ -52,7 +52,7 @@ export default function Interactions({navigation, route}) {
           />
           <View style={{backgroundColor: 'black'}}>
             <TouchableOpacity style={styles.sendBtn}>
-            <Text style={styles.sendText}>Send</Text>
+              <Text style={styles.sendText}>Send</Text>
             </TouchableOpacity>
             <View>
               <TextInput style={styles.input}/>

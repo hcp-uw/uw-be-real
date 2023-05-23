@@ -6,10 +6,10 @@ export const styles = StyleSheet.create({
   header: {
     justifyContent: 'space-between',
     flexDirection: 'row',
-    paddingTop: Platform.OS == 'android' ? (width * 0.02) : 0,
+    paddingTop: Platform.OS == 'android' ? (width * 0.05) : 0,
     marginHorizontal: '3%',
     flexWrap: 'wrap',
-    height: Platform.OS == 'android' ? (width * 0.14) : (width * 0.24)
+    height: Platform.OS == 'android' ? (width * 0.17) : (width * 0.24)
   },
   headerText: {
     fontSize: width * 0.06,

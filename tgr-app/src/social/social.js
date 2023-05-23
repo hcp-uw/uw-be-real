@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { FlatList, Text, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { FlatList, Text, View, TouchableWithoutFeedback } from 'react-native';
 import { styles } from './social-style';
 import Header from "../header/header";
 import Navbar from "../navbar/navbar";
@@ -32,38 +32,38 @@ export default function Social({navigation, route}) {
               
       <CustomSearchBar/>
 
-      <TouchableWithoutFeedback  onPress={() => 
-        navigation.navigate('ExpandedFriends', { pfp: pfp, friends: friends, numFriends: numFriends })
-      }>
-        <Text style={styles.friendsText}>My Friends ({numFriends})</Text>
-      </TouchableWithoutFeedback>
+      {/* Groups the entire components together */}
+      <View style={styles.lists}>
+        {/* My Friends text */}
+        <TouchableWithoutFeedback  onPress={() => 
+          navigation.navigate('ExpandedFriends', { pfp: pfp, friends: friends, numFriends: numFriends })
+        }>
+          <Text style={styles.friendsText}>My Friends ({numFriends})</Text>
+        </TouchableWithoutFeedback>
 
-      {/* List of friends */}
-      <FlatList
-        style={styles.friendsList}
-        data={friends}
-        renderItem={({ item }) => <FriendList item={item}
-                                              navigation={navigation}/>}
-      />
+        {/* List of friends */}
+        <FlatList
+          style={styles.friendsList}
+          data={friends}
+          renderItem={({ item }) => <FriendList item={item}
+                                                navigation={navigation}/>}
+        />
 
-      {/* Filler space */}
-      <View style={{margin: 10}}></View>
+        {/* Pending requests text */}
+        <TouchableWithoutFeedback  onPress={() => 
+          navigation.navigate('ExpandedRequests', { pfp: pfp, requests: requests, numRequests: numRequests })
+        }>
+          <Text style={styles.requestsText}>Pending Requests ({numRequests})</Text>  
+        </TouchableWithoutFeedback>
 
-
-      <TouchableWithoutFeedback  onPress={() => 
-        navigation.navigate('ExpandedRequests', { pfp: pfp, requests: requests, numRequests: numRequests })
-      }>
-        <Text style={styles.requestsText}>Pending Requests ({numRequests})</Text>  
-      </TouchableWithoutFeedback>
-
-      {/* List of requests */}
-      <FlatList
-        style={styles.requestList}
-        data={requests}
-        renderItem={({ item }) => <RequestList item={item}
-                                               navigation={navigation}/>}
-      />
-
+        {/* List of requests */}
+        <FlatList
+          style={styles.requestList}
+          data={requests}
+          renderItem={({ item }) => <RequestList item={item}
+                                                navigation={navigation}/>}
+        />
+      </View>
       <Navbar navigation={navigation} 
               pfp={pfp}/>
     </View>
