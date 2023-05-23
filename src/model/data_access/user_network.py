@@ -41,6 +41,10 @@ class UserNetwork:
         # Connect to Neo4j
         self.driver: Driver = self._connect_neo4j(neo4j_creds)
 
+        # Verify connectivity and constraints
+        self._verify_driver()
+        self._verify_constraints()
+
     def _connect_neo4j(self, neo4j_creds: tuple[str, str, str]) -> Driver:
         """Returns a Neo4j Driver from the provided credentials."""
         uri, user, password = neo4j_creds

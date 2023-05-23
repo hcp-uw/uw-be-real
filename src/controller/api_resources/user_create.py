@@ -3,7 +3,7 @@ from flask import request
 from flask_api import status
 from flask_restful import Resource
 
-# Logging and validation import 
+# Logging and validation import
 from logging import Logger
 from marshmallow import ValidationError
 
@@ -60,15 +60,12 @@ class UserCreate(Resource):
         # Parse and validate request body
         try:
             body: dict = UserCreateValidator().load(request.get_json())
-        except ValidationError as e:
-            return e.messages, status.HTTP_400_BAD_REQUEST
 
-        # String parse to get NetID from UW email.
-        email: str = body["email"]
-        netid: str = email.split("@")[0]
+            # String parse to get NetID from UW email.
+            email: str = body["email"]
+            netid: str = email.split("@")[0]
 
-        # Query database
-        try:
+            # Query database
             self.user_network.create_user(
                 username=body["username"],
                 firstname=body["firstname"],
@@ -78,6 +75,9 @@ class UserCreate(Resource):
             )
 
         # Return response
+        except ValidationError as e:
+            return e.messages, status.HTTP_400_BAD_REQUEST
+
         except NoInputsException as e:
             return e.msg, status.HTTP_400_BAD_REQUEST
 

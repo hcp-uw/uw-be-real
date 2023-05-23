@@ -78,7 +78,6 @@ USER_API_SCHEMA = {
             },
             "birthdate": {
                 "type": "datetime",
-                "coerce": TO_DATE,
             },
             "campus": {
                 "type": "string",
