@@ -12,7 +12,7 @@ export default function Navbar({navigation, route, pfp}) {
         </TouchableWithoutFeedback>
         
         <TouchableWithoutFeedback  onPress={() => 
-        navigation.navigate('Profile')
+        navigation.navigate('Feed')
         }>
           <MaterialIcons name="public" size={35} color="white" />
         </TouchableWithoutFeedback>
