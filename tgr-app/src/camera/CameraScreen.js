@@ -40,7 +40,8 @@ const CameraScreen = ({navigation, route}) => {
     let options = {
       quality: 1,
       base64: true,
-      exif: false
+      exif: false,
+      quality: 0.5
     };
     
       let newPhoto = await cameraRef.current.takePictureAsync(options);
