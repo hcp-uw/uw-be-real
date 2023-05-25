@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'; 
-import { Text, SafeAreaView, Button, StyleSheet, Pressable, TextInput, Animated, View, Keyboard, Dimensions} from 'react-native';
+import { Text, SafeAreaView, Button, StyleSheet, Pressable, TextInput, Animated, View, Keyboard, Dimensions, TouchableOpacity} from 'react-native';
 import { useState, useRef, useMemo, useCallback } from 'react';
 import styles,{ IMAGE_HEIGHT, IMAGE_HEIGHT_SMALL, IMAGE_WIDTH, IMAGE_WIDTH_SMALL} from './CameraStyles.js';
 import { THUMBNAIL_HEIGHT, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT_SMALL, THUMBNAIL_WIDTH_SMALL } from './CameraStyles.js';
@@ -184,7 +184,21 @@ const PreviewScreen = ({route, navigation}) => {
   const sharePic = (postGlobally) => {
     // navigation.navigate("PostPhoto", {photo: photo, backPhoto: backPhoto});
     console.log("Posting Photo" + postGlobally);
-    
+    // let body = new FormData();
+    // body.append('frontPhoto', {uri: photo.uri, name: 'photo.png',filename :'imageName.png',type: 'image/jpg'});
+    // body.append('Content-Type', 'image/png');
+
+    // body.append('backPhoto', {uri: backPhoto.uri, name: ''})
+
+    // fetch(Url,{ method: 'POST',headers:{  
+    //     "Content-Type": "multipart/form-data",
+    //     "otherHeader": "foo",
+    //     } , body :body} )
+    //   .then((res) => checkStatus(res))
+    //   .then((res) => res.json())
+    //   .then((res) => { console.log("response" +JSON.stringify(res)); })
+    //   .catch((e) => console.log(e))
+    //   .done()
   };
   return (
     <NativeViewGestureHandler>
@@ -218,18 +232,26 @@ const PreviewScreen = ({route, navigation}) => {
         textAlign='center'
         placeholder="Test Caption"
         placeholderTextColor="grey"
+        multiline={true}
+        textBreakStrategy='highQuality'
+        returnKeyType='done'
+        blurOnSubmit={true}
       />
       
       </Animated.View>
-      <View style={styles.horizontalLayout}>
-        <Button title="Post" onPress={openOptions} />
-        <Button title="Retake" onPress={() => {navigation.goBack()}} />
+      <View style={[styles.horizontalLayout]}>
+        <TouchableOpacity title="Retake" style={styles.previewButton}onPress={() => {navigation.goBack()}}>
+          <Text style={{color: 'white'}} textAlign='center'>Retake</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.previewButton}onPress={openOptions} >
+          <Text style={{color: 'white'}} textAlign='center'>Post</Text>
+        </TouchableOpacity>
       </View>
       <BottomSheet ref={bottomSheetRef} index={-1} 
-      snapPoints={snapPoints} 
-      backdropComponent={renderBackdrop} onAnimate={previewChange}
-      backgroundComponent={PostOptionBackground}
-      animatedPosition={bottomSheetPosition} >
+                    snapPoints={snapPoints} 
+                  backdropComponent={renderBackdrop} onAnimate={previewChange}
+                  backgroundComponent={PostOptionBackground}
+                  animatedPosition={bottomSheetPosition} >
         <PostOptions postCallback={sharePic}/>
       </BottomSheet>
     </SafeAreaView>

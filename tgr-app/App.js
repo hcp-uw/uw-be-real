@@ -18,8 +18,17 @@ function App() {
     <NavigationContainer>
       <GestureHandlerRootView style={{flex: 1}}>
       <Stack.Navigator initialRouteName="Camera">
-        <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true}}/>
-        <Stack.Screen name="Preview" component={PreviewScreen}/>
+        <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true,
+           headerStyle: {backgroundColor: 'black'},
+           title: '',
+           headerTintColor: 'white'
+           }}/>
+        <Stack.Screen name="Preview" component={PreviewScreen} options={{unmountOnBlur: true,
+           headerStyle: {backgroundColor: 'black'},
+           title: '',
+           headerTintColor: 'white'
+        }}
+        />
         <Stack.Screen name="Feed" component={Feed}
                       options={{
                         headerShown: false,

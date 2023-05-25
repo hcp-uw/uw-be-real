@@ -31,9 +31,9 @@ export default StyleSheet.create({
   input: {
     backgroundColor: 'black',
     color: 'white',
-    margin: 5,
-    width: "100%"
-    
+    marginTop: 5,
+    maxWidth: width,
+    flexWrap: "wrap"
   },
   horizontalLayout: {
     flexDirection:'row'
@@ -96,6 +96,16 @@ export default StyleSheet.create({
     alignItems: 'center', 
     marginTop: 20,
     alignSelf: 'center'
+  },
+  previewButton: {
+    flex: 1,
+    color: 'white', 
+    backgroundColor: 'black',
+    borderColor: 'white',
+    borderWidth: 1,
+    height: width * 0.125,
+    borderRadius: 20, 
+    alignItems: 'center',
+    justifyContent:"center"
   }
-
 })

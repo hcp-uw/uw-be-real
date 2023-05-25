@@ -5,6 +5,7 @@ import { Camera, CameraType} from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library'; 
 import { useIsFocused } from '@react-navigation/native';
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from './CameraStyles';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const CameraScreen = ({navigation, route}) => {
   let cameraRef = useRef();
@@ -27,13 +28,15 @@ const CameraScreen = ({navigation, route}) => {
     })();
   }, []);
 
+  // We could probably set up a screen for these, though I'm not going to do it 
+  // rn. 
   if (hasCameraPermission === undefined) {
     return <Text>Requesting permissions...</Text>
   } else if (!hasCameraPermission) {
     return <Text>Permission for camera not granted. Please change this in settings.</Text>
   }
 
-  let takePic = async () => {
+  async function takePic() {
     let options = {
       quality: 1,
       base64: true,
@@ -42,8 +45,6 @@ const CameraScreen = ({navigation, route}) => {
     
       let newPhoto = await cameraRef.current.takePictureAsync(options);
       
-      console.log(cameraRef.current.getAvailablePictureSizesAsync());
-      console.log(cameraRef.current.getSupportedRatiosAsync());
       
       // cameraRef.current.pausePreview();
       setPhoto(newPhoto);
@@ -52,7 +53,7 @@ const CameraScreen = ({navigation, route}) => {
       setTimeout(async ()  => {
         newPhoto = await cameraRef.current.takePictureAsync(options);
         setBackPhoto(newPhoto);
-      }, 500);
+      }, 1000);
       
       
     
@@ -62,12 +63,19 @@ const CameraScreen = ({navigation, route}) => {
     
     
   };
-
-  if (photo && backPhoto) {
-    
-    navigation.navigate("Preview", {photo: photo, backPhoto: backPhoto});
+  function navigateToPreview(photo, backPhoto) {
+  let payload = {photo: photo, backPhoto: backPhoto}; 
     setPhoto(undefined);
     setBackPhoto(undefined);
+    navigation.navigate("Preview", payload);
+  }
+
+  if (photo && backPhoto) {
+    navigateToPreview(photo, backPhoto);
+    // let payload = {photo: photo, backPhoto: backPhoto}; 
+    // setPhoto(undefined);
+    // setBackPhoto(undefined);
+    // navigation.navigate("Preview", payload);
     
   }
   function toggleCameraType() {
@@ -76,6 +84,7 @@ const CameraScreen = ({navigation, route}) => {
   
   return (
     <View style={styles.container}>
+      
       <View style={styles.roundCamera}>
         {isFocused && <Camera
           ratio="4:3" style={styles.camera} ref={cameraRef} type={type} borderRadius={15} resizeMode="cover" overflow="hidden"
@@ -88,11 +97,14 @@ const CameraScreen = ({navigation, route}) => {
        </View>
       
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={takePic}>
+        <View style={{flex: 0.6}}></View>
+        <TouchableOpacity onPress={takePic} style={{flex: 1}} >
           <View style={styles.ring}/>
         </TouchableOpacity>
         
-        <Button title="Reverse" onPress={toggleCameraType}/>
+        <TouchableOpacity onPress={toggleCameraType} style={{flex: 0.5}}>
+          <Ionicons name="camera-reverse-outline" size={60} color="white"/>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -106,7 +118,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   buttonContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: "center",
   },
   smallPreview: {
     alignSelf: 'flex-start',
@@ -125,7 +138,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderColor: "white",
     borderWidth: 5,
-    alignSelf: 'center', 
     margin: 10,
     justifyContent: 'center'
   },
