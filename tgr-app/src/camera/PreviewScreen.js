@@ -12,7 +12,6 @@ const PreviewScreen = ({route, navigation}) => {
   const {photo, backPhoto} = route.params;
   const [showFront, setShowFront] = useState(true);
   const [caption, setCaption] = useState('');
-  const [postGlobal, setPostGlobal] = useState(false);
   const keyboardHeight = useRef(new Animated.Value(0)).current;
   const imageHeight = useRef(new Animated.Value(IMAGE_HEIGHT)).current;
   const imageWidth = useRef(new Animated.Value(IMAGE_WIDTH)).current;
@@ -23,6 +22,15 @@ const PreviewScreen = ({route, navigation}) => {
   const openOptions = () => bottomSheetRef.current.expand();
   const previewPadding = useRef(new Animated.Value(0)).current;
   const bottomSheetPosition = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    const keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', keyboardWillShow);
+    const keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', keyboardWillHide);
+
+    return () => {
+      keyboardWillShowSub.remove();
+      keyboardWillHideSub.remove();
+    }
+  }, []);
   
   // renders
   const renderBackdrop = useCallback(
@@ -36,18 +44,6 @@ const PreviewScreen = ({route, navigation}) => {
     ),
     []
   ); 
-  console.log("Actual image height: " + IMAGE_HEIGHT);
-  console.log(imageHeight);
-  console.log("Image small height: " + IMAGE_HEIGHT_SMALL);
-  useEffect(() => {
-    const keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', keyboardWillShow);
-    const keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', keyboardWillHide);
-
-    return () => {
-      keyboardWillShowSub.remove();
-      keyboardWillHideSub.remove();
-    }
-  }, []);
   
   const shrinkPreview = () => {
     Animated.parallel([

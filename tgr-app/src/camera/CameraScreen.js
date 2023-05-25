@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,  Button, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { Camera, CameraType} from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library'; 
 import { useIsFocused } from '@react-navigation/native';
-import { IMAGE_HEIGHT, IMAGE_WIDTH } from './CameraStyles';
+import styles, { IMAGE_HEIGHT, IMAGE_WIDTH } from './CameraStyles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const CameraScreen = ({navigation, route}) => {
@@ -15,7 +15,6 @@ const CameraScreen = ({navigation, route}) => {
   const [photo, setPhoto] = useState(undefined);
   const [type, setType] = useState(CameraType.back);
   const [backPhoto, setBackPhoto] = useState(undefined);
-  const [backPhotoReady, setBackPhotoReady] = useState(false);
   
   useEffect(() => {
     (async () => {
@@ -25,17 +24,9 @@ const CameraScreen = ({navigation, route}) => {
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
       setPhoto(undefined);
       setBackPhoto(undefined);
-    })();
-  }, []);
-
-  // We could probably set up a screen for these, though I'm not going to do it 
-  // rn. 
-  if (hasCameraPermission === undefined) {
-    return <Text>Requesting permissions...</Text>
-  } else if (!hasCameraPermission) {
-    return <Text>Permission for camera not granted. Please change this in settings.</Text>
-  }
-
+    })();  
+  }, []);  
+  
   async function takePic() {
     let options = {
       quality: 1,
@@ -47,40 +38,37 @@ const CameraScreen = ({navigation, route}) => {
       let newPhoto = await cameraRef.current.takePictureAsync(options);
       
       
-      // cameraRef.current.pausePreview();
+      cameraRef.current.pausePreview();
       setPhoto(newPhoto);
       toggleCameraType();
-      // cameraRef.current.resumePreview();
+      cameraRef.current.resumePreview();
       setTimeout(async ()  => {
         newPhoto = await cameraRef.current.takePictureAsync(options);
         setBackPhoto(newPhoto);
       }, 1000);
-      
-      
-    
-    // else if (!backPhoto) {
-    //   
-    // }
-    
-    
   };
+
   function navigateToPreview(photo, backPhoto) {
-  let payload = {photo: photo, backPhoto: backPhoto}; 
+    let payload = {photo: photo, backPhoto: backPhoto}; 
     setPhoto(undefined);
     setBackPhoto(undefined);
     navigation.navigate("Preview", payload);
   }
 
-  if (photo && backPhoto) {
-    navigateToPreview(photo, backPhoto);
-    // let payload = {photo: photo, backPhoto: backPhoto}; 
-    // setPhoto(undefined);
-    // setBackPhoto(undefined);
-    // navigation.navigate("Preview", payload);
-    
-  }
   function toggleCameraType() {
     setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+  }
+  
+  // We could probably set up a screen for these, though I'm not going to do it 
+  // rn. 
+  if (hasCameraPermission === undefined) {
+    return <Text>Requesting permissions...</Text>
+  } else if (!hasCameraPermission) {
+    return <Text>Permission for camera not granted. Please change this in settings.</Text>
+  }  
+
+  if (photo && backPhoto) {
+    navigateToPreview(photo, backPhoto);
   }
   
   return (
@@ -111,41 +99,5 @@ const CameraScreen = ({navigation, route}) => {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black'
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: "center",
-  },
-  smallPreview: {
-    alignSelf: 'flex-start',
-    aspectRatio: 0.5,
-    marginLeft: 50,
-  }, 
-  camera: {
-    margin: 5,
-    width: IMAGE_WIDTH,
-    height: IMAGE_HEIGHT,
-  },
-  ring: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: "transparent",
-    borderColor: "white",
-    borderWidth: 5,
-    margin: 10,
-    justifyContent: 'center'
-  },
-  roundCamera: {
-    borderRadius: 75
-  }
-
-});
 
 export default CameraScreen;

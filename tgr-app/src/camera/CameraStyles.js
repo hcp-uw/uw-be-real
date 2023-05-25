@@ -15,6 +15,33 @@ export const THUMBNAIL_WIDTH_SMALL = THUMBNAIL_WIDTH / 2;
 
 
 export default StyleSheet.create({
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: "center",
+  },
+  smallPreview: {
+    alignSelf: 'flex-start',
+    aspectRatio: 0.5,
+    marginLeft: 50,
+  }, 
+  camera: {
+    margin: 5,
+    width: IMAGE_WIDTH,
+    height: IMAGE_HEIGHT,
+  },
+  ring: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: "transparent",
+    borderColor: "white",
+    borderWidth: 5,
+    margin: 10,
+    justifyContent: 'center'
+  },
+  roundCamera: {
+    borderRadius: 75
+  },
   preview: {
     alignSelf: 'stretch',
     flex: 1,
