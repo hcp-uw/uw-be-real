@@ -224,6 +224,7 @@ class UserContent:
 
     def cache_post(self, post_id: str) -> None:
         """Caches a post in Redis."""
+        pass
 
     def create_post(
         self,

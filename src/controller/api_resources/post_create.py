@@ -11,6 +11,11 @@ from marshmallow import ValidationError
 # Utility imports
 from datetime import datetime
 from uuid import uuid4
+from typing import Coroutine
+from src.utilities.async_utils import (
+    async_runner,
+    async_wrapper,
+)
 
 # Controller imports
 from src.controller.exceptions.neo4j_exceptions import (
@@ -95,23 +100,30 @@ class PostCreate(Resource):
             caption: str = content.get("caption", default)
             location: str = metadata.get("location", default)
 
-            # TODO: Use asynchronous processing
-
-            # Cache data into Redis
+            # TODO: Use asynchronous functions
 
             # Upload post to AWS S3 and MongoDB
             image_urls: tuple[str, str] = self.user_content.upload_post_images(
                 post_id, images
             )
 
-            self.user_content.create_post(
-                author_id=author_id,
-                post_id=post_id,
-                caption=caption,
-                location=location,
-                is_global=metadata["is_global"],
-                image_urls=image_urls,
+            # Run database functions asynchronously
+            create_post: Coroutine = async_wrapper(
+                self.user_content.create_post,
+                (
+                    author_id,
+                    post_id,
+                    caption,
+                    location,
+                    metadata["is_global"],
+                    image_urls,
+                ),
             )
+
+            cache_data: Coroutine = async_wrapper()
+
+            # Cache data into Redis
+            async_runner()
 
         except ValidationError as e:
             return e.messages, status.HTTP_400_BAD_REQUEST
