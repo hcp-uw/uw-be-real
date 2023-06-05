@@ -18,9 +18,6 @@ export const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
   },
-  bkgContainer: {
-    
-  },
   bkg: {
     height: width * 0.75,
     opacity: 0.9

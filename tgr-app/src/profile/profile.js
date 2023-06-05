@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Text, View, TouchableWithoutFeedback, Image, FlatList } from 'react-native';
+import { Text, TextInput, View, TouchableWithoutFeedback, Image, FlatList } from 'react-native';
 import { AntDesign, MaterialCommunityIcons, Ionicons, Octicons } from '@expo/vector-icons';
 import { styles } from './profile-style';
 import FriendItem from '../profile/friend-item';
@@ -15,11 +15,12 @@ export default function Profile({navigation, route}) {
 
   const [friends, setFriends] = useState();
   const [numFriends, setNumFriends] = useState(0);
-
+  const [isEditing, setEdit] = useState(false);
+    
   useMemo(() => {
     const fetchUserProf = fetch('https://raw.githubusercontent.com/AantLe12/DummyData/main/dummy_profile.json').then(res => res.json()).then(data => {
       setName(data[0].author_name);
-      setUsername(data[0].author_username);
+      setUsername("@" + data[0].author_username);
       setPfp(data[0].author_icon);
       setBkg(data[0].author_bkg);
       setMajor(data[0].author_major);
@@ -41,18 +42,27 @@ export default function Profile({navigation, route}) {
           <View style={styles.profileHeader}>
             <TouchableWithoutFeedback onPress={() => 
               navigation.navigate('Feed')
-              }>
+            }>
                 <AntDesign name="arrowleft" size={35} color="white" />
             </TouchableWithoutFeedback>    
+            
             <Text style={styles.profileText}>Profile</Text>
-            <MaterialCommunityIcons name="account-cog" size={24} color="white"/>
+
+            <TouchableWithoutFeedback onPress={() => {
+              if(!isEditing) {
+                setEdit(true);
+              } else {
+                setEdit(false);
+              }
+              }}>
+              <MaterialCommunityIcons name="account-cog" size={24} color="white"/>
+            </TouchableWithoutFeedback>
           </View>
 
-          {/* User's background image */}
-          <View style={styles.bkgContainer}>
+        <View>
             <Image
-                style={styles.bkg} 
-                source={{uri: bkg}}
+              style={styles.bkg} 
+              source={{uri: bkg}}
             />
 
             {/* Container composed of icon, name, & username */}
@@ -62,23 +72,23 @@ export default function Profile({navigation, route}) {
                             source={{uri: pfp}}
               />
               <View style={styles.namesContainer}>
-                <Text style={styles.name}>{name}</Text>
-                <Text style={styles.username}>@{username}</Text>
+                <TextInput style={styles.name} editable={isEditing} value={name} onChangeText={(newName) => setName(newName)}></TextInput>
+                <TextInput style={styles.username} editable={isEditing} value={username} onChangeText={(newUser) => setUsername(newUser)}></TextInput>
               </View>
             </View>
           </View>
-          
-          {/* User's bio info is composed of location, major, & bio msg */}
+
+            {/* User's bio info is composed of location, major, & bio msg */}
           <View style={styles.bioContainer}>
             <View style={styles.bioWithoutMessage}>
               <Octicons name="location" size={24} color="white" />
-              <Text style={styles.bioInfoText}>{location}</Text>
+              <TextInput style={styles.bioInfoText} editable={isEditing} value={location} onChangeText={(newLoc) => setLocation(newLoc)}></TextInput>
               {/* Space between the components */}
               <View style={{margin: 5}}></View>
               <Ionicons name="school" size={24} color="white"/>
-              <Text style={styles.bioInfoText}>{major}</Text>
+              <TextInput style={styles.bioInfoText} editable={isEditing} value={major} onChangeText={(newMajor) => setMajor(newMajor)}></TextInput>
             </View>
-            <Text style={styles.bioMsg}>{msg}</Text>
+            <TextInput style={styles.bioMsg} editable={isEditing} value={msg} onChangeText={(newMsg) => setMsg(newMsg)}></TextInput>
           </View>
 
           {/* Friends container composed of friends count text,
