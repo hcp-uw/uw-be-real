@@ -21,6 +21,7 @@ import { firebase } from "./config";
 import ResendVerification from "./signUpPage/ResendVerification";
 import WaitVerification from "./signUpPage/WaitVerification";
 import { StatusBar } from "expo-status-bar";
+import CreateReaction from "./src/camera/CreateReactionScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -97,8 +98,10 @@ function App() {
   return (
     <NavigationContainer>
       
-      <Stack.Navigator initialRouteName="Feed">
-        <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true}}/>
+      <Stack.Navigator initialRouteName="CreateReaction">
+        <Stack.Screen name="CreateReaction" component={CreateReaction} options={{unmountOnBlur: true,headerShown: false, }}/>
+        <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true, headerShown: false,}}/>
+
           <Stack.Screen name="Preview" component={PreviewScreen}/>
           <Stack.Screen name="Feed" component={Feed}
                         options={{
