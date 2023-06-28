@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { SvgFromUri, SvgUri } from 'react-native-svg';
 
 export const {width} = Dimensions.get('window');
 
@@ -52,5 +53,13 @@ export const styles = StyleSheet.create({
         right: -220,
         fontWeight: 'bold',
         bottom: 25
+    },
+    reactionButtonIcon: {
+        position: 'absolute',
+        top: width* 1.52,
+        right: 20,
+        width: width * 0.1,
+        height: width * 0.1,
+        tintColor: 'white'
     }
 })
