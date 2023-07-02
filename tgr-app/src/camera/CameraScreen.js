@@ -77,13 +77,13 @@ const CameraScreen = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.roundCamera}>
-        {isFocused && <Camera
+        {isFocused ? <Camera
           ratio="4:3" style={styles.camera} ref={cameraRef} type={type} borderRadius={15} resizeMode="cover" overflow="hidden"
-          >
+          > 
       
       <StatusBar style="auto" />
      
-      </Camera>
+      </Camera> : null
        }
        </View>
       

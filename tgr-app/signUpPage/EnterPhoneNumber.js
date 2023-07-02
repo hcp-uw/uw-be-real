@@ -1,73 +1,80 @@
-import React, {setState} from 'react';
-import { StyleSheet, Text, SafeAreaView, TextInput } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, Text, SafeAreaView, TextInput } from "react-native";
 
-function EnterPhoneNumber({ navigation }) {
-    const [number, onChangeNumber] = React.useState(null);
-    return(
-      <SafeAreaView style = {styles.background}>
-        <Text style = {styles.logo}>
-          _tgr.
-        </Text>
-        <Text style = {styles.default}>
-          Enter your phone number
-        </Text>
-        <TextInput
-        keyboardType = 'numeric'
-        style = {styles.textbox}
-        onChangeText={onChangeNumber}
-        value={number}
-        placeholder = "xxx-xxx-xxxx"
-        placeholderTextColor = "#3C3C3C"
-        />
-        <Text style = {styles.next}
-        onPress = {(value) => navigation.navigate("Email")}>
-          Next
-        </Text>
-      </SafeAreaView>
+function EnterPhoneNumber({ navigation, route }) {
+    const [number, setNumber] = useState("");
+    const { firstName, lastName, username } = route.params;
+
+    return (
+        <SafeAreaView style={styles.background}>
+            <Text style={styles.logo}>_tgr.</Text>
+            <Text style={styles.default}>Enter your phone number</Text>
+            <TextInput
+                keyboardType="numeric"
+                style={styles.textbox}
+                onChangeText={(number) => setNumber(number)}
+                value={number}
+                placeholder="xxx-xxx-xxxx"
+                placeholderTextColor="#3C3C3C"
+            />
+            <Text
+                style={styles.next}
+                onPress={() => {
+                    if (this.validatePhone(number)) {
+                        navigation.navigate("Email", {
+                            firstName: firstName,
+                            lastName: lastName,
+                            username: username,
+                            phoneNumber: number,
+                        });
+                    } else {
+                        alert("Error: Please enter your phone number!");
+                    }
+                }}
+            >
+                Next
+            </Text>
+        </SafeAreaView>
     );
-  }
+}
+
+validatePhone = (phone) => {
+    var re = /^\d{10}$/;
+    return re.test(phone);
+};
 
 const styles = StyleSheet.create({
     background: {
-      backgroundColor: '#000',
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
+        backgroundColor: "#000",
+        flex: 1,
+        flexDirection: "column",
+        alignItems: "center",
     },
     logo: {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: 16,
-      position: "absolute",
-      top: "5%",
-      left: "7%",
-      bottom: 0,
-      right: 0,
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 16,
+        alignSelf: "flex-start",
+        paddingLeft: 20,
     },
     default: {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: 20,
-      position: "absolute",
-      textAlign: "center",
-      top: "28%",
-      bottom: 0,
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20,
+        padding: 20,
+        paddingTop: 90,
     },
     textbox: {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: 20,
-      position: "absolute",
-      top: "-35%",
-      bottom: 0,
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20,
+        padding: 20,
     },
     next: {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: 20,
-      position: "absolute",
-      top: "45%",
-      bottom: 0,
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20,
+        padding: 20,
     },
 });
 
