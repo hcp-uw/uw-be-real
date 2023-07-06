@@ -1,6 +1,5 @@
 # Constants imports
 from src.model.constants.schema_constants import *
-from src.model.constants.schema_error_messages import *
 
 # Schema imports
 from src.model.schemas.post_schema import *
@@ -79,7 +78,6 @@ USER_API_SCHEMA = {
             },
             "birthdate": {
                 "type": "datetime",
-                "coerce": TO_DATE,
             },
             "campus": {
                 "type": "string",
@@ -105,7 +103,9 @@ USER_API_SCHEMA = {
     },
 }
 
-CREATE_USER_SCHEMA = {
+# Schema for each API endpoints
+# /api/user-create
+USER_CREATE_SCHEMA = {
     "email": {
         "required": True,
         "type": "string",
@@ -128,9 +128,15 @@ CREATE_USER_SCHEMA = {
     },
 }
 
-CREATE_USER_SCHEMA_ERROR_MSG = {
-    "email": EMAIL_ERROR,
-    "username": USERNAME_ERROR,
-    "firstname": FIRSTNAME_ERROR,
-    "lastname": LASTNAME_ERROR,
+# /api/user-profile
+USER_PROFILE_SCHEMA = {
+    "username": {
+        "required": True,
+        "type": "string",
+        "regex": USERNAME_REGEX,
+    },
+    "netid": {
+        "required": True,
+        "type": NETID,
+    },
 }

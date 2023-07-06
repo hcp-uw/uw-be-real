@@ -13,6 +13,7 @@ from src.model.data_access.user_network import UserNetwork
 
 # API resource imports
 from src.controller.api_resources.user_create import UserCreate
+from src.controller.api_resources.user_profile import UserProfile
 
 # Service configuration imports
 from src.config import ENV
@@ -28,6 +29,11 @@ def add_resources(
     api.add_resource(
         UserCreate,
         "/api/user-create",
+        resource_class_kwargs={"user_network": user_network, "logger": logger},
+    )
+    api.add_resource(
+        UserProfile,
+        "/api/user-profile",
         resource_class_kwargs={"user_network": user_network, "logger": logger},
     )
 

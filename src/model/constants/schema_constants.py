@@ -1,8 +1,5 @@
 from datetime import datetime
 
-# For Cerberus Validator to accept datetime in YYYY-MM-DD format.
-TO_DATE = lambda s: datetime.strptime(s, "%Y-%m-%d")
-
 # Constants for readability
 URL = "string"
 NETID = "string"

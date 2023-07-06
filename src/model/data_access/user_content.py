@@ -1,5 +1,8 @@
-# Time conversion
-from datetime import timedelta
+# Time imports
+from datetime import (
+    timedelta,
+    datetime,
+)
 
 # Image typing
 from werkzeug.datastructures import FileStorage
@@ -10,7 +13,9 @@ from mypy_boto3_s3 import S3ServiceResource
 
 # Mongo imports
 from pymongo.mongo_client import MongoClient
+from pymongo.database import Database
 from pymongo.server_api import ServerApi
+import bson
 
 # Redis imports
 import redis
@@ -19,10 +24,9 @@ from redis import Redis
 # Controller imports
 from src.controller.exceptions import *
 from src.controller.validations.credential_validation import *
-from src.controller.validations.s3_validation import *
+from src.controller.validations.database_validation import *
 
 # Model imports
-from src.model.classes.user import User
 from src.model.constants import *
 from src.model.queries import *
 
@@ -63,7 +67,8 @@ class UserContent:
 
         # Connect database clients
         self.s3: S3ServiceResource = self._connect_s3(s3_creds)
-        self.mongo: MongoClient = self._connect_mongo(mongo_uri)
+        self.mongo_client: MongoClient = self._connect_mongo(mongo_uri)
+        self.mongo: Database = self.mongo_client[mongo_constants.MONGO_DATABASE]
         self.redis: Redis = self._connect_redis(redis_creds)
 
     def _connect_s3(self, s3_creds: tuple[str, str]) -> S3ServiceResource:
@@ -104,7 +109,7 @@ class UserContent:
             A str url of the uploaded image.
 
         Exceptions:
-            Throws an InvalidS3BucketNameException if bucket_name is invalid.
+            Throws an InvalidS3ProfileBucketNameException if bucket_name is invalid.
             Throws an IncorrectFileExtensionTypeException if image_name is not a valid image file.
         """
         # Validate arguments
@@ -150,7 +155,7 @@ class UserContent:
             A str presigned-url of the uploaded image that expires (deletes) in 7 days.
 
         Exceptions:
-            Throws an InvalidS3BucketNameException if bucket_name is invalid.
+            Throws an InvalidS3PostBucketNameException if bucket_name is invalid.
             Throws an IncorrectFileExtensionTypeException if image_name is not a valid image file.
         """
         # Validate arguments
@@ -176,6 +181,109 @@ class UserContent:
 
         return image_url
 
-    def create_post(self, author: User, images: tuple, caption: tuple) -> None:
-        """"""
+    def upload_post_images(
+        self, post_id: str, images: list[FileStorage]
+    ) -> tuple[str, str]:
+        """Uploads post content into AWS S3.
+
+        Args:
+            post_id (str): An unique post id.
+            images (list): Contains [front image, back image].
+                Image format must be compatible with werkzeug datastructures' FileStorage.
+
+        Returns:
+            A tuple of strings containing (front image url, back image url).
+            The image urls are valid for up to 7 days. After 7 days, the image will be deleted.
+
+        Exceptions:
+            Throws an InvalidS3PostBucketNameException if bucket name is invalid.
+            Throws an IncorrectFileExtensionTypeException if image name is not a valid image file.
+        """
+        # Determine which AWS S3 bucket this post belongs to based on weekday.
+        bucket_number: int = datetime.today().weekday()
+        bucket_name: str = f"tgr-us-west-{bucket_number}"
+
+        # Get image extensions
+        front_image, back_image = images
+        front_image_ext: str = front_image.filename.split(".")[-1]
+        back_image_ext: str = back_image.filename.split(".")[-1]
+
+        # Create image file names based on post_id.
+        front_image_path: str = f"{POSTS_FOLDER}/{post_id}-front.{front_image_ext}"
+        back_image_path: str = f"{POSTS_FOLDER}/{post_id}-back.{back_image_ext}"
+
+        # Upload images
+        front_image_url: str = self._s3_upload_post_image(
+            bucket_name, front_image_path, front_image
+        )
+        back_image_url: str = self._s3_upload_post_image(
+            bucket_name, back_image_path, back_image
+        )
+
+        return front_image_url, back_image_url
+
+    def cache_post(self, post_id: str) -> None:
+        """Caches a post in Redis."""
         pass
+
+    def create_post(
+        self,
+        author_id: str,
+        post_id: str,
+        caption: str,
+        location: str,
+        is_global: bool,
+        image_urls: tuple[str, str],
+    ) -> None:
+        """Creates a post and its related documents in MongoDB.
+
+        Args:
+
+        Returns:
+
+        Exceptions:
+
+        """
+        # Subtype 4 refers to UUID binary type.
+        binary_uuid = bson.Binary(post_id.encode(), subtype=4)
+
+        # Create document to insert into MongoDB
+        # TODO: Add author icon?
+        post_document = {
+            "_id": binary_uuid,
+            "author_id": author_id,
+            "front_image": image_urls[0],
+            "back_image": image_urls[1],
+            "caption": caption,
+            "location": location,
+            "is_global": is_global,
+            "datetime": datetime.utcnow(),
+        }
+
+        # TODO: Review if this schema is okay.
+        comments_document = {
+            "_id": binary_uuid,
+            "comments": [],
+        }
+
+        # TODO: Review if this schema is okay.
+        reactions_document = {
+            "_id": binary_uuid,
+            "reactions": [],
+        }
+
+        # Insert documents into MongoDB collections
+        self.mongo[mongo_constants.POSTS_COLLECTION].insert_one(post_document)
+        self.mongo[mongo_constants.COMMENTS_COLLECTION].insert_one(comments_document)
+        self.mongo[mongo_constants.REACTIONS_COLLECTION].insert_one(reactions_document)
+
+    def get_user_post(self, netid: str) -> dict | None:
+        """Returns a user's daily post as a dict of post information from Redis.
+
+        Args:
+            netid (str): The user's UW NetID.
+
+        Returns:
+            A dict of post information. If the user has not made a post, None is returned.
+        """
+        return self.redis.hget(f"{redis_constants.POST_KEY}:{netid}")

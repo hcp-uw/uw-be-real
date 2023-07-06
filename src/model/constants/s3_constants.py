@@ -1,4 +1,6 @@
 NAME = "AWS S3"
+POSTS_FOLDER = "post_images"
+REACTIONS_FOLDER = "post_reactions"
 
 # Constants
 S3_PROFILE_BUCKETS = [

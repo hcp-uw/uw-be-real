@@ -23,6 +23,9 @@ POST_API_SCHEMA = {
             "location": {
                 "type": "string",
             },
+            "is_global": {
+                "type": "boolean",
+            },
         },
     },
     "content": {

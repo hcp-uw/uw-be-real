@@ -28,9 +28,9 @@ from flask_restful import (
 )
 
 # Custom class imports
-from src.controller.api_utils.user_content import UserContent
-from src.controller.api_utils.user_network import UserNetwork
-from src.model.classes.env_loader import ENV
+from src.model.data_access.user_content import UserContent
+from src.model.data_access.user_network import UserNetwork
+from src.config import ENV
 
 # API endpoint imports
 from tests.code_playground.upload_image import UploadImage
@@ -67,7 +67,7 @@ def main():
     add_resources(api, user_network, user_content)
 
     # Run Flask application
-    app.run(debug=True, port=5555)
+    app.run(debug=True, port=5000)
 
 
 if __name__ == "__main__":

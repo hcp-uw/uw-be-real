@@ -15,3 +15,4 @@ r = redis.Redis(host=host, port=port, password=password)
 
 # r.mset({"Croatia": "Zagreb", "Bahamas": "Nassau"})
 print(r.get("Bahamas"))
+r.flushall()

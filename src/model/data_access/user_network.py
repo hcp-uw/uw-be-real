@@ -41,6 +41,10 @@ class UserNetwork:
         # Connect to Neo4j
         self.driver: Driver = self._connect_neo4j(neo4j_creds)
 
+        # Verify connectivity and constraints
+        self._verify_driver()
+        self._verify_constraints()
+
     def _connect_neo4j(self, neo4j_creds: tuple[str, str, str]) -> Driver:
         """Returns a Neo4j Driver from the provided credentials."""
         uri, user, password = neo4j_creds
@@ -111,16 +115,17 @@ class UserNetwork:
         if user:
             raise neo4j_exceptions.UserAlreadyExistsException(netid)
 
-        query = neo4j_queries.create_user(username, firstname, lastname, netid, email)
+        query = neo4j_queries.create_user(
+            username, firstname, lastname, netid, email, "active"
+        )
         self._database_query(query)
 
-    def get_user(self, netid: str = None, email: str = None) -> dict:
+    def get_user(self, netid: str) -> dict:
         """Returns all user information associated with the given
-        netid, email, and/or phone. Returns None if no user matches.
+        netid. Returns None if no user matches.
 
         Args:
-            netid (str, optional): The netid of the user.
-            email (str, optional): The email of the user.
+            netid (str): The netid of the user.
 
         Returns:
             A dict of information of the associated user.
@@ -128,25 +133,22 @@ class UserNetwork:
 
         Exceptions:
             NoInputsException: Either the given netid or email is invalid.
+            UserNotFoundException: User is not found.
         """
-        # verify arguments
-        if not (netid or email):
+        # Verify arguments
+        if not netid:
             raise generic_exceptions.NoInputsException()
 
-        # start session
+        # Start session
         with self.driver.session() as session:
-            result = session.execute_read(self._get_user, netid, email)
+            result = session.execute_read(self._get_user, netid)
+
         return result
 
     @staticmethod
-    def _get_user(tx, netid: str, email: str):
+    def _get_user(tx, netid: str):
         """Transaction function to get a user's information."""
-        props: list[str] = []
-        if netid:
-            props.append(f'netid: "{netid}"')
-        if email:
-            props.append(f'email: "{email}"')
-        query: str = neo4j_queries.get_user(props)
+        query: str = neo4j_queries.get_user(netid)
         result: Record = tx.run(query)
         data: list[dict] = result.data()
         return data[0]["user"] if data else {}
