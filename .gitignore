@@ -10,5 +10,13 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# python cache
+*__pycache__/
+.history/
+
 # macOS
 .DS_Store
+
+# secrets
+secrets
+.env
