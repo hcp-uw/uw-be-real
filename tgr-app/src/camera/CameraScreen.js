@@ -35,7 +35,7 @@ const CameraScreen = ({navigation, route}) => {
 
   let takePic = async () => {
     let options = {
-      quality: 1,
+      quality: 0.5,
       base64: true,
       exif: false
     };

@@ -21,6 +21,7 @@ import { firebase } from "./config";
 import ResendVerification from "./signUpPage/ResendVerification";
 import WaitVerification from "./signUpPage/WaitVerification";
 import { StatusBar } from "expo-status-bar";
+import CreateReaction from "./src/camera/CreateReactionScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -44,10 +45,11 @@ function App() {
   }, []);
 
   if (initializing) return null;
-
-  if (!user || (user && !firebase.auth().currentUser.emailVerified)) {
-    return (
-      <NavigationContainer>
+  let isNewUser = !user || (user && !firebase.auth().currentUser.emailVerified);
+  return (
+    
+    <NavigationContainer>
+    {isNewUser ? (
         <Stack.Navigator initialRouteName="Home">
           
           <Stack.Screen
@@ -91,28 +93,32 @@ function App() {
               options={{ headerShown: false }}
           />
       </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
-  return (
-    <NavigationContainer>
+    ) :
+    (
       
       <Stack.Navigator initialRouteName="Feed">
-        <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true}}/>
-          <Stack.Screen name="Preview" component={PreviewScreen}/>
+        {/* At the moment, initialRouteName doesn't work
+          not sure why it doesn't work, so keep Feed as the first screen 
+          If you want to start on a different screen for testing purposes, you'll
+          have to move your screen to be above Feed temporarily
+        */}
           <Stack.Screen name="Feed" component={Feed}
                         options={{
                           headerShown: false,
                         }}/>
+        <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true, headerShown: false,}}/>
+        <Stack.Screen name="CreateReaction" component={CreateReaction} options={{unmountOnBlur: true,headerShown: false }}/>
+
+          <Stack.Screen name="Preview" component={PreviewScreen}/>
           <Stack.Screen name="Edit" component={Edit} 
             options={{
-            headerShown: false,
-            animation: "slide_from_right",
-          }}/>
+              headerShown: false,
+              animation: "slide_from_right",
+            }}/>
           <Stack.Screen name="Profile" component={Profile} 
             options={{
-            headerShown: false,
-          }}/>
+              headerShown: false,
+            }}/>
           <Stack.Screen name="Interactions" component={Interactions}
                         options={{
                           headerShown: false,
@@ -131,7 +137,9 @@ function App() {
                         }}/>
           
       </Stack.Navigator>
-              </NavigationContainer>
+                        
+  )}
+  </NavigationContainer>
   );
 }
 
