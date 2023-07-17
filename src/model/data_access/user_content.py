@@ -222,9 +222,12 @@ class UserContent:
 
         return front_image_url, back_image_url
 
-    def cache_post(self, post_id: str) -> None:
+    def cache_post(self, netid: str, post_id: str) -> None:
         """Caches a post in Redis."""
-        pass
+        # Add to global posts list
+        self.redis.rpush(redis_constants.GLOBAL_KEY, post_id)
+        # Add to post dict
+        self.redis.hset(redis_constants.POST_KEY, netid, post_id)
 
     def create_post(
         self,

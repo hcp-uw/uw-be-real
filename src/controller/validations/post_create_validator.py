@@ -28,7 +28,7 @@ def validate_caption(caption: str) -> None:
         raise ValidationError(f"Caption cannot exceed {CAPTION_MAX_CHAR} characters.")
 
 
-def validate_images(images: list[FileStorage]) -> None:
+def validate_image_files(images: list[FileStorage]) -> None:
     if len(images) != 2:
         raise InvalidImagesException(f"Expected 2 images, received {len(images)}")
 

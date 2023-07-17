@@ -27,7 +27,7 @@ from src.controller.exceptions.s3_exceptions import *
 from src.controller.exceptions.generic_exceptions import *
 from src.controller.validations.post_create_validator import (
     PostCreateValidator,
-    validate_images,
+    validate_image_files,
 )
 
 # Model imports
@@ -92,7 +92,7 @@ class PostCreate(Resource):
 
             # Get images and validate
             images: list[FileStorage] = request.files.getlist("file")
-            validate_images(images)
+            validate_image_files(images)
 
             # Proceed to create post
             post_id: str = uuid4()
@@ -108,7 +108,7 @@ class PostCreate(Resource):
             )
 
             # Run database functions asynchronously
-            create_post: Coroutine = async_wrapper(
+            create_post_task: Coroutine = async_wrapper(
                 self.user_content.create_post,
                 (
                     author_id,
@@ -120,10 +120,11 @@ class PostCreate(Resource):
                 ),
             )
 
-            cache_data: Coroutine = async_wrapper()
+            cache_post_task: Coroutine = async_wrapper(
+                self.user_content.cache_post, (author_id, post_id)
+            )
 
-            # Cache data into Redis
-            async_runner()
+            async_runner(create_post_task, cache_post_task)
 
         except ValidationError as e:
             return e.messages, status.HTTP_400_BAD_REQUEST
