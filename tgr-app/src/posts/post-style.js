@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { SvgFromUri, SvgUri } from 'react-native-svg';
 
 export const {width} = Dimensions.get('window');
 

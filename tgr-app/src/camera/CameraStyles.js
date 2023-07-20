@@ -96,6 +96,17 @@ export default StyleSheet.create({
     alignItems: 'center', 
     marginTop: 20,
     alignSelf: 'center'
+  },
+  ring: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: "transparent",
+    borderColor: "white",
+    borderWidth: 5,
+    alignSelf: 'center', 
+    margin: 10,
+    justifyContent: 'center'
   }
 
 })

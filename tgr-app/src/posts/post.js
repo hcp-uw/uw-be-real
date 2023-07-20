@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { FlatList, Text, Image, View, TouchableWithoutFeedback } from 'react-native';
-import { styles } from './post-style.js';
+import { styles} from './post-style.js';
 import InteractionsList from "../interactions/interactions-list";
 function Post({ navigation, item }) {
   return (
@@ -37,6 +37,16 @@ function Post({ navigation, item }) {
             source={{uri: item.post_back}}
         />
 
+        {/* Button to create a reaction */}
+        <TouchableWithoutFeedback onPress={
+            () => navigation.navigate('CreateReaction', {username: item.author_username})}>
+            <Image
+            source={require('../../assets/emoji-round-plus.png')}
+            style={styles.reactionButtonIcon}
+            />
+        </TouchableWithoutFeedback>
+
+        
         {/* Space in between the big photo and interactions */}
         <View style={styles.interactionsContainer}>
         <FlatList
