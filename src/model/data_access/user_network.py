@@ -77,8 +77,6 @@ class UserNetwork:
         with self.driver.session() as session:
             try:
                 result: Result = session.run(query)
-                # for item in result:
-                #     print("Relationship:", item.values()[0])
             except Exception:
                 raise neo4j_exceptions.QueryFailureException(query)
         return result
@@ -167,7 +165,7 @@ class UserNetwork:
 
         Args:
             sender_netid (str): The first UW NetID pertaining to the first user.
-            connection (str): The connection between the two users (request, accept, or reject)
+            connection (str): The connection between the two users (request, accept, decline, block, unblock, or unfriend)
             recipient_netid (str): The second UW NetID pertaining to the second user who
                                 the first user wants to request/accept/reject/unfriend.
         
@@ -187,34 +185,44 @@ class UserNetwork:
             with self.driver.session() as session:
                 request = int(session.execute_read(self._check_request, recipient_netid, sender_netid))
                 friend = int(session.execute_read(self._check_friend, recipient_netid, sender_netid))
-                print("request:", request)
-                print("friend:", friend)
-            if (request > 0 or friend > 0):
+                blocked = int(session.execute_read(self._check_blocked, recipient_netid, sender_netid))
+            if (request > 0 or friend > 0 or blocked > 0):
                 raise user_exceptions.ExistingConnectionException()
+            if (int(session.execute_read(self._check_request, sender_netid, recipient_netid) > 0)): # already have a friend request from this user
+                query: str = neo4j_queries.connect_users(recipient_netid, sender_netid) # accept friend request
             else:
-                query: str = neo4j_queries.friend_request(recipient_netid, sender_netid)
+                query: str = neo4j_queries.friend_request(recipient_netid, sender_netid) # send friend request
         elif connection == "accept":
             with self.driver.session() as session:
                 request = int(session.execute_read(self._check_request, sender_netid, recipient_netid))
             if (request < 1):
                 raise user_exceptions.InvalidConnectionException()
-            else:
-                query: str = neo4j_queries.connect_users(sender_netid, recipient_netid)
-        elif connection == "reject":
+            query: str = neo4j_queries.connect_users(sender_netid, recipient_netid)
+        elif connection == "decline":
             with self.driver.session() as session:
                 request = int(session.execute_read(self._check_request, sender_netid, recipient_netid))
-                print("request:", request)
             if (request < 1):
                 raise user_exceptions.InvalidConnectionException()
-            else:
-                query: str = neo4j_queries.reject_users(sender_netid, recipient_netid)
+            query: str = neo4j_queries.reject_users(sender_netid, recipient_netid)
         elif connection == "unfriend":
             with self.driver.session() as session:
                 friend = int(session.execute_read(self._check_friend, recipient_netid, sender_netid))
             if (friend < 1):
                 raise user_exceptions.InvalidConnectionException()
-            else:
-                query: str = neo4j_queries.unfriend_users(sender_netid, recipient_netid)
+            query: str = neo4j_queries.unfriend_users(sender_netid, recipient_netid)
+        elif connection == "block":
+            with self.driver.session() as session:
+                blocked = int(session.execute_read(self._check_blocked, sender_netid, recipient_netid))
+            if (blocked > 0):
+                raise user_exceptions.InvalidConnectionException()
+            self._database_query(neo4j_queries.delete_relationships(sender_netid, recipient_netid))
+            query: str = neo4j_queries.block_user(sender_netid, recipient_netid)
+        elif connection == "unblock":
+            with self.driver.session() as session:
+                blocked = int(session.execute_read(self._check_blocked, sender_netid, recipient_netid))
+            if (blocked < 1):
+                raise user_exceptions.InvalidConnectionException()
+            query: str = neo4j_queries.unblock_user(sender_netid, recipient_netid)
         self._database_query(query)
 
     @staticmethod
@@ -264,7 +272,7 @@ class UserNetwork:
     
     @staticmethod
     def _check_request(tx, sender_netid: str, recipient_netid: str):
-        """Transaction function to get a user's information."""
+        """Transaction function to check if there is a request between two users."""
         query: str = neo4j_queries.check_request(sender_netid, recipient_netid)
         result: Record = tx.run(query)
         data: list[dict] = result.data()
@@ -272,11 +280,27 @@ class UserNetwork:
     
     @staticmethod
     def _check_friend(tx, sender_netid: str, recipient_netid: str):
-        """Transaction function to get a user's information."""
+        """Transaction function to the two users are friends."""
         query: str = neo4j_queries.check_friend(sender_netid, recipient_netid)
         result: Record = tx.run(query)
         data: list[dict] = result.data()
         return data[0]["COUNT(*)"] if data else {}
+    
+    @staticmethod
+    def _check_blocked(tx, sender_netid: str, recipient_netid: str):
+        """Transaction function to check if either one blocked the other user."""
+        query: str = neo4j_queries.check_blocked(sender_netid, recipient_netid)
+        result: Record = tx.run(query)
+        data: list[dict] = result.data()
+        return data[0]["COUNT(*)"] if data else {}
+    
+    @staticmethod
+    def _delete_relationships(tx, sender_netid: str, recipient_netid: str):
+        """Transaction function to all relationships between two users."""
+        query: str = neo4j_queries.delete_relationships(sender_netid, recipient_netid)
+        result: Record = tx.run(query)
+        data: list[dict] = result.data()
+        return data
 
     def deactivate_user(self, netid: str) -> None:
         """Deactivates the user associated with the given netid."""

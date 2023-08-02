@@ -11,7 +11,12 @@ from src.model.constants.validation_messages import *
 from model.constants.schema_constants import *
 
 def validate_connection(connection: str) -> None:
-    if not (connection == "accept" or connection == "request" or connection == "reject" or connection == "unfriend"):
+    if not (connection == "accept" or 
+            connection == "request" or 
+            connection == "decline" or 
+            connection == "unfriend" or
+            connection == "block" or
+            connection == "unblock"):
         raise ValidationError(CONNECTION_ERROR)
     
 

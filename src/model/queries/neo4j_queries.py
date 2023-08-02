@@ -80,6 +80,14 @@ def check_friend(sender_netid: str, recipient_netid: str) -> str:
         RETURN COUNT(*)
     """
 
+def check_blocked(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender)-[rel:BLOCKED]->(recipient)
+        RETURN COUNT(*)
+    """
+
 def friend_request(sender_netid: str, recipient_netid: str) -> str:
     return f"""
         MATCH (sender: User {{netid: '{sender_netid}'}})
@@ -109,6 +117,29 @@ def unfriend_users(sender_netid: str, recipient_netid: str) -> str:
         MATCH (sender: User {{netid: '{sender_netid}'}})
         MATCH (recipient: User {{netid: '{recipient_netid}'}})
         MATCH (sender)-[r:Friend]-(recipient)
+        DELETE r
+    """
+
+def block_user(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        CREATE (sender)-[rel1:BLOCKED]->(recipient)
+    """
+
+def unblock_user(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender)-[r:BLOCKED]->(recipient)
+        DELETE r
+    """
+
+def delete_relationships(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender)-[r]-(recipient)
         DELETE r
     """
 

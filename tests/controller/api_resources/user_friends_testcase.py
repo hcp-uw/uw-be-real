@@ -502,7 +502,7 @@ class UserFriendsTestCase(unittest.TestCase):
         )
 
         received: str = decline2_response.status_code
-        expected: str = status.HTTP_200_OK
+        expected: str = status.HTTP_400_BAD_REQUEST
         self.assertEqual(
             received,
             expected,
@@ -572,4 +572,228 @@ class UserFriendsTestCase(unittest.TestCase):
             expected,
             msg=f"Expected {expected} status code, received {received}.\n"
             + f"{response.text}",
+        )
+
+    def test_blocked_should_return_200(self) -> None:
+        ### ARRANGE: Set up necessary preconditions.
+        # Clear all data in database
+        config.clear_database()
+
+        # Request payload
+        user1 = {
+            "username": "user1",
+            "firstname": "user1",
+            "lastname": "user1",
+            "email": "user1@uw.edu",
+        }
+
+        user2 = {
+            "username": "user2",
+            "firstname": "user2",
+            "lastname": "user2",
+            "email": "user2@uw.edu",
+        }
+
+        request = {
+            "sender_netid": "user1",
+            "connection": "block",
+            "recipient_netid": "user2",
+        }
+
+        # Request header
+        headers = {
+            "content-type": "application/json",
+        }
+
+        ### ACT: Perform action to invoke API.
+        create_user1 = requests.post(self.url_user_create, json=user1, headers=headers)
+        create_user2 = requests.post(self.url_user_create, json=user2, headers=headers)
+        response = requests.put(self.url_user_friends, json=request, headers=headers)
+
+        ### ASSERT: Verify expected outcome.
+        received: str = create_user1.status_code
+        expected: str = status.HTTP_201_CREATED
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{create_user1.text}",
+        )
+
+        received: str = create_user2.status_code
+        expected: str = status.HTTP_201_CREATED
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{create_user2.text}",
+        )
+
+        received: str = response.status_code
+        expected: str = status.HTTP_200_OK
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{response.text}",
+        )
+
+    def test_block_then_unblock_should_return_200(self) -> None:
+        ### ARRANGE: Set up necessary preconditions.
+        # Clear all data in database
+        config.clear_database()
+
+        # Request payload
+        user1 = {
+            "username": "user1",
+            "firstname": "user1",
+            "lastname": "user1",
+            "email": "user1@uw.edu",
+        }
+
+        user2 = {
+            "username": "user2",
+            "firstname": "user2",
+            "lastname": "user2",
+            "email": "user2@uw.edu",
+        }
+
+        block = {
+            "sender_netid": "user1",
+            "connection": "block",
+            "recipient_netid": "user2",
+        }
+
+        unblock = {
+            "sender_netid": "user1",
+            "connection": "unblock",
+            "recipient_netid": "user2",
+        }
+
+        # Request header
+        headers = {
+            "content-type": "application/json",
+        }
+
+        ### ACT: Perform action to invoke API.
+        create_user1 = requests.post(self.url_user_create, json=user1, headers=headers)
+        create_user2 = requests.post(self.url_user_create, json=user2, headers=headers)
+        block_response = requests.put(self.url_user_friends, json=block, headers=headers)
+        unblock_response = requests.put(self.url_user_friends, json=unblock, headers=headers)
+
+        ### ASSERT: Verify expected outcome.
+        received: str = create_user1.status_code
+        expected: str = status.HTTP_201_CREATED
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{create_user1.text}",
+        )
+
+        received: str = create_user2.status_code
+        expected: str = status.HTTP_201_CREATED
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{create_user2.text}",
+        )
+
+        received: str = block_response.status_code
+        expected: str = status.HTTP_200_OK
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{block_response.text}",
+        )
+
+        received: str = unblock_response.status_code
+        expected: str = status.HTTP_200_OK
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{unblock_response.text}",
+        )
+
+    def test_block_then_request_should_return_400(self) -> None:
+        ### ARRANGE: Set up necessary preconditions.
+        # Clear all data in database
+        config.clear_database()
+
+        # Request payload
+        user1 = {
+            "username": "user1",
+            "firstname": "user1",
+            "lastname": "user1",
+            "email": "user1@uw.edu",
+        }
+
+        user2 = {
+            "username": "user2",
+            "firstname": "user2",
+            "lastname": "user2",
+            "email": "user2@uw.edu",
+        }
+
+        block = {
+            "sender_netid": "user1",
+            "connection": "block",
+            "recipient_netid": "user2",
+        }
+
+        request = {
+            "sender_netid": "user2",
+            "connection": "request",
+            "recipient_netid": "user1",
+        }
+
+        # Request header
+        headers = {
+            "content-type": "application/json",
+        }
+
+        ### ACT: Perform action to invoke API.
+        create_user1 = requests.post(self.url_user_create, json=user1, headers=headers)
+        create_user2 = requests.post(self.url_user_create, json=user2, headers=headers)
+        block_response = requests.put(self.url_user_friends, json=block, headers=headers)
+        request_response = requests.put(self.url_user_friends, json=request, headers=headers)
+
+        ### ASSERT: Verify expected outcome.
+        received: str = create_user1.status_code
+        expected: str = status.HTTP_201_CREATED
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{create_user1.text}",
+        )
+
+        received: str = create_user2.status_code
+        expected: str = status.HTTP_201_CREATED
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{create_user2.text}",
+        )
+
+        received: str = block_response.status_code
+        expected: str = status.HTTP_200_OK
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{block_response.text}",
+        )
+
+        received: str = request_response.status_code
+        expected: str = status.HTTP_400_BAD_REQUEST
+        self.assertEqual(
+            received,
+            expected,
+            msg=f"Expected {expected} status code, received {received}.\n"
+            + f"{request_response.text}",
         )

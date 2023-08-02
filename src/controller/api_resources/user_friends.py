@@ -41,7 +41,7 @@ class UserFriends(Resource):
         Args:
             sender_netid (str): The first UW NetID pertaining to the first user.
 
-            connection (str): The connection between the two users (request, accept, reject, or unfriend)
+            connection (str): The connection between the two users (request, accept, decline, block, unblock, or unfriend)
 
             recipient_netid (str): The second UW NetID pertaining to the second user who
                                 the first user wants to request/accept/reject/unfriend.
