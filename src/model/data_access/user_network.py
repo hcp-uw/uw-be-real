@@ -77,6 +77,8 @@ class UserNetwork:
         with self.driver.session() as session:
             try:
                 result: Result = session.run(query)
+                # for item in result:
+                #     print("Relationship:", item.values()[0])
             except Exception:
                 raise neo4j_exceptions.QueryFailureException(query)
         return result
@@ -160,6 +162,61 @@ class UserNetwork:
         query: str = neo4j_queries.update_user(netid, **data)
         self._database_query(query)
 
+    def friend_request(self, sender_netid: str, connection: str, recipient_netid: str):
+        """Updates connection between users.
+
+        Args:
+            sender_netid (str): The first UW NetID pertaining to the first user.
+            connection (str): The connection between the two users (request, accept, or reject)
+            recipient_netid (str): The second UW NetID pertaining to the second user who
+                                the first user wants to request/accept/reject/unfriend.
+        
+        Returns:
+            None.
+        
+        Exceptions:
+            NoInputsException: The given netid is invalid.
+            ExistingConnectionException: A connection already exists
+            InvalidConnectionexception: An invalid connection was passed.
+            QueryFailureException: An error occured with the query.
+        """
+        if not sender_netid or not recipient_netid:
+            raise generic_exceptions.NoInputsException()
+        if connection == "request":
+            # Start session
+            with self.driver.session() as session:
+                request = int(session.execute_read(self._check_request, recipient_netid, sender_netid))
+                friend = int(session.execute_read(self._check_friend, recipient_netid, sender_netid))
+                print("request:", request)
+                print("friend:", friend)
+            if (request > 0 or friend > 0):
+                raise user_exceptions.ExistingConnectionException()
+            else:
+                query: str = neo4j_queries.friend_request(recipient_netid, sender_netid)
+        elif connection == "accept":
+            with self.driver.session() as session:
+                request = int(session.execute_read(self._check_request, sender_netid, recipient_netid))
+            if (request < 1):
+                raise user_exceptions.InvalidConnectionException()
+            else:
+                query: str = neo4j_queries.connect_users(sender_netid, recipient_netid)
+        elif connection == "reject":
+            with self.driver.session() as session:
+                request = int(session.execute_read(self._check_request, sender_netid, recipient_netid))
+                print("request:", request)
+            if (request < 1):
+                raise user_exceptions.InvalidConnectionException()
+            else:
+                query: str = neo4j_queries.reject_users(sender_netid, recipient_netid)
+        elif connection == "unfriend":
+            with self.driver.session() as session:
+                friend = int(session.execute_read(self._check_friend, recipient_netid, sender_netid))
+            if (friend < 1):
+                raise user_exceptions.InvalidConnectionException()
+            else:
+                query: str = neo4j_queries.unfriend_users(sender_netid, recipient_netid)
+        self._database_query(query)
+
     @staticmethod
     def _get_user(tx, netid: str):
         """Transaction function to get a user's information."""
@@ -204,6 +261,22 @@ class UserNetwork:
         query: str = neo4j_queries.check_unique(props)
         result: Record = tx.run(query)
         return result.value("username", "")
+    
+    @staticmethod
+    def _check_request(tx, sender_netid: str, recipient_netid: str):
+        """Transaction function to get a user's information."""
+        query: str = neo4j_queries.check_request(sender_netid, recipient_netid)
+        result: Record = tx.run(query)
+        data: list[dict] = result.data()
+        return data[0]["COUNT(*)"] if data else {}
+    
+    @staticmethod
+    def _check_friend(tx, sender_netid: str, recipient_netid: str):
+        """Transaction function to get a user's information."""
+        query: str = neo4j_queries.check_friend(sender_netid, recipient_netid)
+        result: Record = tx.run(query)
+        data: list[dict] = result.data()
+        return data[0]["COUNT(*)"] if data else {}
 
     def deactivate_user(self, netid: str) -> None:
         """Deactivates the user associated with the given netid."""

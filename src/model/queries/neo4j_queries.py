@@ -64,20 +64,59 @@ def delete_user(netid: str) -> str:
         MATCH (user:User{{netid: '{netid}'}}) DELETE (user)
     """
 
+def check_request(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender)-[rel:HAS_A_FRIEND_REQUEST_FROM]->(recipient)
+        RETURN COUNT(*)
+    """
+
+def check_friend(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender)-[rel:Friend]-(recipient)
+        RETURN COUNT(*)
+    """
+
+def friend_request(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        CREATE (sender)-[rel:HAS_A_FRIEND_REQUEST_FROM]->(recipient)
+    """
 
 def connect_users(sender_netid: str, recipient_netid: str) -> str:
     return f"""
         MATCH (sender: User {{netid: '{sender_netid}'}})
-        OPTIONAL MATCH (recipient: User {{netid: '{recipient_netid}'}})
-        WHERE recipient IS NOT NULL
-        CREATE (sender)-[connect: Friend]->(recipient)
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender)-[rel:HAS_A_FRIEND_REQUEST_FROM]->(recipient)
+        DELETE rel
+        CREATE (sender)-[rel1: Friend]->(recipient)
+    """
+
+def reject_users(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender)-[rel:HAS_A_FRIEND_REQUEST_FROM]->(recipient)
+        DELETE rel
+    """
+
+def unfriend_users(sender_netid: str, recipient_netid: str) -> str:
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})
+        MATCH (recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender)-[r:Friend]-(recipient)
+        DELETE r
     """
 
 
 # DO NOT USE THESE IN ACTUAL APPLICATION. TESTING ONLY.
 def delete_all_users() -> str:
     return """
-        MATCH (user: User) DELETE (user)
+        MATCH (user: User) DETACH DELETE (user)
     """
 
 

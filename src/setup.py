@@ -14,6 +14,7 @@ from src.model.data_access.user_network import UserNetwork
 # API resource imports
 from src.controller.api_resources.user_create import UserCreate
 from src.controller.api_resources.user_profile import UserProfile
+from src.controller.api_resources.user_friends import UserFriends
 
 # Service configuration imports
 from src.config import ENV
@@ -36,6 +37,11 @@ def add_resources(
         "/api/user-profile",
         resource_class_kwargs={"user_network": user_network, "logger": logger},
     )
+    api.add_resource(
+        UserFriends,
+        "/api/user-friends",
+        resource_class_kwargs={"user_network": user_network, "logger": logger},
+    )
 
 
 def setup(api: Api) -> None:
@@ -50,4 +56,4 @@ def setup(api: Api) -> None:
     logger: Logger = getLogger()
 
     # Add API endpoint Resources
-    add_resources(api, user_network, user_content, logger)
+    add_resources(api, user_network, user_content, logger=logger)

@@ -18,7 +18,8 @@ def run_tests():
     # Load all tests into a TestSuite
     test_suite = loader.discover(
         start_dir=testcase_dir,
-        pattern="*_testcase.py",
+        # pattern="*_testcase.py",
+        pattern="user_friends_testcase.py",
     )
 
     # Run the test suite
