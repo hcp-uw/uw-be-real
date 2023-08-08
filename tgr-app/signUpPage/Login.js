@@ -105,12 +105,6 @@ const Login = () => {
                     >
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={() => navigation.navigate("Name")}
-                        >
-                            <Text style={styles.textbutton}>Sign Up</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.button}
                             onPress={() => loginUser(email, password)}
                         >
                             <Text style={styles.textbutton}>Log In</Text>

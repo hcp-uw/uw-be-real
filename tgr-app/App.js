@@ -92,6 +92,10 @@ function App() {
               component={WaitVerification}
               options={{ headerShown: false }}
           />
+          <Stack.Screen name="Feed" component={Feed}
+                        options={{
+                          headerShown: false,
+                        }}/>
       </Stack.Navigator>
     ) :
     (

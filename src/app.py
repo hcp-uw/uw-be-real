@@ -33,7 +33,7 @@ setup.setup(api)
 def main() -> None:
     # Run Flask application
     # app.run(debug=True, host="0.0.0.0")  # For Docker container
-    app.run(debug=True, port=5000)  # For local testing
+    app.run(debug=True, port=5000, host="0.0.0.0")  # For local testing
 
 
 if __name__ == "__main__":

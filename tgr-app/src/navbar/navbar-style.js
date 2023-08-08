@@ -9,7 +9,8 @@ export const styles = StyleSheet.create({
     height: width * 0.15,
     flexDirection: 'row',
     marginHorizontal: '25%',
-    columnGap: width * 0.15,
-    paddingTop: '1%'
+    justifyContent: 'space-between'
+    // columnGap: width * 0.15,
+    // paddingTop: '1%'
   },
 });

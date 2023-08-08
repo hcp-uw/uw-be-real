@@ -36,24 +36,6 @@ function EnterEmail({ navigation, route }) {
                         .catch((error) => {
                             alert(error.message);
                         })
-                        .then(() => {
-                            // replace with neo4j database;
-                            // right now, adding to firestore database
-                            firebase
-                                .firestore()
-                                .collection("users")
-                                .doc(firebase.auth().currentUser.uid)
-                                .set({
-                                    firstName,
-                                    lastName,
-                                    username,
-                                    email,
-                                    username,
-                                });
-                        })
-                        .catch((error) => {
-                            alert(error.message);
-                        });
                 })
                 .catch((error) => {
                     alert(error.message);
@@ -147,7 +129,7 @@ function EnterEmail({ navigation, route }) {
                         <TouchableOpacity
                             style={styles.button}
                             onPress={() => {
-                                navigation.navigate("WaitVerification"),
+                                navigation.navigate("WaitVerification", {email: email, firstName: firstName, lastName: lastName, username: username}),
                                     registerUser(
                                         email + "@uw.edu",
                                         password,

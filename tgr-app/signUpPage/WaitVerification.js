@@ -7,15 +7,32 @@ import {
     SafeAreaView,
     TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../config";
 
-const WaitVerification = () => {
-    const navigation = useNavigation();
+function WaitVerification({ navigation, route }) {
+    const { username, firstName, lastName, email } = route.params;
 
     verify = async () => {
+        // Get the latest updates for the current user
+        firebase.auth().currentUser.reload();
+        // Check if the user verified their email
         if (firebase.auth().currentUser.emailVerified) {
-            navigation.navigate("tempDashboard");
+            fetch('http://' + ip + ':5000/api/user-create', 
+                  {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        "username": username,
+                        "firstname": firstName,
+                        "lastname": lastName,
+                        "email": (email + "@uw.edu")
+                    }),
+                  }
+            ).then((res) => res.json()).then((data) => {
+                console.log(data);
+                // Navigate to feed
+                navigation.navigate("Feed");
+            }).catch(err => { console.log(err)});
         } else {
             alert("Please verify your email!");
         }

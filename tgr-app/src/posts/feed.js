@@ -4,16 +4,19 @@ import { styles } from './feed-style.js';
 import Header from "../header/header";
 import Navbar from "../navbar/navbar";
 import Post from "../posts/post";
+import "../../Constants.js";
 
 export default function Feed({navigation, route}) {
   const [posts, setPosts] = useState([]);
   const [pfp, setPfp] = useState(" ");
-
   useMemo(() => {
-    const fetchData = fetch('https://raw.githubusercontent.com/AantLe12/DummyData/main/dummy_posts.json').then(res => res.json()).then(data => {
-      setPosts(data);
-      setPfp(data[0].author_icon);
-    }).catch(err => { console.log("ERROR")});
+
+    fetch('http://' + ip + ':5000/api/user-profile?netid=newuser2')
+    .then(response => response.text())
+    .then(text => console.log(text)).catch((err) => {
+      // console.log("API call error");
+      console.log(ip);
+    });
   }, []);
 
   return (
