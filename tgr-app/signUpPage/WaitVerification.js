@@ -17,6 +17,7 @@ function WaitVerification({ navigation, route }) {
         firebase.auth().currentUser.reload();
         // Check if the user verified their email
         if (firebase.auth().currentUser.emailVerified) {
+            // Create the user once they verified their email
             fetch('http://' + ip + ':5000/api/user-create', 
                   {
                     method: "POST",
@@ -25,14 +26,13 @@ function WaitVerification({ navigation, route }) {
                         "username": username,
                         "firstname": firstName,
                         "lastname": lastName,
-                        "email": (email + "@uw.edu")
-                    }),
+                        "email": (email + "@uw.edu")}),
                   }
             ).then((res) => res.json()).then((data) => {
                 console.log(data);
                 // Navigate to feed
-                navigation.navigate("Feed");
-            }).catch(err => { console.log(err)});
+                navigation.navigate("Feed", {username: username});
+            }).catch(err => {console.log(err)});
         } else {
             alert("Please verify your email!");
         }

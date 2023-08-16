@@ -27,7 +27,7 @@ const Login = () => {
                 .signInWithEmailAndPassword(email, password)
                 .then(() => {
                     if (firebase.auth().currentUser.emailVerified) {
-                        //alert("Error: Email is verified.")
+                        // alert("Error: Email is verified.")
                     } else {
                         Alert.alert(
                             "Un-Verified Email",

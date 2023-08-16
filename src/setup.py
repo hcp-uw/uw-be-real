@@ -36,6 +36,11 @@ def add_resources(
         "/api/user-profile",
         resource_class_kwargs={"user_network": user_network, "logger": logger},
     )
+    # api.add_resource(
+    #     PostCreate,
+    #     "/api/post-create",
+    #     resource_class_kwargs={"user_network": user_network, "user_content": user_content, "logger": logger}
+    # )
 
 
 def setup(api: Api) -> None:

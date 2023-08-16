@@ -106,10 +106,11 @@ function App() {
           If you want to start on a different screen for testing purposes, you'll
           have to move your screen to be above Feed temporarily
         */}
-          <Stack.Screen name="Feed" component={Feed}
-                        options={{
-                          headerShown: false,
-                        }}/>
+        <Stack.Screen name="Feed" component={Feed}
+                      options={{
+                        headerShown: false,
+                      }}
+                      initialParams={{username: user.email.split("@uw.edu")[0]}}/>
         <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true, headerShown: false,}}/>
         <Stack.Screen name="CreateReaction" component={CreateReaction} options={{unmountOnBlur: true,headerShown: false }}/>
 

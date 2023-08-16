@@ -9,13 +9,12 @@ import "../../Constants.js";
 export default function Feed({navigation, route}) {
   const [posts, setPosts] = useState([]);
   const [pfp, setPfp] = useState(" ");
+  const { username } = route.params;
   useMemo(() => {
-
-    fetch('http://' + ip + ':5000/api/user-profile?netid=newuser2')
+    fetch('http://' + ip + ':5000/api/user-profile?netid=' + username)
     .then(response => response.text())
     .then(text => console.log(text)).catch((err) => {
-      // console.log("API call error");
-      console.log(ip);
+      console.log("API call error");
     });
   }, []);
 
