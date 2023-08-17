@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions, Platform } from 'react-native';
 export const {width} = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
-  header: {
+  headerContainer: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     paddingTop: Platform.OS == 'android' ? (width * 0.05) : 0,
@@ -16,8 +16,11 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
+  profile: {
+    flexDirection: 'row',
+  },
   userProfilePic: {
-    width: '10%',
+    width: width * 0.1,
     height: width * 0.1,
     borderRadius: width * 0.05,
     borderWidth: width * 0.003,
