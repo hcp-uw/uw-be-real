@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera, CameraType} from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library'; 
 import { useIsFocused } from '@react-navigation/native';
-import { IMAGE_HEIGHT, IMAGE_WIDTH } from './CameraStyles';
+import { styles } from './CameraScreenStyles.js';
 
-const CameraScreen = ({navigation, route}) => {
+export default function CameraScreen({navigation, route}) {
   let cameraRef = useRef();
   const isFocused = useIsFocused();
   const [hasCameraPermission, setHasCameraPermission] = useState();
@@ -76,6 +76,7 @@ const CameraScreen = ({navigation, route}) => {
   
   return (
     <View style={styles.container}>
+      {/* Camera itself */}
       <View style={styles.roundCamera}>
         {isFocused ? <Camera
           ratio="4:3" style={styles.camera} ref={cameraRef} type={type} borderRadius={15} resizeMode="cover" overflow="hidden"
@@ -88,51 +89,18 @@ const CameraScreen = ({navigation, route}) => {
        </View>
       
       <View style={styles.buttonContainer}>
+        {/* Button to take a picture */}
         <TouchableOpacity onPress={takePic}>
           <View style={styles.ring}/>
         </TouchableOpacity>
-        
-        <Button title="Reverse" onPress={toggleCameraType}/>
+        {/* Button to reverse the camera */}
+        <TouchableOpacity
+            style={styles.reverseBtn}
+            onPress={toggleCameraType}
+          >
+              <Text style={styles.reverseText}>Reverse</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black'
-  },
-  buttonContainer: {
-    flexDirection: 'row'
-  },
-  smallPreview: {
-    alignSelf: 'flex-start',
-    aspectRatio: 0.5,
-    marginLeft: 50,
-  }, 
-  camera: {
-    margin: 5,
-    width: IMAGE_WIDTH,
-    height: IMAGE_HEIGHT,
-  },
-  ring: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: "transparent",
-    borderColor: "white",
-    borderWidth: 5,
-    alignSelf: 'center', 
-    margin: 10,
-    justifyContent: 'center'
-  },
-  roundCamera: {
-    borderRadius: 75
-  }
-
-});
-
-export default CameraScreen;

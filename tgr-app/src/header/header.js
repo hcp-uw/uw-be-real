@@ -2,7 +2,7 @@ import { View, Text, Image, SafeAreaView, TouchableWithoutFeedback } from 'react
 import { styles } from './header-style';
 import { Entypo } from '@expo/vector-icons';
 
-export default function Header({navigation, route, pfp}) {
+export default function Header({navigation, pfp}) {
   return (
     <SafeAreaView style={styles.headerContainer}>
         <Text style={styles.headerText}>_tgr.</Text>
@@ -14,13 +14,13 @@ export default function Header({navigation, route, pfp}) {
             </TouchableWithoutFeedback>
             {/* Space between camera and profile pic */}
             <View style={{margin: 5}}></View>
-            <TouchableWithoutFeedback  onPress={() => 
+            {/* <TouchableWithoutFeedback  onPress={() => 
                 navigation.navigate('Profile')}>
                 <Image
                     style={styles.userProfilePic}
                     source={{uri: pfp}}
                 />
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback> */}
           </View>
     </SafeAreaView>
   );
