@@ -114,7 +114,8 @@ function App() {
         <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true, headerShown: false,}}/>
         <Stack.Screen name="CreateReaction" component={CreateReaction} options={{unmountOnBlur: true,headerShown: false }}/>
 
-          <Stack.Screen name="Preview" component={PreviewScreen}/>
+          <Stack.Screen name="Preview" component={PreviewScreen}
+            options={{headerShown: false}}/>
           <Stack.Screen name="Edit" component={Edit} 
             options={{
               headerShown: false,

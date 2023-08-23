@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'; 
-import { Text, SafeAreaView, Button, StyleSheet, Pressable, TextInput, Animated, View, Keyboard, Dimensions} from 'react-native';
+import { Text, SafeAreaView, Pressable, TextInput, Animated, View, Keyboard, TouchableOpacity} from 'react-native';
 import { useState, useRef, useMemo, useCallback } from 'react';
 import styles,{ IMAGE_HEIGHT, IMAGE_HEIGHT_SMALL, IMAGE_WIDTH, IMAGE_WIDTH_SMALL} from './CameraStyles.js';
 import { THUMBNAIL_HEIGHT, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT_SMALL, THUMBNAIL_WIDTH_SMALL } from './CameraStyles.js';
@@ -223,8 +223,22 @@ const PreviewScreen = ({route, navigation}) => {
       
       </Animated.View>
       <View style={styles.horizontalLayout}>
-        <Button title="Post" onPress={openOptions} />
-        <Button title="Retake" onPress={() => {navigation.goBack()}} />
+        {/* Post button */}
+        <TouchableOpacity
+              style={styles.postRetakeBtns}
+              onPress={openOptions}
+        >
+                <Text style={styles.postRetakeBtnsText}>Post</Text>
+        </TouchableOpacity>
+        {/* Space between post and retake buttons */}
+        <View style={{margin: 5}}></View>
+        {/* Retake button */}
+        <TouchableOpacity
+              style={styles.postRetakeBtns}
+              onPress={() => {navigation.goBack()}}
+        >
+                <Text style={styles.postRetakeBtnsText}>Retake</Text>
+        </TouchableOpacity>
       </View>
       <BottomSheet ref={bottomSheetRef} index={-1} 
       snapPoints={snapPoints} 

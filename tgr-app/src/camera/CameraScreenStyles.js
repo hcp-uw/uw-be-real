@@ -39,16 +39,5 @@ export const styles = StyleSheet.create({
     roundCamera: {
       borderRadius: 75
     },
-    reverseBtn: {
-        width: width * 0.2,
-        height: width * 0.1,
-        borderRadius: width * 0.1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#FFFFFF',
-    },
-    reverseText: {
-        color: '#000000'
-    },
   
   });

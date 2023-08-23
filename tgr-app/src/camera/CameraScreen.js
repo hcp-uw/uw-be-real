@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,  Button, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { Camera, CameraType} from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library'; 
 import { useIsFocused } from '@react-navigation/native';
-import { styles } from './CameraScreenStyles.js';
+import { styles, width } from './CameraScreenStyles.js';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function CameraScreen({navigation, route}) {
   let cameraRef = useRef();
@@ -95,10 +96,9 @@ export default function CameraScreen({navigation, route}) {
         </TouchableOpacity>
         {/* Button to reverse the camera */}
         <TouchableOpacity
-            style={styles.reverseBtn}
             onPress={toggleCameraType}
-          >
-              <Text style={styles.reverseText}>Reverse</Text>
+        >
+              <MaterialCommunityIcons name="camera-flip-outline" size={width * 0.1} color="white" />
         </TouchableOpacity>
       </View>
     </View>

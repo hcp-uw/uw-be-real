@@ -107,6 +107,17 @@ export default StyleSheet.create({
     alignSelf: 'center', 
     margin: 10,
     justifyContent: 'center'
-  }
+  },
+  postRetakeBtns: {
+    width: width * 0.2,
+    height: width * 0.1,
+    borderRadius: width * 0.1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  postRetakeBtnsText: {
+      color: '#000000'
+  },
 
 })
