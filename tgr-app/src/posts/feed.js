@@ -7,21 +7,32 @@ import Post from "../posts/post";
 import "../../Constants.js";
 
 export default function Feed({navigation, route}) {
-  const [posts, setPosts] = useState([]);
-  const [pfp, setPfp] = useState(" ");
   const { username } = route.params;
-  useMemo(() => {
-    fetch('http://' + ip + ':5000/api/user-profile?netid=' + username)
-    .then(response => response.text())
-    .then(text => console.log(text)).catch((err) => {
-      console.log("API call error");
-    });
-  }, []);
+  const [posts, setPosts] = useState([]);
+  // TEMPLATE FUNCTION TO RETRIEVE POSTS
+  // function getPostInfo() {
+  //   fetch('http://' + ip + ':5000/api/user-profile?netid=' + username)
+  //   .then(response => response.text())
+  //   .then(text => {
+  //     // Access text
+  //     console.log(text)
+  //     // Set username
+  //     // setUser()
+  //     // Set pfp
+  //     // setPfp()
+  //   })
+  //   .catch((err) => {
+  //     console.log("Could not retrieve latest posts");
+  //   });
+  // }
+  // useMemo(() => {
+  //   getPostInfo();
+  // }, []);
 
   return (
     <View style={styles.container}>
       <Header navigation={navigation}
-              pfp={pfp}/>
+              username={username}/>
 
       {/* List of posts */}
       <FlatList

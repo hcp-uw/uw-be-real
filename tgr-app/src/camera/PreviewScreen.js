@@ -9,7 +9,7 @@ import PostOptionBackground from './components/PostOptionsBackground.js';
 import PostOptions from './components/PostOptions.js';
 
 const PreviewScreen = ({route, navigation}) => {
-  const {photo, backPhoto} = route.params;
+  const {photo, backPhoto, username} = route.params;
   const [showFront, setShowFront] = useState(true);
   const [caption, setCaption] = useState('');
   const [postGlobal, setPostGlobal] = useState(false);
@@ -240,12 +240,13 @@ const PreviewScreen = ({route, navigation}) => {
                 <Text style={styles.postRetakeBtnsText}>Retake</Text>
         </TouchableOpacity>
       </View>
-      <BottomSheet ref={bottomSheetRef} index={-1} 
-      snapPoints={snapPoints} 
-      backdropComponent={renderBackdrop} onAnimate={previewChange}
-      backgroundComponent={PostOptionBackground}
-      animatedPosition={bottomSheetPosition}>
-        <PostOptions/>
+      <BottomSheet 
+        ref={bottomSheetRef} index={-1} 
+        snapPoints={snapPoints} 
+        backdropComponent={renderBackdrop} onAnimate={previewChange}
+        backgroundComponent={PostOptionBackground}
+        animatedPosition={bottomSheetPosition}>
+        <PostOptions front_uri={photo.uri} back_uri={backPhoto.uri} username={username}/>
       </BottomSheet>
     </SafeAreaView>
     </NativeViewGestureHandler>

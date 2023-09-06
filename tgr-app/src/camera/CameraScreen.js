@@ -8,6 +8,7 @@ import { styles, width } from './CameraScreenStyles.js';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function CameraScreen({navigation, route}) {
+  const { username } = route.params;
   let cameraRef = useRef();
   const isFocused = useIsFocused();
   const [hasCameraPermission, setHasCameraPermission] = useState();
@@ -64,13 +65,13 @@ export default function CameraScreen({navigation, route}) {
     
   };
 
+  // Navigate to the Preview Screen once the front and back photo are taken
   if (photo && backPhoto) {
-    
-    navigation.navigate("Preview", {photo: photo, backPhoto: backPhoto});
+    navigation.navigate("Preview", {photo: photo, backPhoto: backPhoto, username: username});
     setPhoto(undefined);
     setBackPhoto(undefined);
-    
   }
+
   function toggleCameraType() {
     setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
   }

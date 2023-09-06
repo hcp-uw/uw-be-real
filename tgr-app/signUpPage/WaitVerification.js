@@ -27,12 +27,12 @@ function WaitVerification({ navigation, route }) {
                         "firstname": firstName,
                         "lastname": lastName,
                         "email": (email + "@uw.edu")}),
-                  }
-            ).then((res) => res.json()).then((data) => {
+                  })
+            .then((res) => res.json()).then((data) => {
                 console.log(data);
                 // Navigate to feed
-                navigation.navigate("Feed", {username: username});
-            }).catch(err => {console.log(err)});
+                navigation.navigate("Feed", {username: username});})
+            .catch(err => {console.log(err)});
         } else {
             alert("Please verify your email!");
         }

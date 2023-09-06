@@ -85,45 +85,50 @@ class PostCreate(Resource):
             content: dict = body["content"]
             author_id: str = metadata["author_id"]
 
-            # Check if user has already made a post today
-            recent_post: dict = self.user_content.get_user_post(author_id)
-            if recent_post:
-                raise AlreadyPostedTodayException()
+            # Can do a print here
+            # print("META: " + metadata + '\n')
+            # print("CONTENT: " + content + '\n')
+            # print("AUTHOR_ID: " + author_id + '\n')
 
-            # Get images and validate
-            images: list[FileStorage] = request.files.getlist("file")
-            validate_images(images)
+            # # Check if user has already made a post today
+            # recent_post: dict = self.user_content.get_user_post(author_id)
+            # if recent_post:
+            #     raise AlreadyPostedTodayException()
 
-            # Proceed to create post
-            post_id: str = uuid4()
-            default: str = ""
-            caption: str = content.get("caption", default)
-            location: str = metadata.get("location", default)
+            # # Get images and validate
+            # images: list[FileStorage] = request.files.getlist("file")
+            # validate_images(images)
 
-            # TODO: Use asynchronous functions
+            # # Proceed to create post
+            # post_id: str = uuid4()
+            # default: str = ""
+            # caption: str = content.get("caption", default)
+            # location: str = metadata.get("location", default)
 
-            # Upload post to AWS S3 and MongoDB
-            image_urls: tuple[str, str] = self.user_content.upload_post_images(
-                post_id, images
-            )
+            # # TODO: Use asynchronous functions
 
-            # Run database functions asynchronously
-            create_post: Coroutine = async_wrapper(
-                self.user_content.create_post,
-                (
-                    author_id,
-                    post_id,
-                    caption,
-                    location,
-                    metadata["is_global"],
-                    image_urls,
-                ),
-            )
+            # # Upload post to AWS S3 and MongoDB
+            # image_urls: tuple[str, str] = self.user_content.upload_post_images(
+            #     post_id, images
+            # )
 
-            cache_data: Coroutine = async_wrapper()
+            # # Run database functions asynchronously
+            # create_post: Coroutine = async_wrapper(
+            #     self.user_content.create_post,
+            #     (
+            #         author_id,
+            #         post_id,
+            #         caption,
+            #         location,
+            #         metadata["is_global"],
+            #         image_urls,
+            #     ),
+            # )
 
-            # Cache data into Redis
-            async_runner()
+            # cache_data: Coroutine = async_wrapper()
+
+            # # Cache data into Redis
+            # async_runner()
 
         except ValidationError as e:
             return e.messages, status.HTTP_400_BAD_REQUEST
@@ -142,3 +147,5 @@ class PostCreate(Resource):
 
         except InvalidS3PostBucketNameException as e:
             return GENERIC_INTERNAL_SERVER_ERROR, status.HTTP_500_INTERNAL_SERVER_ERROR
+
+        return POST_CREATE_SUCCESS, status.HTTP_201_CREATED

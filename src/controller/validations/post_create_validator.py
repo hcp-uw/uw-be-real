@@ -43,7 +43,7 @@ def validate_images(images: list[FileStorage]) -> None:
 class MetaData(Schema):
     author_id = fields.Str(
         required=True,
-        error_messages=NETID_ERROR,
+        error_messages={"required": NETID_ERROR},
     )
     location = fields.Str(required=False)
     is_global = fields.Bool(required=True)
@@ -51,7 +51,10 @@ class MetaData(Schema):
 
 class Content(Schema):
     # Images are validated in API Resource
-    caption = fields.Str(required=False)
+    caption = fields.Str(
+        required=False,
+        validate=validate_caption 
+    )
 
 
 class PostCreateValidator(Schema):
