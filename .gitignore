@@ -20,3 +20,4 @@ web-build/
 # secrets
 secrets
 .env
+tgr-app/Constants.js

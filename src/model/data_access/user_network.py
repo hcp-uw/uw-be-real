@@ -165,7 +165,8 @@ class UserNetwork:
         """Transaction function to return a list of friend information."""
         query = neo4j_queries.get_friends(netid)
         result: Record = tx.run(query)
-        return result
+        data: list[dict] = result.data()
+        return data
 
     def check_unique(self, netid: str = None, email: str = None) -> bool:
         """Checks if a user already exists by their netid or email."""

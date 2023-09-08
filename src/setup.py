@@ -15,6 +15,7 @@ from src.model.data_access.user_network import UserNetwork
 from src.controller.api_resources.user_create import UserCreate
 from src.controller.api_resources.user_profile import UserProfile
 from src.controller.api_resources.post_create import PostCreate
+from src.controller.api_resources.friend_get import FriendGet
 
 # Service configuration imports
 from src.config import ENV
@@ -41,6 +42,11 @@ def add_resources(
         PostCreate,
         "/api/post-create",
         resource_class_kwargs={"user_network": user_network, "logger": logger, "user_content": user_content}
+    )
+    api.add_resource(
+        FriendGet,
+        "/api/friend-get",
+        resource_class_kwargs={"user_network": user_network, "logger": logger},
     )
 
 
