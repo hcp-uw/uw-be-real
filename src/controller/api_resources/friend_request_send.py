@@ -47,6 +47,8 @@ class FriendRequestSend(Resource):
                 - Successfully sent a friend request from sender_netid to recipient_netid
             400 BAD REQUEST:
                 - Invalid request, no changes made.
+            409 CONFLICT: 
+                - Users are already friends.
             500 INTERNAL SERVER ERROR:
                 - Generic error.
         """
@@ -83,7 +85,7 @@ class FriendRequestSend(Resource):
             return e.msg, status.HTTP_400_BAD_REQUEST
         
         except FriendsAlreadyException as e: 
-            return e.msg, status.HTTP_400_BAD_REQUEST
+            return e.msg, status.HTTP_409_BAD_REQUEST
         except Exception as e:
             self.logger.log(ERROR, str(e))
             return GENERIC_INTERNAL_SERVER_ERROR, status.HTTP_500_INTERNAL_SERVER_ERROR
