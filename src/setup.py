@@ -6,6 +6,8 @@ from logging import (
 
 # Flask imports
 from flask_restful import Api
+from controller.api_resources.friend_request_get import FriendRequestGet
+from controller.api_resources.friend_request_send import FriendRequestSend
 
 # Model imports
 from src.model.data_access.user_content import UserContent
@@ -47,6 +49,16 @@ def add_resources(
         FriendGet,
         "/api/friend-get",
         resource_class_kwargs={"user_network": user_network, "logger": logger},
+    )
+    api.add_resource(
+        FriendRequestSend,
+        "/api/friend-request-send",
+        resource_class_kwargs={"user_network": user_network, "logger": logger},
+    )
+    api.add_resource(
+        FriendRequestGet,
+        "/api/friend-request-get",
+        resource_class_kwargs={"user_network": user_network, "logger": logger}
     )
 
 

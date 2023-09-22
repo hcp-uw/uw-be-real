@@ -156,6 +156,11 @@ class UserNetwork:
     def get_friends(self, netid: str) -> list[str]:
         """Returns a list of friend information from a user netid."""
         # start session
+        # # FOR TESTING PURPOSES ONLY
+        # clean_query = neo4j_queries.delete_all_friend_requests()
+        # self._database_query(clean_query)
+
+
         with self.driver.session() as session:
             result = session.execute_read(self._get_friends, netid)
         return result
@@ -168,6 +173,40 @@ class UserNetwork:
         data: list[dict] = result.data()
         return data
 
+    def get_incoming_friend_requests(self, netid: str) -> list[str]:
+        """Returns a list of friend information from those who sent a
+            friend request to the given user netid.
+        """
+        with self.driver.session() as session:
+            result = session.execute_read(self._get_incoming_friend_requests, netid)
+        return result
+
+    @staticmethod
+    def _get_incoming_friend_requests(tx, netid: str) -> list[dict]: 
+        """Transaction function to return a list of friend request information"""
+        query = neo4j_queries.get_incoming_friend_requests(netid)
+        result: Record = tx.run(query)
+        data: list[dict] = result.data()
+        return data
+    
+    def check_friend_request(self, sender_netid: str, recipient_netid: str) -> bool: 
+        """Checks if the sender sent a friend request to recipient, 
+            returns true if the friend request is already present. 
+        """ 
+
+        if not (sender_netid and recipient_netid):
+            raise generic_exceptions.NoInputsException()
+        with self.driver.session() as session: 
+            result = session.execute_read(self._check_friend_request, sender_netid, recipient_netid)
+        return bool(result)
+    
+    @staticmethod 
+    def _check_friend_request(tx, sender_netid: str, recipient_netid: str) -> str: 
+        """Transaction function that returns sender's username if sender has sent a friend request to recipient"""
+        query = neo4j_queries.check_friend_request(sender_netid, recipient_netid)
+        result: Record = tx.run(query)
+        return result.value("username", "")
+    
     def check_unique(self, netid: str = None, email: str = None) -> bool:
         """Checks if a user already exists by their netid or email."""
         # verify arguments
@@ -190,6 +229,18 @@ class UserNetwork:
         query: str = neo4j_queries.check_unique(props)
         result: Record = tx.run(query)
         return result.value("username", "")
+    def check_friend(self, netid1: str, netid2: str) -> bool: 
+        """Checks if the two netids given are friends"""
+        if not (netid1 and netid2):
+            raise generic_exceptions.NoInputsException()
+        with self.driver.session() as session: 
+            result = session.execute_read(self._check_friend, netid1, netid2)
+        return bool(result)
+    @staticmethod
+    def _check_friend(tx, netid1: str, netid2: str) -> str: 
+        query: str = neo4j_queries.check_friend(netid1, netid2)
+        result: Record = tx.run(query)
+        return result.value("friend", "")
 
     def deactivate_user(self, netid: str) -> None:
         """Deactivates the user associated with the given netid."""
@@ -205,6 +256,19 @@ class UserNetwork:
         self._database_query(query)
 
     def connect_users(self, sender_netid: str, recipient_netid: str) -> None:
-        """Connect two users by their netids."""
+        """Connect two users by their netids. This makes them friends bidirectionally."""
+        # # FOR TESTING PURPOSES ONLY
+        # clean_query = neo4j_queries.delete_all_friends()
+        # self._database_query(clean_query)
+
+        # ACTUAL FUNCTION
         query = neo4j_queries.connect_users(sender_netid, recipient_netid)
+        result = self._database_query(query)
+    
+    def send_friend_request(self, sender_netid: str, recipient_netid: str) -> None:
+        """Allows a user to send a friend request to another user,
+          if recipient has sent a friend request already, makes them friends.
+        """
+        query = neo4j_queries.send_friend_request(sender_netid, recipient_netid)
         self._database_query(query)
+

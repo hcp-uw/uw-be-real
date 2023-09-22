@@ -17,9 +17,9 @@ from src.model.constants.http_response_messages import *
 from src.model.constants.logger_constants import *
 from src.model.data_access.user_network import UserNetwork
 
-class FriendGet(Resource):
+class FriendRequestGet(Resource):
     def __init__(self, user_network: UserNetwork, logger: Logger) -> None:
-        """Instantiates a FriendGet API Resource for retrieving user's friend information.
+        """Instantiates a FriendRequestGet API Resource for retrieving user's friend request information.
 
         Methods:
             - GET
@@ -34,7 +34,7 @@ class FriendGet(Resource):
         self.user_network: UserNetwork = user_network
     
     def get(self):
-        """Get user's friends information from the provided information in the request payload.
+        """Get user's incoming friends requests from the provided information in the request payload.
 
         Args:
             netid (str): The UW NetID of the user.
@@ -44,7 +44,7 @@ class FriendGet(Resource):
 
         Responses:
             200 OK:
-                - User's friends successfully retrieved.
+                - User's incomin friend requets successfully retrieved.
             400 BAD REQUEST:
                 - Invalid request, no changes made.
             500 INTERNAL SERVER ERROR:
@@ -62,8 +62,10 @@ class FriendGet(Resource):
             user_info: dict = self.user_network.get_user(netid)
             if not user_info:
                raise UserNotFoundException(netid) 
+        
 
-            friend_info: list[str] = self.user_network.get_friends(netid)
+            friend_info: list[str] = self.user_network.get_incoming_friend_requests(netid)
+
         
         # Return response
         except NoInputsException as e:
