@@ -6,6 +6,7 @@ from logging import (
 
 # Flask imports
 from flask_restful import Api
+from controller.api_resources.friend_remove import FriendRemove
 from controller.api_resources.friend_request_get import FriendRequestGet
 from controller.api_resources.friend_request_send import FriendRequestSend
 
@@ -58,6 +59,11 @@ def add_resources(
     api.add_resource(
         FriendRequestGet,
         "/api/friend-request-get",
+        resource_class_kwargs={"user_network": user_network, "logger": logger}
+    )
+    api.add_resource(
+        FriendRemove,
+        "/api/friend-remove",
         resource_class_kwargs={"user_network": user_network, "logger": logger}
     )
 

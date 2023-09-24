@@ -107,7 +107,11 @@ def send_friend_request(sender_netid: str, recipient_netid: str) -> str:
         WHERE NOT (sender)-[:Friend]-(recipient)
         MERGE (sender)-[:SentFriendRequestTo]->(recipient)
     """
- 
+def remove_friend(sender_netid: str, recipient_netid: str) -> str: 
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})-[r:Friend]-(recipient: User {{netid: '{recipient_netid}'}})
+        DELETE r
+    """ 
 # DO NOT USE THESE IN ACTUAL APPLICATION. TESTING ONLY.
 def delete_all_users() -> str:
     return """

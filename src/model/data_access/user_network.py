@@ -271,4 +271,7 @@ class UserNetwork:
         """
         query = neo4j_queries.send_friend_request(sender_netid, recipient_netid)
         self._database_query(query)
-
+    def remove_friend(self, sender_netid: str, recipient_netid: str) -> None: 
+        """Removes recipient as a friend of sender."""
+        query = neo4j_queries.remove_friend(sender_netid, recipient_netid)
+        self._database_query(query)
