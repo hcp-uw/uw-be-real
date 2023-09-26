@@ -241,6 +241,23 @@ class UserNetwork:
         query: str = neo4j_queries.check_friend(netid1, netid2)
         result: Record = tx.run(query)
         return result.value("friend", "")
+    
+    def search_users(self, search_str: str) -> list[str]: 
+        """Returns a list of user information whose usernames start with search_str
+        """
+        with self.driver.session() as session:
+            result = session.execute_read(self._search_users, search_str)
+        return result
+
+    @staticmethod
+    def _search_users(tx, search_str: str) -> list[dict]: 
+        """Transaction function to return a list of user information"""
+        query = neo4j_queries.search_users(search_str)
+        result: Record = tx.run(query)
+        data: list[dict] = result.data()
+        return data
+    
+    
 
     def deactivate_user(self, netid: str) -> None:
         """Deactivates the user associated with the given netid."""
@@ -271,6 +288,13 @@ class UserNetwork:
         """
         query = neo4j_queries.send_friend_request(sender_netid, recipient_netid)
         self._database_query(query)
+
+    def remove_friend_request(self, sender_netid: str, recipient_netid: str) -> None: 
+        """Removes incoming friend request to recipient from sender."""
+
+        query = neo4j_queries.remove_friend_request(sender_netid, recipient_netid)
+        self._database_query(query)
+        
     def remove_friend(self, sender_netid: str, recipient_netid: str) -> None: 
         """Removes recipient as a friend of sender."""
         query = neo4j_queries.remove_friend(sender_netid, recipient_netid)

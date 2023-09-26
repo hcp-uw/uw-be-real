@@ -11,7 +11,7 @@ from controller.exceptions.friend_exceptions import FriendsAlreadyException
 # Controller imports
 from controller.exceptions.generic_exceptions import NoInputsException
 from controller.exceptions.user_exceptions import UserNotFoundException
-from controller.validations.friend_request_send_validator import FriendRequestSendValidator
+from controller.validations.friend_request_validator import FriendRequestSendValidator
 
 # Model imports
 from src.model.constants.http_response_messages import *

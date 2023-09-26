@@ -8,7 +8,9 @@ from logging import (
 from flask_restful import Api
 from controller.api_resources.friend_remove import FriendRemove
 from controller.api_resources.friend_request_get import FriendRequestGet
+from controller.api_resources.friend_request_respond import FriendRequestRespond
 from controller.api_resources.friend_request_send import FriendRequestSend
+from controller.api_resources.user_search import UserSearch
 
 # Model imports
 from src.model.data_access.user_content import UserContent
@@ -42,6 +44,11 @@ def add_resources(
         resource_class_kwargs={"user_network": user_network, "logger": logger},
     )
     api.add_resource(
+        UserSearch,
+        "/api/user-search",
+        resource_class_kwargs={"user_network": user_network, "logger": logger},
+    )
+    api.add_resource(
         PostCreate,
         "/api/post-create",
         resource_class_kwargs={"user_network": user_network, "logger": logger, "user_content": user_content}
@@ -62,11 +69,16 @@ def add_resources(
         resource_class_kwargs={"user_network": user_network, "logger": logger}
     )
     api.add_resource(
+        FriendRequestRespond,
+        "/api/friend-request-respond",
+        resource_class_kwargs={"user_network": user_network, "logger": logger}
+    )
+    api.add_resource(
         FriendRemove,
         "/api/friend-remove",
         resource_class_kwargs={"user_network": user_network, "logger": logger}
     )
-
+    
 
 def setup(api: Api) -> None:
     """Sets up the Flask application."""

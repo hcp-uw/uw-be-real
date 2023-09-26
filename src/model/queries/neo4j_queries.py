@@ -78,10 +78,22 @@ def delete_user(netid: str) -> str:
         MATCH (user:User{{netid: '{netid}'}}) DELETE (user)
     """
 
+def search_users(search_str: str) -> str: 
+    return f"""
+        MATCH (user: User)
+        WHERE user.username STARTS WITH '{search_str}'
+        RETURN user.netid AS netid,
+            user.username AS username,
+            user.firstname AS firstname,
+            user.lastname AS lastname,
+            user.profile_image AS profile_image,
+            user.account_status AS account_status
+        LIMIT 50
+    """
 
 def connect_users(sender_netid: str, recipient_netid: str) -> str:
     return f"""
-        MATCH (sender: User {{netid: '{sender_netid}'}})-[r:SentFriendRequestTo]-(recipient: User {{netid: '{recipient_netid}'}})
+        MATCH (sender: User {{netid: '{sender_netid}'}})-[r:SentFriendRequestTo]->(recipient: User {{netid: '{recipient_netid}'}})
         DELETE r
         MERGE (sender)-[:Friend]-(recipient)
     """
@@ -107,11 +119,18 @@ def send_friend_request(sender_netid: str, recipient_netid: str) -> str:
         WHERE NOT (sender)-[:Friend]-(recipient)
         MERGE (sender)-[:SentFriendRequestTo]->(recipient)
     """
+
+def remove_friend_request(sender_netid: str, recipient_netid: str) -> str: 
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})-[r:SentFriendRequestTo]->(recipient: User {{netid: '{recipient_netid}'}})
+        DELETE r
+    """
 def remove_friend(sender_netid: str, recipient_netid: str) -> str: 
     return f"""
         MATCH (sender: User {{netid: '{sender_netid}'}})-[r:Friend]-(recipient: User {{netid: '{recipient_netid}'}})
         DELETE r
     """ 
+
 # DO NOT USE THESE IN ACTUAL APPLICATION. TESTING ONLY.
 def delete_all_users() -> str:
     return """
