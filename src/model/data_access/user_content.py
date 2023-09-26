@@ -3,6 +3,7 @@ from datetime import (
     timedelta,
     datetime,
 )
+import json
 
 # Image typing
 from werkzeug.datastructures import FileStorage
@@ -201,7 +202,6 @@ class UserContent:
         """
         # Determine which AWS S3 bucket this post belongs to based on weekday.
         # bucket_number: int = datetime.today().weekday()
-        bucket_number = 1
         bucket_name: str = f"awstgr-us-west-1"
 
         # Get image extensions
@@ -222,9 +222,14 @@ class UserContent:
         )
         return front_image_url, back_image_url
 
-    def cache_post(self, author_id: str, post_id: str) -> None:
+    def cache_post(self, author_id: str, post_id: str, is_global: bool) -> None:
         """Caches a post in Redis."""
-        self.redis.set(name=author_id, value=post_id, ex=timedelta(hours=24))
+        cache_post_info = {
+            "post_id": post_id,
+            "is_global": is_global
+        }
+        self.redis.hset(name=author_id, key=author_id, value=json.dumps(cache_post_info))
+        self.redis.expire(name=author_id, time=timedelta(hours=24))
 
     def create_post(
         self,
@@ -248,7 +253,6 @@ class UserContent:
         binary_uuid = bson.Binary(post_id.encode(), subtype=4)
 
         # Create document to insert into MongoDB
-        # TODO: Add author icon?
         post_document = {
             "_id": binary_uuid,
             "author_id": author_id,
@@ -260,13 +264,11 @@ class UserContent:
             "datetime": datetime.utcnow(),
         }
 
-        # TODO: Review if this schema is okay.
         comments_document = {
             "_id": binary_uuid,
             "comments": [],
         }
 
-        # TODO: Review if this schema is okay.
         reactions_document = {
             "_id": binary_uuid,
             "reactions": [],
@@ -286,5 +288,4 @@ class UserContent:
         Returns:
             A dict of post information. If the user has not made a post, None is returned.
         """
-        # return self.redis.hget(f"{redis_constants.POST_KEY}:{netid}")
-        return self.redis.get(netid)
+        return self.redis.hgetall(netid)

@@ -87,21 +87,22 @@ class PostCreate(Resource):
             content: dict = body["content"]
             author_id: str = metadata["author_id"]
 
-            # # Check if user has already made a post today
+            # Check if user has already made a post today
             recent_post: str = self.user_content.get_user_post(author_id)
             if recent_post:
                 raise AlreadyPostedTodayException()
 
-            # # Get images and validate
+            # Get images
             images = content["file"]
 
-            # # Proceed to create post
+            # Proceed to create post
             post_id: str = str(uuid4())
             post_datetime = datetime.now()
             default: str = ""
             caption: str = content.get("caption", default)
             location: str = metadata.get("location", default)
-            
+            is_global: bool = metadata["is_global"]
+
             # Upload post to AWS S3 and MongoDB
             image_urls: tuple[str, str] = self.user_content.upload_post_images(
                 post_id, images
@@ -110,10 +111,10 @@ class PostCreate(Resource):
             # Create the post in MongoDB
             self.user_content.create_post(author_id=author_id, post_id=post_id, 
                                           caption=caption, location=location,
-                                          is_global=metadata["is_global"], image_urls=image_urls)
+                                          is_global=is_global, image_urls=image_urls)
 
             # Cache the post in Redis
-            self.user_content.cache_post(author_id=author_id, post_id=post_id)
+            self.user_content.cache_post(author_id=author_id, post_id=post_id, is_global=is_global)
             
         except ValidationError as e:
             return e.messages, status.HTTP_400_BAD_REQUEST
