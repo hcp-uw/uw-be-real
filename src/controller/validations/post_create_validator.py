@@ -28,7 +28,7 @@ def validate_caption(caption: str) -> None:
         raise ValidationError(f"Caption cannot exceed {CAPTION_MAX_CHAR} characters.")
 
 
-def validate_images(images: list[FileStorage]) -> None:
+def validate_images(images: list[str]) -> None:
     if len(images) != 2:
         raise InvalidImagesException(f"Expected 2 images, received {len(images)}")
 
@@ -51,6 +51,8 @@ class MetaData(Schema):
 
 class Content(Schema):
     # Images are validated in API Resource
+    # File is where the front and back image are received
+    file = fields.List(fields.Str(default=''))
     caption = fields.Str(
         required=False,
         validate=validate_caption 

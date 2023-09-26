@@ -8,31 +8,35 @@ import "../../Constants.js";
 
 export default function Feed({navigation, route}) {
   const { username } = route.params;
+  const [user, setUser] = useState("");
   const [posts, setPosts] = useState([]);
+  // const [pfp, setPfp] = useState("");
   // TEMPLATE FUNCTION TO RETRIEVE POSTS
-  // function getPostInfo() {
-  //   fetch('http://' + ip + ':5000/api/user-profile?netid=' + username)
-  //   .then(response => response.text())
-  //   .then(text => {
-  //     // Access text
-  //     console.log(text)
-  //     // Set username
-  //     // setUser()
-  //     // Set pfp
-  //     // setPfp()
-  //   })
-  //   .catch((err) => {
-  //     console.log("Could not retrieve latest posts");
-  //   });
-  // }
-  // useMemo(() => {
-  //   getPostInfo();
-  // }, []);
+  function getPostInfo() {
+    fetch('http://' + ip + ':5000/api/user-profile?netid=' + username)
+    .then(response => response.text())
+    .then(text => {
+      // Access text
+      console.log(text)
+      // Set username
+      // setUser()
+      // Set pfp
+      // setPfp()
+    })
+    .catch((err) => {
+      console.log("Could not retrieve latest posts");
+    });
+  }
+  useMemo(() => {
+    setUser(username);
+    getPostInfo();
+  }, []);
 
   return (
     <View style={styles.container}>
       <Header navigation={navigation}
-              username={username}/>
+              username={user}
+              />
 
       {/* List of posts */}
       <FlatList
@@ -42,8 +46,8 @@ export default function Feed({navigation, route}) {
                                         item={item} />}
       />
 
-      <Navbar navigation={navigation}
-              pfp={pfp}/>
+      {/* <Navbar navigation={navigation}
+              pfp={pfp}/> */}
     </View>
   );
 }

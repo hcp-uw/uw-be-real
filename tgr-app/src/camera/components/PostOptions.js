@@ -4,7 +4,7 @@ import {View, Text} from 'react-native';
 import styles from '../CameraStyles';
 import PostOptionBlock from './PostOptionBlock';
 
-export default function PostOptions(front_uri, back_uri, username) {
+export default function PostOptions({front_uri, back_uri, username, caption}) {
   const [postGlobal, setPostGlobal] = useState(false);
   
   // Function to make a call to create the post
@@ -16,13 +16,11 @@ export default function PostOptions(front_uri, back_uri, username) {
             body: JSON.stringify({
               "metadata": {
                 "author_id": username,
-                "location": "Seattle",
                 "is_global": postGlobal
               },
               "content": {
-                "front_image": front_uri,
-                "back_image": back_uri,
-                "caption": "Test caption"
+                "file": [back_uri, front_uri],
+                "caption": caption
               }
             }),
           })
@@ -44,7 +42,7 @@ export default function PostOptions(front_uri, back_uri, username) {
           <PostOptionBlock icon="earth" text="Everyone (Discovery)" selected={postGlobal}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.postButton} 
-                          onPress={() => {createPost}}>
+                          onPress={createPost}>
           <Text style={{color: 'black'}} textAlign='center'>Post</Text>
         </TouchableOpacity>
       </View>

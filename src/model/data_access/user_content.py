@@ -159,7 +159,7 @@ class UserContent:
             Throws an IncorrectFileExtensionTypeException if image_name is not a valid image file.
         """
         # Validate arguments
-        validate_s3_upload_post_image(bucket_name, image_name)
+        # validate_s3_upload_post_image(bucket_name, image_name)
 
         # Upload image to S3
         # put_object() is used over upload_fileobj() because the image is directly viewable
@@ -182,7 +182,7 @@ class UserContent:
         return image_url
 
     def upload_post_images(
-        self, post_id: str, images: list[FileStorage]
+        self, post_id: str, images: list[str]
     ) -> tuple[str, str]:
         """Uploads post content into AWS S3.
 
@@ -200,13 +200,14 @@ class UserContent:
             Throws an IncorrectFileExtensionTypeException if image name is not a valid image file.
         """
         # Determine which AWS S3 bucket this post belongs to based on weekday.
-        bucket_number: int = datetime.today().weekday()
-        bucket_name: str = f"tgr-us-west-{bucket_number}"
+        # bucket_number: int = datetime.today().weekday()
+        bucket_number = 1
+        bucket_name: str = f"awstgr-us-west-1"
 
         # Get image extensions
         front_image, back_image = images
-        front_image_ext: str = front_image.filename.split(".")[-1]
-        back_image_ext: str = back_image.filename.split(".")[-1]
+        front_image_ext: str = front_image.split(".")[-1]
+        back_image_ext: str = back_image.split(".")[-1]
 
         # Create image file names based on post_id.
         front_image_path: str = f"{POSTS_FOLDER}/{post_id}-front.{front_image_ext}"
@@ -219,12 +220,11 @@ class UserContent:
         back_image_url: str = self._s3_upload_post_image(
             bucket_name, back_image_path, back_image
         )
-
         return front_image_url, back_image_url
 
-    def cache_post(self, post_id: str) -> None:
+    def cache_post(self, author_id: str, post_id: str) -> None:
         """Caches a post in Redis."""
-        pass
+        self.redis.set(name=author_id, value=post_id, ex=timedelta(hours=24))
 
     def create_post(
         self,
@@ -277,7 +277,7 @@ class UserContent:
         self.mongo[mongo_constants.COMMENTS_COLLECTION].insert_one(comments_document)
         self.mongo[mongo_constants.REACTIONS_COLLECTION].insert_one(reactions_document)
 
-    def get_user_post(self, netid: str) -> dict | None:
+    def get_user_post(self, netid: str) -> str | None:
         """Returns a user's daily post as a dict of post information from Redis.
 
         Args:
@@ -286,4 +286,5 @@ class UserContent:
         Returns:
             A dict of post information. If the user has not made a post, None is returned.
         """
-        return self.redis.hget(f"{redis_constants.POST_KEY}:{netid}")
+        # return self.redis.hget(f"{redis_constants.POST_KEY}:{netid}")
+        return self.redis.get(netid)

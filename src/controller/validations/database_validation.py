@@ -25,7 +25,7 @@ def validate_s3_upload_profile_image(bucket_name: str, image_name: str) -> None:
         Throws an IncorrectFileExtensionTypeException if image_name is not a valid image file.
     """
     # Validate bucket name
-    if bucket_name not in S3_PROFILE_BUCKETS:
+    if bucket_name not in S3_POST_BUCKETS:
         raise InvalidS3ProfileBucketNameException(bucket_name)
 
     # Validate image name
