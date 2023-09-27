@@ -23,4 +23,14 @@ class NoFriendRequestException(Exception):
     def __str__(self) -> str:
         return self.msg
 
+class UserBlockedException(Exception): 
+    """Raised when sender cannot perform action because recipient has blocked them"""
+    def __init__(self, sender_netid: str, recipient_netid: str) -> None:
+        self.msg = f'Action cannot be performed because "{sender_netid}" is blocked by "{recipient_netid}.'
+
+    def __str__(self) -> str:
+        return self.msg
+
+
+
 

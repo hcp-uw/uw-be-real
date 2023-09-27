@@ -6,3 +6,10 @@ class UserNotFoundException(Exception):
 
     def __str__(self) -> str:
         return self.msg
+class CannotPerformOnSelfException(Exception): 
+
+    def __init__(self, netid: str) -> None:
+        self.msg = f'"{netid}" cannot perform this action on themselves.'
+    
+    def __str__(self) -> str:
+        return self.msg

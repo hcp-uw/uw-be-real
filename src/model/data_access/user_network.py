@@ -229,6 +229,7 @@ class UserNetwork:
         query: str = neo4j_queries.check_unique(props)
         result: Record = tx.run(query)
         return result.value("username", "")
+
     def check_friend(self, netid1: str, netid2: str) -> bool: 
         """Checks if the two netids given are friends"""
         if not (netid1 and netid2):
@@ -241,18 +242,34 @@ class UserNetwork:
         query: str = neo4j_queries.check_friend(netid1, netid2)
         result: Record = tx.run(query)
         return result.value("friend", "")
+
+    def check_blocked(self, blocker_netid: str, blocked_netid: str) -> bool: 
+        """Checks if blocker has blocked the blocked_netid"""
+        if not (blocker_netid and blocked_netid):
+            raise generic_exceptions.NoInputsException()
+        with self.driver.session() as session: 
+            result = session.execute_read(self._check_blocked, blocker_netid, blocked_netid)
+        return bool(result)
     
-    def search_users(self, search_str: str) -> list[str]: 
-        """Returns a list of user information whose usernames start with search_str
+    @staticmethod
+    def _check_blocked(tx, blocker_netid: str, blocked_netid: str) -> str: 
+        query: str = neo4j_queries.check_block(blocker_netid, blocked_netid)
+        result: Record = tx.run(query)
+        return result.value("blocked", "")
+    
+
+    def search_users(self, netid: str, search_str: str) -> list[str]: 
+        """Returns a list of user information whose usernames start with search_str, 
+        excludes blocked users from current netid
         """
         with self.driver.session() as session:
-            result = session.execute_read(self._search_users, search_str)
+            result = session.execute_read(self._search_users, netid, search_str)
         return result
 
     @staticmethod
-    def _search_users(tx, search_str: str) -> list[dict]: 
+    def _search_users(tx, netid: str, search_str: str) -> list[dict]: 
         """Transaction function to return a list of user information"""
-        query = neo4j_queries.search_users(search_str)
+        query = neo4j_queries.search_users(netid, search_str)
         result: Record = tx.run(query)
         data: list[dict] = result.data()
         return data
@@ -280,7 +297,7 @@ class UserNetwork:
 
         # ACTUAL FUNCTION
         query = neo4j_queries.connect_users(sender_netid, recipient_netid)
-        result = self._database_query(query)
+        self._database_query(query)
     
     def send_friend_request(self, sender_netid: str, recipient_netid: str) -> None:
         """Allows a user to send a friend request to another user,
@@ -298,4 +315,14 @@ class UserNetwork:
     def remove_friend(self, sender_netid: str, recipient_netid: str) -> None: 
         """Removes recipient as a friend of sender."""
         query = neo4j_queries.remove_friend(sender_netid, recipient_netid)
+        self._database_query(query)
+
+    def block_user(self, sender_netid: str, recipient_netid: str) -> None: 
+        """Allows sender to block a recipient"""
+        query = neo4j_queries.block_user(sender_netid, recipient_netid) 
+        self._database_query(query)
+
+    def unblock_user(self, sender_netid: str, recipient_netid: str) -> None: 
+        """Allows the sender to unblock the recipient"""
+        query = neo4j_queries.unblock_user(sender_netid, recipient_netid) 
         self._database_query(query)

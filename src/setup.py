@@ -10,6 +10,7 @@ from controller.api_resources.friend_remove import FriendRemove
 from controller.api_resources.friend_request_get import FriendRequestGet
 from controller.api_resources.friend_request_respond import FriendRequestRespond
 from controller.api_resources.friend_request_send import FriendRequestSend
+from controller.api_resources.user_block import UserBlock
 from controller.api_resources.user_search import UserSearch
 
 # Model imports
@@ -78,7 +79,12 @@ def add_resources(
         "/api/friend-remove",
         resource_class_kwargs={"user_network": user_network, "logger": logger}
     )
-    
+    api.add_resource(
+        UserBlock,
+        "/api/user-block",
+        resource_class_kwargs={"user_network": user_network, "logger": logger}
+    )
+
 
 def setup(api: Api) -> None:
     """Sets up the Flask application."""

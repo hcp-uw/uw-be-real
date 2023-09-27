@@ -10,7 +10,7 @@ from controller.exceptions.friend_exceptions import NoFriendRequestException, No
 
 # Controller imports
 from controller.exceptions.generic_exceptions import NoInputsException
-from controller.exceptions.user_exceptions import UserNotFoundException
+from controller.exceptions.user_exceptions import CannotPerformOnSelfException, UserNotFoundException
 from controller.validations.friend_request_validator import FriendRequestRespondValidator
 
 # Model imports
@@ -62,7 +62,8 @@ class FriendRequestRespond(Resource):
         
         #Query Database
         try:
-            
+            if sender_netid == recipient_netid: 
+                raise CannotPerformOnSelfException(sender_netid)
             if not self.user_network.get_user(sender_netid):
                 raise UserNotFoundException(sender_netid)
             if not self.user_network.get_user(recipient_netid):
@@ -81,6 +82,9 @@ class FriendRequestRespond(Resource):
         except NoInputsException as e:
             return e.msg, status.HTTP_400_BAD_REQUEST
         
+        except CannotPerformOnSelfException as e: 
+            return e.msg, status.HTTP_400_BAD_REQUEST
+
         except UserNotFoundException as e:
             return e.msg, status.HTTP_400_BAD_REQUEST
         

@@ -78,10 +78,10 @@ def delete_user(netid: str) -> str:
         MATCH (user:User{{netid: '{netid}'}}) DELETE (user)
     """
 
-def search_users(search_str: str) -> str: 
+def search_users(netid: str, search_str: str) -> str: 
     return f"""
         MATCH (user: User)
-        WHERE user.username STARTS WITH '{search_str}'
+        WHERE user.username STARTS WITH '{search_str}' AND NOT (user)-[:Blocked]-(:User{{netid: '{netid}'}}) AND NOT user.netid = '{netid}' 
         RETURN user.netid AS netid,
             user.username AS username,
             user.firstname AS firstname,
@@ -131,6 +131,24 @@ def remove_friend(sender_netid: str, recipient_netid: str) -> str:
         DELETE r
     """ 
 
+def block_user(sender_netid: str, recipient_netid: str) -> str: 
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})-[r]-(recipient: User {{netid: '{recipient_netid}'}})
+        DELETE r 
+        MERGE (sender)-[:Blocked]->(recipient)
+    """
+
+def unblock_user(sender_netid: str, recipient_netid: str) -> str: 
+    return f"""
+        MATCH (sender: User {{netid: '{sender_netid}'}})-[block: Blocked]->(recipient: User {{netid: '{recipient_netid}'}})
+        DELETE block
+    """
+
+def check_block(blocker_netid: str, blocked_netid: str) -> str: 
+    return f"""
+        MATCH (: User{{netid: '{blocker_netid}'}})-[b:Blocked]->(: User{{netid: '{blocked_netid}'}})
+        RETURN b as blocked
+    """
 # DO NOT USE THESE IN ACTUAL APPLICATION. TESTING ONLY.
 def delete_all_users() -> str:
     return """

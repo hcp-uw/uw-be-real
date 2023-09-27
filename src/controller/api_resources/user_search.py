@@ -9,8 +9,6 @@ from marshmallow import ValidationError
 
 # Controller imports
 from controller.exceptions.generic_exceptions import NoInputsException
-from controller.exceptions.user_exceptions import UserNotFoundException
-from controller.validations.user_profile_validator import UserProfileValidator
 from controller.validations.user_search_validator import UserSearchValidator
 
 # Model imports
@@ -40,13 +38,17 @@ class UserSearch(Resource):
 
         Args:
             search_str (str): The search term to be matched to usernames.
+            netid (str): The netid of the current user whose blocked users
+              will not appear in the search (not required).
+
 
         Returns:
             Serialized JSON data of the user's friends.
 
         Responses:
             200 OK:
-                - A list of users whose names start with search_str
+                - A list of users whose names start with search_str, excluding
+                those blocked by netid
             400 BAD REQUEST:
                 - Invalid request, no changes made.
             500 INTERNAL SERVER ERROR:
@@ -56,12 +58,13 @@ class UserSearch(Resource):
         try:
             body: dict = UserSearchValidator().load(request.args)
             search_str = body["search_str"]
+            netid = body["netid"]
         except ValidationError as e:
             return e.messages, status.HTTP_400_BAD_REQUEST
         
         #Query Database        
         try:
-            user_info: list[str] = self.user_network.search_users(search_str)
+            user_info: list[str] = self.user_network.search_users(netid, search_str)
 
 
         # Return response
