@@ -37,6 +37,8 @@ from src.model.constants.generic_constants import DATE_FORMAT
 from src.model.data_access.user_network import UserNetwork
 from src.model.data_access.user_content import UserContent
 
+from datetime import datetime
+
 
 class PostCreate(Resource):
     def __init__(
@@ -77,59 +79,43 @@ class PostCreate(Resource):
         Responses:
         """
         # Parse and validate request body
-        try:
+        try:          
             body: dict = PostCreateValidator().load(request.get_json())
-
+            
             # Deconstruct body
             metadata: dict = body["metadata"]
             content: dict = body["content"]
             author_id: str = metadata["author_id"]
 
-            # Can do a print here
-            # print("META: " + metadata + '\n')
-            # print("CONTENT: " + content + '\n')
-            # print("AUTHOR_ID: " + author_id + '\n')
+            # Check if user has already made a post today
+            recent_post: str = self.user_content.get_user_post(author_id)
+            if recent_post:
+                raise AlreadyPostedTodayException()
 
-            # # Check if user has already made a post today
-            # recent_post: dict = self.user_content.get_user_post(author_id)
-            # if recent_post:
-            #     raise AlreadyPostedTodayException()
+            # Get images
+            images = content["file"]
 
-            # # Get images and validate
-            # images: list[FileStorage] = request.files.getlist("file")
-            # validate_images(images)
+            # Proceed to create post
+            post_id: str = str(uuid4())
+            post_datetime = datetime.now()
+            default: str = ""
+            caption: str = content.get("caption", default)
+            location: str = metadata.get("location", default)
+            is_global: bool = metadata["is_global"]
 
-            # # Proceed to create post
-            # post_id: str = uuid4()
-            # default: str = ""
-            # caption: str = content.get("caption", default)
-            # location: str = metadata.get("location", default)
+            # Upload post to AWS S3 and MongoDB
+            image_urls: tuple[str, str] = self.user_content.upload_post_images(
+                post_id, images
+            )
+            
+            # Create the post in MongoDB
+            self.user_content.create_post(author_id=author_id, post_id=post_id, 
+                                          caption=caption, location=location,
+                                          is_global=is_global, image_urls=image_urls)
 
-            # # TODO: Use asynchronous functions
-
-            # # Upload post to AWS S3 and MongoDB
-            # image_urls: tuple[str, str] = self.user_content.upload_post_images(
-            #     post_id, images
-            # )
-
-            # # Run database functions asynchronously
-            # create_post: Coroutine = async_wrapper(
-            #     self.user_content.create_post,
-            #     (
-            #         author_id,
-            #         post_id,
-            #         caption,
-            #         location,
-            #         metadata["is_global"],
-            #         image_urls,
-            #     ),
-            # )
-
-            # cache_data: Coroutine = async_wrapper()
-
-            # # Cache data into Redis
-            # async_runner()
-
+            # Cache the post in Redis
+            self.user_content.cache_post(author_id=author_id, post_id=post_id, is_global=is_global)
+            
         except ValidationError as e:
             return e.messages, status.HTTP_400_BAD_REQUEST
 

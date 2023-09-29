@@ -240,13 +240,14 @@ const PreviewScreen = ({route, navigation}) => {
                 <Text style={styles.postRetakeBtnsText}>Retake</Text>
         </TouchableOpacity>
       </View>
+      {/* Expands the options for global or friends feed when the post button is clicked */}
       <BottomSheet 
         ref={bottomSheetRef} index={-1} 
         snapPoints={snapPoints} 
         backdropComponent={renderBackdrop} onAnimate={previewChange}
         backgroundComponent={PostOptionBackground}
         animatedPosition={bottomSheetPosition}>
-        <PostOptions front_uri={photo.uri} back_uri={backPhoto.uri} username={username}/>
+        <PostOptions front_uri={photo.uri} back_uri={backPhoto.uri} username={username} caption={caption}/>
       </BottomSheet>
     </SafeAreaView>
     </NativeViewGestureHandler>
