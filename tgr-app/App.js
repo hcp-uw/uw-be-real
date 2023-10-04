@@ -110,7 +110,7 @@ function App() {
                       options={{
                         headerShown: false,
                       }}
-                      initialParams={{username: user.email.split("@uw.edu")[0]}}/>
+                      initialParams={{username: user.email.split("@uw.edu")[0], is_global: true}}/>
         <Stack.Screen name="Camera" component={CameraScreen} options={{unmountOnBlur: true, headerShown: false,}}/>
         <Stack.Screen name="CreateReaction" component={CreateReaction} options={{unmountOnBlur: true,headerShown: false }}/>
 

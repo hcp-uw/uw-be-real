@@ -1,4 +1,6 @@
 # Flask imports
+from json import dumps
+from bson import ObjectId, json_util
 from flask import request
 from flask_api import status
 from flask_restful import Resource
@@ -34,7 +36,6 @@ from src.controller.validations.post_create_validator import (
 from src.model.constants.http_response_messages import *
 from src.model.constants.logger_constants import *
 from src.model.constants.generic_constants import DATE_FORMAT
-from src.model.data_access.user_network import UserNetwork
 from src.model.data_access.user_content import UserContent
 
 from datetime import datetime
@@ -43,7 +44,6 @@ from datetime import datetime
 class PostCreate(Resource):
     def __init__(
         self,
-        user_network: UserNetwork,
         user_content: UserContent,
         logger: Logger,
     ) -> None:
@@ -53,14 +53,12 @@ class PostCreate(Resource):
             - POST
 
         Args:
-            user_network (UserNetwork): A valid UserNetwork.
             user_content (UserContent): A valid UserContent.
 
         Returns:
             None.
         """
         self.logger: Logger = logger
-        self.user_network: UserNetwork = user_network
         self.user_content: UserContent = user_content
 
     def post(self) -> None:
@@ -96,25 +94,27 @@ class PostCreate(Resource):
             images = content["file"]
 
             # Proceed to create post
-            post_id: str = str(uuid4())
-            post_datetime = datetime.now()
+            post_id = str(ObjectId())
+            post_datetime = dumps(datetime.now(), default=json_util.default)
             default: str = ""
             caption: str = content.get("caption", default)
             location: str = metadata.get("location", default)
             is_global: bool = metadata["is_global"]
 
             # Upload post to AWS S3 and MongoDB
-            image_urls: tuple[str, str] = self.user_content.upload_post_images(
-                post_id, images
-            )
+            # image_urls: tuple[str, str] = self.user_content.upload_post_images(
+            #     post_id, images
+            # )
             
             # Create the post in MongoDB
-            self.user_content.create_post(author_id=author_id, post_id=post_id, 
+            self.user_content.create_post(author_id=author_id,
+                                          post_id=post_id,
                                           caption=caption, location=location,
-                                          is_global=is_global, image_urls=image_urls)
+                                          is_global=is_global, image_urls=images,
+                                          post_datetime=post_datetime)
 
             # Cache the post in Redis
-            self.user_content.cache_post(author_id=author_id, post_id=post_id, is_global=is_global)
+            self.user_content.cache_post(author_id=author_id, is_global=is_global, post_id=post_id)
             
         except ValidationError as e:
             return e.messages, status.HTTP_400_BAD_REQUEST

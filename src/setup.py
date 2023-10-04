@@ -15,6 +15,7 @@ from src.model.data_access.user_network import UserNetwork
 from src.controller.api_resources.user_create import UserCreate
 from src.controller.api_resources.user_profile import UserProfile
 from src.controller.api_resources.post_create import PostCreate
+from controller.api_resources.get_posts import GetPosts
 
 # Service configuration imports
 from src.config import ENV
@@ -40,9 +41,13 @@ def add_resources(
     api.add_resource(
         PostCreate,
         "/api/post-create",
-        resource_class_kwargs={"user_network": user_network, "logger": logger, "user_content": user_content}
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
-
+    api.add_resource(
+        GetPosts,
+        "/api/get-posts",
+        resource_class_kwargs={"user_content": user_content, "user_network": user_network, "logger": logger}
+    )
 
 def setup(api: Api) -> None:
     """Sets up the Flask application."""

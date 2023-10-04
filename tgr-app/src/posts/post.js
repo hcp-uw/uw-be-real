@@ -1,8 +1,14 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { FlatList, Text, Image, View, TouchableWithoutFeedback } from 'react-native';
 import { styles} from './post-style.js';
 import InteractionsList from "../interactions/interactions-list";
 function Post({ navigation, item }) {
+  const [frontURI, setFrontURI] = useState(item.front_image);
+  const [backURI, setBackURI] = useState(item.back_image);
+  function swap(front, back) {
+    setFrontURI(front)
+    setBackURI(back)
+  }
   return (
     <View style={styles.postContainer}>
         {/* Profile info is the pfp, username, and time post */}
@@ -27,15 +33,19 @@ function Post({ navigation, item }) {
         </View>
         
         {/* User's big post photo */}
-        <Image
-            style={styles.bigPostImg} 
-            source={{uri: item.post_front}}
-        />
+        <TouchableWithoutFeedback  onPress={() => {swap(backURI, frontURI)}}>
+            <Image
+                style={styles.bigPostImg} 
+                source={{uri: frontURI}}
+            />
+        </TouchableWithoutFeedback>
         {/* User's small post photo */}
-        <Image
-            style={styles.smallPostImg} 
-            source={{uri: item.post_back}}
-        />
+        <TouchableWithoutFeedback  onPress={() => {swap(backURI, frontURI)}}>
+            <Image
+                style={styles.smallPostImg} 
+                source={{uri: backURI}}
+            />
+        </TouchableWithoutFeedback>
 
         {/* Button to create a reaction */}
         <TouchableWithoutFeedback onPress={

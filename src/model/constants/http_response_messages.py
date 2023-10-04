@@ -3,6 +3,7 @@ USER_CREATE_SUCCESS = "User is successfully created."
 
 # Post
 POST_CREATE_SUCCESS = "Post is successfully created"
+GET_POST_SUCCESS = "Posts successfully fetched"
 
 # Generic
 QUERY_FAILED_TO_EXECUTE = "Query failed to execute."

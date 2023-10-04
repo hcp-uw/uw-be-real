@@ -8,6 +8,7 @@ export default function PostOptions({front_uri, back_uri, username, caption}) {
   const [postGlobal, setPostGlobal] = useState(false);
   
   // Function to make a call to create the post
+  console.log(front_uri)
   function createPost() {
     fetch('http://' + ip + ':5000/api/post-create', 
           {
@@ -19,7 +20,7 @@ export default function PostOptions({front_uri, back_uri, username, caption}) {
                 "is_global": postGlobal
               },
               "content": {
-                "file": [back_uri, front_uri],
+                "file": [front_uri, back_uri],
                 "caption": caption
               }
             }),
