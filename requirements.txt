@@ -11,3 +11,4 @@ mypy-boto3-s3
 pymongo[srv]
 redis[hiredis]
 gunicorn
+Werkzeug==2.2.2
