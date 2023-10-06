@@ -27,7 +27,9 @@ export default function Feed({navigation, route}) {
     .then(response => response.text())
     .then(text => {
       // Convert JSON string to JSON
-      setPosts(JSON.parse(text))
+      if (text != null) {
+        setPosts(JSON.parse(text))
+      }
     })
     .catch((err) => {
       console.log("Could not retrieve posts");

@@ -15,6 +15,19 @@ const CreateReaction = ({navigation, route}) => {
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const [photo, setPhoto] = useState(undefined);
   const PREVIEW_WIDTH = SCREEN_WIDTH * 0.9
+
+  function createPosts() {
+    fetch('http://' + ip + ':5000/api/create-reaction?reaction_uri=' + reaction_uri + '&post_id=' + post_id + '&net_id=' + net_id)
+    .then(response => response.text())
+    .then(text => {
+      // Convert JSON string to JSON
+      console.log(text)
+    })
+    .catch((err) => {
+      console.log("Could not create reaction");
+    });
+  }
+
   useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermissionsAsync();

@@ -5,10 +5,30 @@ import InteractionsList from "../interactions/interactions-list";
 function Post({ navigation, item }) {
   const [frontURI, setFrontURI] = useState(item.front_image);
   const [backURI, setBackURI] = useState(item.back_image);
+  
   function swap(front, back) {
     setFrontURI(front)
     setBackURI(back)
   }
+
+// Gets the comments
+//   function getPosts() {
+//     fetch('http://' + ip + ':5000/api/get-posts?is_global=' + global)
+//     .then(response => response.text())
+//     .then(text => {
+//       // Convert JSON string to JSON
+//       if (text != null) {
+//         setPosts(JSON.parse(text))
+//       }
+//     })
+//     .catch((err) => {
+//       console.log("Could not retrieve posts");
+//     });
+//   }
+
+// Gets the reactions
+
+
   return (
     <View style={styles.postContainer}>
         {/* Profile info is the pfp, username, and time post */}

@@ -304,3 +304,21 @@ class UserContent:
         #     post = self.mongo[mongo_constants.POSTS_COLLECTION].find_one({"_id": curr_post_id})
         #     posts.append(post)
         return posts
+    
+    def create_reaction(self, reaction_uri: str, net_id: str, post_id: str, datetime: str) -> None:
+        """Creates a Reaction and stores it in the reactions collections of MongoDB.
+
+        Args:
+            reaction_uri (str): The reaction image as a uri
+            net_id: The user's netid
+            datetime: The time posted in epoch
+            post_id (str): The id of the post that the reaction belongs to
+        """
+        reactions_arr = self.mongo[mongo_constants.REACTIONS_COLLECTION].find_one({"_id": post_id}).reactions
+        curr_reaction = {
+            "net_id": net_id,
+            "reaction_uri": reaction_uri,
+            "datetime": datetime
+        }
+        reactions_arr.append(json.dumps(curr_reaction))
+        curr_post = self.mongo[mongo_constants.REACTIONS_COLLECTION].update_one({"_id": post_id}, {"$set": {'reactions': reactions_arr}})

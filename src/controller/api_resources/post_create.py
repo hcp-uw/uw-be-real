@@ -94,8 +94,8 @@ class PostCreate(Resource):
             images = content["file"]
 
             # Proceed to create post
-            post_id = str(ObjectId())
-            post_datetime = int(datetime.now().timestamp())
+            post_id: str = str(ObjectId())
+            post_datetime: int = int(datetime.now().timestamp())
             default: str = ""
             caption: str = content.get("caption", default)
             location: str = metadata.get("location", default)
