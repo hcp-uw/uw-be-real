@@ -247,7 +247,7 @@ const PreviewScreen = ({route, navigation}) => {
         backdropComponent={renderBackdrop} onAnimate={previewChange}
         backgroundComponent={PostOptionBackground}
         animatedPosition={bottomSheetPosition}>
-        <PostOptions front_uri={photo.uri} back_uri={backPhoto.uri} username={username} caption={caption}/>
+        <PostOptions navigation={navigation} front_uri={photo.uri} back_uri={backPhoto.uri} username={username} caption={caption}/>
       </BottomSheet>
     </SafeAreaView>
     </NativeViewGestureHandler>

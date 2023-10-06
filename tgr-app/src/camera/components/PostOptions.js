@@ -4,7 +4,7 @@ import {View, Text} from 'react-native';
 import styles from '../CameraStyles';
 import PostOptionBlock from './PostOptionBlock';
 
-export default function PostOptions({front_uri, back_uri, username, caption}) {
+export default function PostOptions({front_uri, back_uri, username, caption, navigation}) {
   const [postGlobal, setPostGlobal] = useState(false);
   
   // Function to make a call to create the post
@@ -27,6 +27,7 @@ export default function PostOptions({front_uri, back_uri, username, caption}) {
           })
     .then((res) => res.json()).then((data) => {
       console.log(data);
+      navigation.navigate("Feed");
     })
     .catch(err => {console.log(err)});
   }
