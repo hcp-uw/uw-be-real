@@ -292,10 +292,15 @@ class UserContent:
     def get_all_posts_global(self):
         """Returns all the posts in Redis"""
         posts = []
-        for key in self.redis.scan_iter():
-            user_to_post_info = self.get_user_post(key)
-            post_info_dict = json.loads(user_to_post_info.get(key).decode('utf-8'))
-            curr_post_id = post_info_dict.get("post_id")
-            post = self.mongo[mongo_constants.POSTS_COLLECTION].find_one({"_id": curr_post_id})
+        # For the sake of the demo we display all the posts
+        for post in self.mongo[mongo_constants.POSTS_COLLECTION].find({}): 
             posts.append(post)
+
+        # Formal code for redis being a cache
+        # for key in self.redis.scan_iter():
+        #     user_to_post_info = self.get_user_post(key)
+        #     post_info_dict = json.loads(user_to_post_info.get(key).decode('utf-8'))
+        #     curr_post_id = post_info_dict.get("post_id")
+        #     post = self.mongo[mongo_constants.POSTS_COLLECTION].find_one({"_id": curr_post_id})
+        #     posts.append(post)
         return posts

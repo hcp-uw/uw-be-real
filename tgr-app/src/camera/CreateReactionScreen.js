@@ -9,7 +9,7 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@gorhom/bottom-sheet';
 
 const CreateReaction = ({navigation, route}) => {
   let cameraRef = useRef();
-  const {username} = route.params;
+  const {username, id} = route.params;
   const isFocused = useIsFocused();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();

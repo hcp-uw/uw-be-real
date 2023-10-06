@@ -25,14 +25,15 @@ function Post({ navigation, item }) {
 
             {/* Username and time posted on the same row */}
             <View style={styles.userContainer}>
-                <Text style={{color: 'white',}}>{item.author_username}</Text>
+                <Text style={{color: 'white',}}>{item.author_id}</Text>
                 <Text style={{color: '#adadad',}}>
-                    { parseInt((parseInt(Date.now() / 1000) - item.post_time) / 3600)} hr Late
+                    { parseInt((parseInt(Date.now() / 1000) - item.datetime) / 3600)} hr Late
                 </Text>
             </View>
         </View>
         
         {/* User's big post photo */}
+        <View>
         <TouchableWithoutFeedback  onPress={() => {swap(backURI, frontURI)}}>
             <Image
                 style={styles.bigPostImg} 
@@ -49,13 +50,13 @@ function Post({ navigation, item }) {
 
         {/* Button to create a reaction */}
         <TouchableWithoutFeedback onPress={
-            () => navigation.navigate('CreateReaction', {username: item.author_username})}>
+            () => navigation.navigate('CreateReaction', {username: item.author_username, id: item._id})}>
             <Image
             source={require('../../assets/emoji-round-plus.png')}
             style={styles.reactionButtonIcon}
             />
         </TouchableWithoutFeedback>
-
+        </View>
         
         {/* Space in between the big photo and interactions */}
         <View style={styles.interactionsContainer}>

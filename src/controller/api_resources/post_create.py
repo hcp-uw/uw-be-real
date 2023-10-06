@@ -86,16 +86,16 @@ class PostCreate(Resource):
             author_id: str = metadata["author_id"]
 
             # Check if user has already made a post today
-            recent_post: str = self.user_content.get_user_post(author_id)
-            if recent_post:
-                raise AlreadyPostedTodayException()
+            # recent_post: str = self.user_content.get_user_post(author_id)
+            # if recent_post:
+            #     raise AlreadyPostedTodayException()
 
             # Get images
             images = content["file"]
 
             # Proceed to create post
             post_id = str(ObjectId())
-            post_datetime = dumps(datetime.now(), default=json_util.default)
+            post_datetime = int(datetime.now().timestamp())
             default: str = ""
             caption: str = content.get("caption", default)
             location: str = metadata.get("location", default)
