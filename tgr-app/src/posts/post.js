@@ -1,33 +1,44 @@
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { FlatList, Text, Image, View, TouchableWithoutFeedback } from 'react-native';
 import { styles} from './post-style.js';
 import InteractionsList from "../interactions/interactions-list";
-function Post({ navigation, item }) {
+function Post({ navigation, item, curr_user_id }) {
   const [frontURI, setFrontURI] = useState(item.front_image);
   const [backURI, setBackURI] = useState(item.back_image);
-  
+  const [reactions, setReactions] = useState([{}]);
+
   function swap(front, back) {
     setFrontURI(front)
     setBackURI(back)
   }
 
-// Gets the comments
-//   function getPosts() {
-//     fetch('http://' + ip + ':5000/api/get-posts?is_global=' + global)
-//     .then(response => response.text())
-//     .then(text => {
-//       // Convert JSON string to JSON
-//       if (text != null) {
-//         setPosts(JSON.parse(text))
-//       }
-//     })
-//     .catch((err) => {
-//       console.log("Could not retrieve posts");
-//     });
-//   }
-
 // Gets the reactions
+  function getReactions() {
+    fetch('http://' + ip + ':5000/api/get-reactions?post_id=' + item._id)
+    .then(response => response.text())
+    .then(text => {
+        if (JSON.parse(text) != {}) {
+            let parsedArr = JSON.parse(text)
+            if (JSON.parse(text).length > 0) {
+                parsedArr = []
+                for (let i=0; i < JSON.parse(text).length; i++) {
+                    let entry = JSON.parse(parsedArr[i]);
+                    // console.log(typeof(entry))
+                    parsedArr.push(entry);
+                    // console.log(typeof(JSON.parse(parsedArr[i])))
+                }
+            }
+            setReactions(parsedArr);
+        }
+    })
+    .catch((err) => {
+      console.log("Could not retrieve reactions");
+    });
+  }
 
+  useMemo(() => {
+    getReactions();
+  }, []);
 
   return (
     <View style={styles.postContainer}>
@@ -70,7 +81,7 @@ function Post({ navigation, item }) {
 
         {/* Button to create a reaction */}
         <TouchableWithoutFeedback onPress={
-            () => navigation.navigate('CreateReaction', {username: item.author_username, id: item._id})}>
+            () => navigation.navigate('CreateReaction', {reactor_id: curr_user_id, post_id: item._id})}>
             <Image
             source={require('../../assets/emoji-round-plus.png')}
             style={styles.reactionButtonIcon}
@@ -80,18 +91,19 @@ function Post({ navigation, item }) {
         
         {/* Space in between the big photo and interactions */}
         <View style={styles.interactionsContainer}>
+        {/* Reactions preview */}
         <FlatList
             horizontal={true}
             // scrollEnabled={false}
-            data={item.post_interactions}
+            data={reactions}
             ItemSeparatorComponent={() => <View style={styles.reactionSpace} />}
             renderItem={({ filler, index }) => <InteractionsList item={item} index={index}/>}
         />
         {/* Interactions section of post */}
         <TouchableWithoutFeedback  onPress={() => 
-            navigation.navigate('Interactions', { username: item.author_username })
+            navigation.navigate('Interactions', { username: item.author_id, post_id: item._id})
         }>
-            <Text style={styles.interactionsText}>View interactions ({item.post_comments})</Text>
+            <Text style={styles.interactionsText}>View interactions ({reactions.length})</Text>
         </TouchableWithoutFeedback>
         </View>
     </View>)

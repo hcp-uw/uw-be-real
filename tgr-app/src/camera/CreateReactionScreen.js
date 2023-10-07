@@ -9,23 +9,29 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@gorhom/bottom-sheet';
 
 const CreateReaction = ({navigation, route}) => {
   let cameraRef = useRef();
-  const {username, id} = route.params;
+  const {reactor_id, post_id} = route.params;
   const isFocused = useIsFocused();
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const [photo, setPhoto] = useState(undefined);
   const PREVIEW_WIDTH = SCREEN_WIDTH * 0.9
 
-  function createPosts() {
-    fetch('http://' + ip + ':5000/api/create-reaction?reaction_uri=' + reaction_uri + '&post_id=' + post_id + '&net_id=' + net_id)
-    .then(response => response.text())
-    .then(text => {
-      // Convert JSON string to JSON
-      console.log(text)
+  function createReaction(reaction_uri) {
+    fetch('http://' + ip + ':5000/api/reaction-create', 
+          {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              "reaction_uri": reaction_uri,
+              "post_id": post_id,
+              "reactor_id": reactor_id 
+            }),
+          })
+    .then((res) => res.json()).then((data) => {
+      console.log(data);
+      navigation.navigate("Feed");
     })
-    .catch((err) => {
-      console.log("Could not create reaction");
-    });
+    .catch(err => {console.log("Could not create reaction")});
   }
 
   useEffect(() => {
@@ -53,12 +59,13 @@ const CreateReaction = ({navigation, route}) => {
       let newPhoto = await cameraRef.current.takePictureAsync(options);
       
       setPhoto(newPhoto);
-      navigation.goBack();
+      console.log(newPhoto.uri)
+      createReaction(newPhoto.uri);
   }
   return (
     <View style={CameraStyles.container}>
 
-        <Text style={{color: 'white', fontSize: 20}}>Replying to @{username}</Text>
+        <Text style={{color: 'white', fontSize: 20}}>Replying to @{reactor_id}</Text>
         <View style={{margin: 30, height: PREVIEW_WIDTH, width: PREVIEW_WIDTH, borderRadius: PREVIEW_WIDTH/2, overflow: 'hidden', borderColor: 'white', borderWidth: 3}}>
 
         <Camera ratio="1:1" useCamera2Api={false} style={{height: PREVIEW_WIDTH, width: PREVIEW_WIDTH}} type={CameraType.front} ref={cameraRef} />

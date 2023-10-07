@@ -15,8 +15,11 @@ from src.model.data_access.user_network import UserNetwork
 from src.controller.api_resources.user_create import UserCreate
 from src.controller.api_resources.user_profile import UserProfile
 from src.controller.api_resources.post_create import PostCreate
-from controller.api_resources.get_posts import GetPosts
 from controller.api_resources.reaction_create import ReactionCreate
+from controller.api_resources.comment_create import CommentCreate
+from controller.api_resources.get_posts import GetPosts
+from controller.api_resources.get_comments import GetComments
+from controller.api_resources.get_reactions import GetReactions
 
 # Service configuration imports
 from src.config import ENV
@@ -45,16 +48,30 @@ def add_resources(
         resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
     api.add_resource(
-        GetPosts,
-        "/api/get-posts",
-        resource_class_kwargs={"user_content": user_content, "user_network": user_network, "logger": logger}
+        CommentCreate,
+        "/api/comment-create",
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
     api.add_resource(
         ReactionCreate,
         "/api/reaction-create",
         resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
-    
+    api.add_resource(
+        GetPosts,
+        "/api/get-posts",
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
+    )
+    api.add_resource(
+        GetComments,
+        "/api/get-comments",
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
+    )
+    api.add_resource(
+        GetReactions,
+        "/api/get-reactions",
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
+    )
 
 def setup(api: Api) -> None:
     """Sets up the Flask application."""

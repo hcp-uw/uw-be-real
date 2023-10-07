@@ -8,41 +8,62 @@ import Reaction from './reaction';
 import Comment from './comment';
 
 export default function Interactions({navigation, route}) {
-  const { username } = route.params;
+  const { username, post_id } = route.params;
+  const [comment, onChangeComment] = useState('Add a comment!');
   const [commentsBool, setCommentsBool] = useState(true);
   const [commentsList, setCommentsList] = useState([]);
   const [reactionsList, setReactionsList] = useState([]);
-  paddingSpace = Dimensions.get('window').width * 0.001;
   
+  const paddingSpace = Dimensions.get('window').width * 0.001;
+  
+  function createComment() {
+    fetch('http://' + ip + ':5000/api/comment-create', 
+          {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              "comment": comment,
+              "post_id": post_id,
+              "commenter_id": username 
+            }),
+          })
+    .then((res) => res.json()).then((data) => {
+      console.log(data);
+    })
+    .catch(err => {console.log("Could not create comment")});
+  }
+
   useMemo(() => {
-    const fetchInteractions = fetch('https://raw.githubusercontent.com/AantLe12/DummyData/main/dummy_interactions.json').then(res => res.json()).then(data => {
-      setCommentsList(data.comments);
-      setReactionsList(data.reactions);
-    }).catch(err => { console.log("ERROR")});
+
   }, []);
 
+  // Switches between the comments and reactions tab 
   if (commentsBool) {
     return (
       <View style={styles.container}>
+          {/* Back arrow leads back to the feed */}
           <TouchableWithoutFeedback onPress={() => 
             navigation.navigate('Feed')
             }>
               <AntDesign style={styles.backArrow} name="arrowleft" size={35} color="white" />
           </TouchableWithoutFeedback>    
-    
+          {/* Username on top of tabs */}
           <Text style={styles.username}>{username}</Text>
           <View style={styles.tabs}>
+            {/* Comments tab */}
             <TouchableWithoutFeedback  onPress={() => setCommentsBool(1) }>
               <View style={styles.underlineContainer}>
                 <Text style={styles.tabsText}>Comments</Text>
               </View>
             </TouchableWithoutFeedback>
+            {/* Reactions tab */}
             <TouchableWithoutFeedback  onPress={() => setCommentsBool(0) }>
                 <Text style={styles.tabsText} onClick>Reactions</Text>
             </TouchableWithoutFeedback>
           </View>
-
+        
         <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={5}>
+          {/* List of comments */}
           <FlatList
             style={styles.commentsList}
             data={commentsList}
@@ -50,12 +71,15 @@ export default function Interactions({navigation, route}) {
                                               navigation={navigation}/>}
             ItemSeparatorComponent={() => <View style={styles.commentSpace} />}
           />
-          <View style={{backgroundColor: 'black'}}>
-            <TouchableOpacity style={styles.sendBtn}>
+
+          {/* Keyboard with send button */}
+          <View>
+            <TouchableOpacity style={styles.sendBtn} onPress={() => createComment()}>
               <Text style={styles.sendText}>Send</Text>
             </TouchableOpacity>
+            {/* Text field to type comment */}
             <View>
-              <TextInput style={styles.input}/>
+              <TextInput style={styles.input} onChangeText={onChangeComment} value={comment}/>
             </View>
           </View>
         </KeyboardAvoidingView>
@@ -64,12 +88,14 @@ export default function Interactions({navigation, route}) {
   } else {
     return (
       <SafeAreaView style={styles.container}>
+        {/* Back arrow leads back to the feed */}
         <TouchableWithoutFeedback onPress={() => 
           navigation.navigate('Feed')
           }>
             <AntDesign style={styles.backArrow} name="arrowleft" size={35} color="white" />
         </TouchableWithoutFeedback>    
   
+        {/* Username on top of tabs */}
         <Text style={styles.username}>{username}</Text>
         <View style={styles.tabs}>
           <TouchableWithoutFeedback  onPress={() => setCommentsBool(1) }>

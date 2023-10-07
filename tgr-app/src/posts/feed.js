@@ -53,7 +53,8 @@ export default function Feed({navigation, route}) {
         style={styles.feed}
         data={posts}
         renderItem={({ item }) => <Post navigation={navigation} 
-                                        item={item} />}
+                                        item={item}
+                                        curr_user_id={user} />}
         refreshControl={
                   <RefreshControl refreshing={refreshing} onRefresh={() => refreshFeed()} />
                                         }

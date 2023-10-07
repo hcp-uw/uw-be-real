@@ -1,6 +1,7 @@
 # Flask imports
 from datetime import datetime
 from json import dumps
+from bson import ObjectId, json_util
 from flask import request
 from flask_api import status
 from flask_restful import Resource
@@ -13,23 +14,24 @@ from marshmallow import ValidationError
 from src.controller.exceptions.post_exceptions import *
 from src.controller.exceptions.s3_exceptions import *
 from src.controller.exceptions.generic_exceptions import *
-from src.controller.validations.reaction_create_validation import (
-    ReactionCreateValidator,
+from src.controller.validations.comment_create_validation import (
+    CommentCreateValidator,
 )
 
 # Model imports
 from src.model.constants.http_response_messages import *
 from src.model.constants.logger_constants import *
+from src.model.constants.generic_constants import DATE_FORMAT
 from src.model.data_access.user_content import UserContent
 
 
-class ReactionCreate(Resource):
+class CommentCreate(Resource):
     def __init__(
         self,
         user_content: UserContent,
         logger: Logger,
     ) -> None:
-        """Instantiates a ReactionCreate API Resource for creating new posts.
+        """Instantiates a CommentCreate API Resource for creating new posts.
 
         Methods:
             - POST
@@ -44,28 +46,28 @@ class ReactionCreate(Resource):
         self.user_content: UserContent = user_content
 
     def post(self) -> None:
-        """Creates a new reaction from the provided reaction information in the request payload.
+        """Creates a new comment from the provided comment information in the request payload.
 
         Args:
-            reaction_uri (str): The reaction image as a uri
-            reactor_id: The reactor's netid
+            comment (str): The comment sent by the commenter
+            commenter_id: The commenter's netid
             post_id: The id of the post that the reaction belongs to
 
         Responses:
         """
         # Parse and validate request body
         try:          
-            body: dict = ReactionCreateValidator().load(request.get_json())
+            body: dict = CommentCreateValidator().load(request.get_json())
             
             # Deconstruct body
-            reaction_uri: str = body["reaction_uri"]
-            reactior_id: str = body["reactor_id"]
+            comment: str = body["comment"]
+            commenter_id: str = body["commenter_id"]
             post_id: str = body["post_id"]
-            reaction_datetime: int = int(datetime.now().timestamp())
+            comment_datetime: int = int(datetime.now().timestamp())
 
-            # Creates a reaction
-            self.user_content.create_reaction(reaction_uri=reaction_uri, reactor_id=reactior_id, 
-                                              post_id=post_id, datetime=reaction_datetime)
+            # Creates a comment
+            self.user_content.create_comment(comment=comment, commenter_id=commenter_id,
+                                             post_id=post_id, datetime=comment_datetime)
             
             
         except ValidationError as e:
@@ -86,4 +88,4 @@ class ReactionCreate(Resource):
         except InvalidS3PostBucketNameException as e:
             return GENERIC_INTERNAL_SERVER_ERROR, status.HTTP_500_INTERNAL_SERVER_ERROR
 
-        return REACTION_CREATE_SUCCESS, status.HTTP_201_CREATED
+        return COMMENT_CREATE_SUCCESS, status.HTTP_201_CREATED

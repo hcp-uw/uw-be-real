@@ -305,20 +305,60 @@ class UserContent:
         #     posts.append(post)
         return posts
     
-    def create_reaction(self, reaction_uri: str, net_id: str, post_id: str, datetime: str) -> None:
+    def create_reaction(self, reaction_uri: str, reactor_id: str, post_id: str, datetime: str) -> None:
         """Creates a Reaction and stores it in the reactions collections of MongoDB.
 
         Args:
             reaction_uri (str): The reaction image as a uri
-            net_id: The user's netid
-            datetime: The time posted in epoch
+            reactor_id: The reactor's netid
             post_id (str): The id of the post that the reaction belongs to
+            datetime: The time posted in epoch
         """
-        reactions_arr = self.mongo[mongo_constants.REACTIONS_COLLECTION].find_one({"_id": post_id}).reactions
+        reactions_arr = self.mongo[mongo_constants.REACTIONS_COLLECTION].find_one({"_id": post_id})
         curr_reaction = {
-            "net_id": net_id,
+            "reactor_id": reactor_id,
             "reaction_uri": reaction_uri,
             "datetime": datetime
         }
-        reactions_arr.append(json.dumps(curr_reaction))
-        curr_post = self.mongo[mongo_constants.REACTIONS_COLLECTION].update_one({"_id": post_id}, {"$set": {'reactions': reactions_arr}})
+        reactions_arr["reactions"].append(json.dumps(curr_reaction))
+        self.mongo[mongo_constants.REACTIONS_COLLECTION].update_one({"_id": post_id}, {"$set": {'reactions': reactions_arr["reactions"]}})
+
+    def create_comment(self, comment: str, commenter_id: str, post_id: str, datetime: str) -> None:
+        """Creates a Comment and stores it in the comments collections of MongoDB.
+
+        Args:
+            comment (str): The comment
+            commenter_id: The commenter's netid
+            post_id (str): The id of the post that the comment belongs to
+            datetime: The time posted in epoch
+        """
+        comments_arr = self.mongo[mongo_constants.COMMENTS_COLLECTION].find_one({"_id": post_id})
+        curr_comment = {
+            "comment": comment,
+            "commenter_id": commenter_id,
+            "datetime": datetime
+        }
+        comments_arr["comments"].append(json.dumps(curr_comment))
+        self.mongo[mongo_constants.COMMENTS_COLLECTION].update_one({"_id": post_id}, {"$set": {'comments': comments_arr["comments"]}})
+
+    def get_all_comments(self, post_id: str):
+        """Returns all comments to a post
+
+        Args:
+            post_id (str): The id of the post that the comments belong to
+        """
+
+        comments_arr = self.mongo[mongo_constants.COMMENTS_COLLECTION].find_one({"_id": post_id})
+        return comments_arr["comments"]
+    
+    def get_all_reactions(self, post_id: str):
+        """Returns all reactions to a post
+
+        Args:
+            post_id (str): The id of the post that the reactions belong to
+        """
+        
+        reactions_arr = self.mongo[mongo_constants.REACTIONS_COLLECTION].find_one({"_id": post_id})
+        if len(reactions_arr["reactions"]) > 0:
+            print(type(reactions_arr["reactions"][0]))
+        return reactions_arr["reactions"]

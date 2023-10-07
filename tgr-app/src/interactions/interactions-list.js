@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Image, View, Dimensions } from 'react-native';
 export const {width} = Dimensions.get('window');
 function InteractionsList({ item, index }) {
+  // console.log(item)
   return (
     <View>
         <Image
@@ -12,7 +13,7 @@ function InteractionsList({ item, index }) {
                 borderColor: 'white',
                 // opacity: (1 -0.1 * index),
         }} 
-        source={{uri: item.post_interactions[index]}}
+        source={{uri: item.reaction_uri}}
         />
     </View>)
 }
