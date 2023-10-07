@@ -6,13 +6,13 @@ export default function Navbar({navigation, route, pfp}) {
   return (
     <View style={styles.navbar}>
         <TouchableWithoutFeedback  onPress={() => 
-            navigation.navigate('Feed')
+          navigation.navigate('Feed')
         }>
           <Foundation name="home" size={35} color="white" />
         </TouchableWithoutFeedback>
         
         <TouchableWithoutFeedback  onPress={() => 
-        navigation.navigate('Feed')
+          navigation.navigate('Feed')
         }>
           <MaterialIcons name="public" size={35} color="white" />
         </TouchableWithoutFeedback>

@@ -21,6 +21,11 @@ from src.model.data_access.user_network import UserNetwork
 from src.controller.api_resources.user_create import UserCreate
 from src.controller.api_resources.user_profile import UserProfile
 from src.controller.api_resources.post_create import PostCreate
+from controller.api_resources.reaction_create import ReactionCreate
+from controller.api_resources.comment_create import CommentCreate
+from controller.api_resources.get_posts import GetPosts
+from controller.api_resources.get_comments import GetComments
+from controller.api_resources.get_reactions import GetReactions
 from src.controller.api_resources.friend_get import FriendGet
 
 # Service configuration imports
@@ -52,37 +57,27 @@ def add_resources(
     api.add_resource(
         PostCreate,
         "/api/post-create",
-        resource_class_kwargs={"user_network": user_network, "logger": logger, "user_content": user_content}
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
     api.add_resource(
-        FriendGet,
-        "/api/friend-get",
-        resource_class_kwargs={"user_network": user_network, "logger": logger},
+        CommentCreate,
+        "/api/comment-create",
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
     api.add_resource(
-        FriendRequestSend,
-        "/api/friend-request-send",
-        resource_class_kwargs={"user_network": user_network, "logger": logger},
+        ReactionCreate,
+        "/api/reaction-create",
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
     api.add_resource(
-        FriendRequestGet,
-        "/api/friend-request-get",
-        resource_class_kwargs={"user_network": user_network, "logger": logger}
+        GetPosts,
+        "/api/get-posts",
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
     api.add_resource(
-        FriendRequestRespond,
-        "/api/friend-request-respond",
-        resource_class_kwargs={"user_network": user_network, "logger": logger}
-    )
-    api.add_resource(
-        FriendRemove,
-        "/api/friend-remove",
-        resource_class_kwargs={"user_network": user_network, "logger": logger}
-    )
-    api.add_resource(
-        UserBlock,
-        "/api/user-block",
-        resource_class_kwargs={"user_network": user_network, "logger": logger}
+        GetComments,
+        "/api/get-comments",
+        resource_class_kwargs={"user_content": user_content, "logger": logger}
     )
 
 

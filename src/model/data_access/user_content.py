@@ -17,6 +17,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.database import Database
 from pymongo.server_api import ServerApi
 import bson
+from bson.objectid import ObjectId
 
 # Redis imports
 import redis
@@ -206,19 +207,20 @@ class UserContent:
 
         # Get image extensions
         front_image, back_image = images
-        front_image_ext: str = front_image.split(".")[-1]
-        back_image_ext: str = back_image.split(".")[-1]
-
+        # front_image_ext: str = front_image.split(".")[-1]
+        # back_image_ext: str = back_image.split(".")[-1]
+        front_image_ext: str = "jpg"
+        back_image_ext: str = "jpg"
         # Create image file names based on post_id.
         front_image_path: str = f"{POSTS_FOLDER}/{post_id}-front.{front_image_ext}"
         back_image_path: str = f"{POSTS_FOLDER}/{post_id}-back.{back_image_ext}"
 
         # Upload images
         front_image_url: str = self._s3_upload_post_image(
-            bucket_name, front_image_path, front_image
+            bucket_name=bucket_name, image_name=front_image_path, image_file=front_image
         )
         back_image_url: str = self._s3_upload_post_image(
-            bucket_name, back_image_path, back_image
+            bucket_name=bucket_name, image_name=back_image_path, image_file=back_image
         )
         return front_image_url, back_image_url
 
@@ -233,12 +235,13 @@ class UserContent:
 
     def create_post(
         self,
-        author_id: str,
         post_id: str,
+        author_id: str,
         caption: str,
         location: str,
         is_global: bool,
         image_urls: tuple[str, str],
+        post_datetime: str
     ) -> None:
         """Creates a post and its related documents in MongoDB.
 
@@ -249,28 +252,24 @@ class UserContent:
         Exceptions:
 
         """
-        # Subtype 4 refers to UUID binary type.
-        binary_uuid = bson.Binary(post_id.encode(), subtype=4)
-
-        # Create document to insert into MongoDB
         post_document = {
-            "_id": binary_uuid,
+            "_id": post_id,
             "author_id": author_id,
             "front_image": image_urls[0],
             "back_image": image_urls[1],
             "caption": caption,
             "location": location,
             "is_global": is_global,
-            "datetime": datetime.utcnow(),
+            "datetime": post_datetime,
         }
 
         comments_document = {
-            "_id": binary_uuid,
+            "_id": post_id,
             "comments": [],
         }
 
         reactions_document = {
-            "_id": binary_uuid,
+            "_id": post_id,
             "reactions": [],
         }
 
@@ -279,7 +278,7 @@ class UserContent:
         self.mongo[mongo_constants.COMMENTS_COLLECTION].insert_one(comments_document)
         self.mongo[mongo_constants.REACTIONS_COLLECTION].insert_one(reactions_document)
 
-    def get_user_post(self, netid: str) -> str | None:
+    def get_user_post(self, netid: str) -> dict | None:
         """Returns a user's daily post as a dict of post information from Redis.
 
         Args:
@@ -289,3 +288,77 @@ class UserContent:
             A dict of post information. If the user has not made a post, None is returned.
         """
         return self.redis.hgetall(netid)
+
+    def get_all_posts_global(self):
+        """Returns all the posts in Redis"""
+        posts = []
+        # For the sake of the demo we display all the posts
+        for post in self.mongo[mongo_constants.POSTS_COLLECTION].find({}): 
+            posts.append(post)
+
+        # Formal code for redis being a cache
+        # for key in self.redis.scan_iter():
+        #     user_to_post_info = self.get_user_post(key)
+        #     post_info_dict = json.loads(user_to_post_info.get(key).decode('utf-8'))
+        #     curr_post_id = post_info_dict.get("post_id")
+        #     post = self.mongo[mongo_constants.POSTS_COLLECTION].find_one({"_id": curr_post_id})
+        #     posts.append(post)
+        return posts
+    
+    def create_reaction(self, reaction_uri: str, reactor_id: str, post_id: str, datetime: str) -> None:
+        """Creates a Reaction and stores it in the reactions collections of MongoDB.
+
+        Args:
+            reaction_uri (str): The reaction image as a uri
+            reactor_id: The reactor's netid
+            post_id (str): The id of the post that the reaction belongs to
+            datetime: The time posted in epoch
+        """
+        reactions_arr = self.mongo[mongo_constants.REACTIONS_COLLECTION].find_one({"_id": post_id})
+        curr_reaction = {
+            "reactor_id": reactor_id,
+            "reaction_uri": reaction_uri,
+            "datetime": datetime
+        }
+        reactions_arr["reactions"].append(json.dumps(curr_reaction))
+        self.mongo[mongo_constants.REACTIONS_COLLECTION].update_one({"_id": post_id}, {"$set": {'reactions': reactions_arr["reactions"]}})
+
+    def create_comment(self, comment: str, commenter_id: str, post_id: str, datetime: str) -> None:
+        """Creates a Comment and stores it in the comments collections of MongoDB.
+
+        Args:
+            comment (str): The comment
+            commenter_id: The commenter's netid
+            post_id (str): The id of the post that the comment belongs to
+            datetime: The time posted in epoch
+        """
+        comments_arr = self.mongo[mongo_constants.COMMENTS_COLLECTION].find_one({"_id": post_id})
+        curr_comment = {
+            "comment": comment,
+            "commenter_id": commenter_id,
+            "datetime": datetime
+        }
+        comments_arr["comments"].append(json.dumps(curr_comment))
+        self.mongo[mongo_constants.COMMENTS_COLLECTION].update_one({"_id": post_id}, {"$set": {'comments': comments_arr["comments"]}})
+
+    def get_all_comments(self, post_id: str):
+        """Returns all comments to a post
+
+        Args:
+            post_id (str): The id of the post that the comments belong to
+        """
+
+        comments_arr = self.mongo[mongo_constants.COMMENTS_COLLECTION].find_one({"_id": post_id})
+        return comments_arr["comments"]
+    
+    def get_all_reactions(self, post_id: str):
+        """Returns all reactions to a post
+
+        Args:
+            post_id (str): The id of the post that the reactions belong to
+        """
+        
+        reactions_arr = self.mongo[mongo_constants.REACTIONS_COLLECTION].find_one({"_id": post_id})
+        if len(reactions_arr["reactions"]) > 0:
+            print(type(reactions_arr["reactions"][0]))
+        return reactions_arr["reactions"]

@@ -5,7 +5,8 @@ export const {width} = Dimensions.get('window');
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: 'black',
-    paddingTop: '10%'
+    paddingTop: '10%',
+    flex: 1
   },
   backArrow: {
     top: width * 0.01,

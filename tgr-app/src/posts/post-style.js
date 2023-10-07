@@ -19,6 +19,14 @@ export const styles = StyleSheet.create({
         borderWidth: width * 0.005,
         borderColor: 'white'
     },
+    reactionButtonIcon: {
+        width: width * 0.2,
+        height: width * 0.2,
+        position: 'absolute',
+        left: '75%',
+        bottom: '1%',
+        tintColor: 'white'
+    },
     userContainer: {
         flexDirection: 'column',
         paddingBottom: '3%'
